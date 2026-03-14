@@ -119,6 +119,11 @@
   </a>
 
   <div class="header-right">
+    {% if user.is_staff %}
+    <a href="/admin/" class="header-icon-btn" title="Admin Dashboard" target="_blank">
+      <i class="ph ph-gauge"></i>
+    </a>
+    {% endif %}
     <a href="{% url 'product_list' %}?sort=" class="header-icon-btn" aria-label="Search" id="searchBtn">
       <i class="ph ph-magnifying-glass" style="font-size:22px;"></i>
     </a>
