@@ -1,0 +1,166 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block title %}Perfumes — Saleel Parfums{% endblock %}
+{% block meta_desc %}Browse our complete collection of luxury perfumes. Filter by gender, scent profile and price.{% endblock %}
+
+{% block content %}
+
+<!-- Page Banner -->
+<div class="plp-hero">
+  <div style="width:100%;height:100%;background:linear-gradient(135deg,#2D5A5A 0%,#1E3E3E 100%);display:flex;align-items:flex-end;padding:40px;">
+    <div>
+      <span class="section-label" style="color:rgba(255,255,255,0.5);">[Perfumes]</span>
+      <h1 class="plp-hero-title" style="color:#fff;">Our Collection</h1>
+    </div>
+  </div>
+</div>
+
+<!-- Breadcrumb -->
+<nav class="breadcrumb">
+  <a href="{% url 'store' %}">Home</a>
+  <span class="breadcrumb-sep">›</span>
+  <span>Perfumes</span>
+</nav>
+
+<!-- Filter Panel -->
+<form method="GET" action="{% url 'product_list' %}">
+  <div class="plp-main" style="padding-bottom:0;">
+    <div class="plp-toolbar">
+      <button type="button" class="plp-filter-toggle" id="filterToggleBtn" onclick="toggleFilterPanel()">
+        <i class="ph ph-sliders-horizontal" style="font-size:18px;"></i>
+        FILTERS
+      </button>
+      <span class="plp-count">{{ products|length }} Product{% if products|length != 1 %}s{% endif %}</span>
+      <div class="plp-sort">
+        <select name="sort" onchange="this.form.submit()" id="sortSelect">
+          <option value="" {% if not selected_sort %}selected{% endif %}>Sort By</option>
+          <option value="price_asc" {% if selected_sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+          <option value="price_desc" {% if selected_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+          <option value="name" {% if selected_sort == 'name' %}selected{% endif %}>Name A-Z</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-panel {% if selected_gender or selected_scent or selected_price_max %}open{% endif %}" id="filterPanel">
+    <div class="filter-grid">
+      <!-- Gender Filter -->
+      <div class="filter-group">
+        <h4>For</h4>
+        <div class="filter-options">
+          <a href="{% url 'product_list' %}{% if selected_sort %}?sort={{ selected_sort }}{% endif %}"
+             class="filter-btn {% if not selected_gender %}active{% endif %}">All</a>
+          <a href="?gender=M{% if selected_sort %}&sort={{ selected_sort }}{% endif %}{% if selected_scent %}&scent={{ selected_scent }}{% endif %}"
+             class="filter-btn {% if selected_gender == 'M' %}active{% endif %}">Men</a>
+          <a href="?gender=W{% if selected_sort %}&sort={{ selected_sort }}{% endif %}{% if selected_scent %}&scent={{ selected_scent }}{% endif %}"
+             class="filter-btn {% if selected_gender == 'W' %}active{% endif %}">Women</a>
+          <a href="?gender=U{% if selected_sort %}&sort={{ selected_sort }}{% endif %}{% if selected_scent %}&scent={{ selected_scent }}{% endif %}"
+             class="filter-btn {% if selected_gender == 'U' %}active{% endif %}">Unisex</a>
+        </div>
+      </div>
+
+      <!-- Scent Filter -->
+      <div class="filter-group">
+        <h4>Scent Profile</h4>
+        <div class="filter-options">
+          <a href="{% url 'product_list' %}{% if selected_gender %}?gender={{ selected_gender }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}"
+             class="filter-btn {% if not selected_scent %}active{% endif %}">All</a>
+          {% for scent_val, scent_label in scent_choices|default:"" %}
+            <a href="?scent={{ scent_val }}{% if selected_gender %}&gender={{ selected_gender }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}"
+               class="filter-btn {% if selected_scent == scent_val %}active{% endif %}">{{ scent_label }}</a>
+          {% empty %}
+            {% for scent_val, scent_label in "floral,Floral|woody,Woody|oriental,Oriental|fresh,Fresh|citrus,Citrus|musky,Musky|aquatic,Aquatic"|make_list %}{% endfor %}
+            <a href="?scent=floral{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'floral' %}active{% endif %}">Floral</a>
+            <a href="?scent=woody{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'woody' %}active{% endif %}">Woody</a>
+            <a href="?scent=oriental{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'oriental' %}active{% endif %}">Oriental</a>
+            <a href="?scent=fresh{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'fresh' %}active{% endif %}">Fresh</a>
+            <a href="?scent=citrus{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'citrus' %}active{% endif %}">Citrus</a>
+            <a href="?scent=aquatic{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'aquatic' %}active{% endif %}">Aquatic</a>
+            <a href="?scent=musky{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'musky' %}active{% endif %}">Musky</a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Price Filter -->
+      <div class="filter-group">
+        <h4>Max Price (AED)</h4>
+        <div class="filter-options">
+          <a href="?price_max=100{% if selected_gender %}&gender={{ selected_gender }}{% endif %}{% if selected_scent %}&scent={{ selected_scent }}{% endif %}"
+             class="filter-btn {% if selected_price_max == '100' %}active{% endif %}">Under 100</a>
+          <a href="?price_max=250{% if selected_gender %}&gender={{ selected_gender }}{% endif %}{% if selected_scent %}&scent={{ selected_scent }}{% endif %}"
+             class="filter-btn {% if selected_price_max == '250' %}active{% endif %}">Under 250</a>
+          <a href="?price_max=500{% if selected_gender %}&gender={{ selected_gender }}{% endif %}{% if selected_scent %}&scent={{ selected_scent }}{% endif %}"
+             class="filter-btn {% if selected_price_max == '500' %}active{% endif %}">Under 500</a>
+          <a href="{% url 'product_list' %}{% if selected_gender %}?gender={{ selected_gender }}{% endif %}{% if selected_scent %}&scent={{ selected_scent }}{% endif %}"
+             class="filter-btn {% if not selected_price_max %}active{% endif %}">All Prices</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- Product Grid -->
+<div class="plp-main" style="padding-top:32px;">
+  {% if products %}
+  <div class="products-grid">
+    {% for product in products %}
+    <article class="product-card" id="plp-product-{{ product.pk }}">
+      <a href="{% url 'product_detail' product.pk %}">
+        <div class="product-card-image">
+          {% if product.imageURL %}
+            <img src="{{ product.imageURL }}" alt="{{ product.name }}" loading="lazy" />
+          {% else %}
+            <div class="img-placeholder" style="height:340px;">
+              <i class="ph ph-package" style="font-size:48px;opacity:0.3;"></i>
+            </div>
+          {% endif %}
+          {% if product.is_featured %}
+            <span class="product-card-badge">Featured</span>
+          {% endif %}
+          <div class="product-card-overlay">
+            <span style="color:#fff;font-size:11px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.5);padding-bottom:3px;">Quick View</span>
+          </div>
+        </div>
+      </a>
+      <button class="product-wishlist-btn" id="plp-wish-{{ product.pk }}" aria-label="Add to wishlist">
+        <i class="ph ph-heart"></i>
+      </button>
+      <div class="product-card-info">
+        <span class="product-category-tag">[PERFUMES]</span>
+        <h3 class="product-name"><a href="{% url 'product_detail' product.pk %}" style="color:inherit;">{{ product.name }}</a></h3>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+          <p class="product-price">AED {{ product.price|floatformat:0 }}</p>
+          <button
+            class="btn-primary update-cart"
+            data-product="{{ product.pk }}"
+            data-action="add"
+            id="add-cart-{{ product.pk }}"
+            style="padding:8px 16px;font-size:11px;letter-spacing:1.5px;"
+          >+ Add</button>
+        </div>
+        <span class="product-size-tag">{{ product.size_ml }}ml · {{ product.get_gender_display }}</span>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:80px 20px;color:var(--text-muted);">
+    <i class="ph ph-funnel-x" style="font-size:48px;margin-bottom:16px;display:block;"></i>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:28px;margin-bottom:12px;">No products found</h3>
+    <p>Try adjusting your filters to find what you're looking for.</p>
+    <a href="{% url 'product_list' %}" class="btn-outline" style="margin-top:24px;display:inline-flex;">Clear Filters</a>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleFilterPanel() {
+  var panel = document.getElementById('filterPanel');
+  panel.classList.toggle('open');
+}
+</script>
+{% endblock %}

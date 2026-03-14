@@ -1,0 +1,53 @@
+{% extends 'store/main.html' %}
+{% block title %}Journal — Saleel Parfums{% endblock %}
+
+{% block content %}
+
+<!-- Blog Hero -->
+<div class="blog-hero">
+  <p class="blog-hero-label">[Stories &amp; Blog]</p>
+  <h1 class="blog-hero-title font-serif">The Art of Scent<br>&amp; Storytelling</h1>
+</div>
+
+<!-- Blog Grid -->
+<div class="blog-grid">
+  {% if blogs %}
+    {% for blog in blogs %}
+    <article class="blog-card" id="blog-card-{{ blog.pk }}">
+      <a href="{% url 'blog_detail' blog.slug %}">
+        <div class="blog-card-image">
+          {% if blog.imageURL %}
+            <img src="{{ blog.imageURL }}" alt="{{ blog.title }}" loading="lazy" />
+          {% else %}
+            <div class="img-placeholder" style="height:200px;">
+              <i class="ph ph-article" style="font-size:40px;opacity:0.3;"></i>
+            </div>
+          {% endif %}
+        </div>
+      </a>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span>{{ blog.published_at|date:"M d, Y" }}</span>
+          <div class="dot"></div>
+          <span>{{ blog.reading_time }} min read</span>
+          <div class="dot"></div>
+          <span>{{ blog.author }}</span>
+        </div>
+        <h2 class="blog-card-title font-serif">
+          <a href="{% url 'blog_detail' blog.slug %}" style="color:inherit;">{{ blog.title }}</a>
+        </h2>
+        <p class="blog-card-excerpt">{{ blog.excerpt|default:blog.content|truncatewords:22 }}</p>
+        <a href="{% url 'blog_detail' blog.slug %}" class="blog-card-link">Read More →</a>
+      </div>
+    </article>
+    {% endfor %}
+  {% else %}
+    <div style="grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--text-muted);">
+      <i class="ph ph-article" style="font-size:48px;margin-bottom:16px;display:block;"></i>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:28px;margin-bottom:12px;">No articles yet</h3>
+      <p>Our journal is coming soon. Check back for fragrance stories and inspiration.</p>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

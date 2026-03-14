@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Saleel Parfums — Luxury Fragrances{% endblock %}</title>
+  <meta name="description" content="{% block meta_desc %}Discover Saleel Parfums — a luxury perfume brand established in 2006, offering premium fragrances crafted with the finest ingredients.{% endblock %}" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Icons (Phosphor Icons CDN) -->
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"></script>
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+
+  {% block extra_css %}{% endblock %}
+
+  <!-- CSRF & Cart cookie setup -->
+  <script>
+    var user = '{{ request.user }}';
+    var isAuthenticated = "{{ request.user.is_authenticated }}" === "True";
+
+    function getToken(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+    var csrftoken = getToken('csrftoken');
+
+    function getCookie(name) {
+      var cookieArr = document.cookie.split(';');
+      for (var i = 0; i < cookieArr.length; i++) {
+        var cookiePair = cookieArr[i].split('=');
+        if (name == cookiePair[0].trim()) {
+          return decodeURIComponent(cookiePair[1]);
+        }
+      }
+      return null;
+    }
+
+    var cart = JSON.parse(getCookie('cart'));
+    if (cart == undefined) {
+      cart = {};
+      document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/';
+    }
+  </script>
+</head>
+<body>
+
+<!-- =========================================
+     FLASH MESSAGES
+  ========================================= -->
+{% if messages %}
+<div class="messages-container" id="messagesContainer">
+  {% for message in messages %}
+  <div class="alert alert-{{ message.tags }}">
+    {% if message.tags == 'success' %}✓{% elif message.tags == 'error' %}✕{% else %}ℹ{% endif %}
+    {{ message }}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- =========================================
+     FULLSCREEN NAV DRAWER
+  ========================================= -->
+<div class="nav-drawer" id="navDrawer">
+  <button class="nav-drawer-close" id="navDrawerClose" aria-label="Close menu">✕</button>
+  <div class="nav-drawer-inner">
+    <nav>
+      <ul>
+        <li><a href="{% url 'store' %}" id="nav-home">Home</a></li>
+        <li><a href="{% url 'product_list' %}" id="nav-products">Perfumes</a></li>
+        <li><a href="{% url 'about' %}" id="nav-about">About Us</a></li>
+        <li><a href="{% url 'blog_list' %}" id="nav-blog">Journal</a></li>
+        <li><a href="{% url 'contact' %}" id="nav-contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="nav-drawer-footer">
+      {% if request.user.is_authenticated %}
+        <a href="{% url 'logout' %}">Sign Out</a>
+      {% else %}
+        <a href="{% url 'login' %}">Sign In / Register</a>
+      {% endif %}
+      <a href="{% url 'terms' %}">Terms & Conditions</a>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================
+     SITE HEADER
+  ========================================= -->
+<header class="site-header" id="siteHeader">
+  <div class="header-left">
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <span class="menu-label">MENU</span>
+  </div>
+
+  <a href="{% url 'store' %}" class="header-logo" id="headerLogo">
+    <img src="{% static 'images/logo.png' %}" alt="Saleel Parfums" style="height: 48px; width: auto;">
+  </a>
+
+  <div class="header-right">
+    <a href="{% url 'product_list' %}?sort=" class="header-icon-btn" aria-label="Search" id="searchBtn">
+      <i class="ph ph-magnifying-glass" style="font-size:22px;"></i>
+    </a>
+    {% if request.user.is_authenticated %}
+    <a href="{% url 'logout' %}" class="header-icon-btn" id="userBtn" title="Sign Out">
+      <i class="ph ph-user-circle" style="font-size:24px;"></i>
+    </a>
+    {% else %}
+    <a href="{% url 'login' %}" class="header-icon-btn" id="userBtn" title="Sign In">
+      <i class="ph ph-user" style="font-size:22px;"></i>
+    </a>
+    {% endif %}
+    <a href="{% url 'cart' %}" class="header-icon-btn" aria-label="Cart" id="cartBtn">
+      <i class="ph ph-shopping-bag" style="font-size:22px;"></i>
+      <span class="cart-badge" id="cartCount">{{ cartItems }}</span>
+    </a>
+  </div>
+</header>
+
+<!-- =========================================
+     PAGE CONTENT
+  ========================================= -->
+<main class="page-wrapper">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- =========================================
+     SITE FOOTER
+  ========================================= -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="logo-text font-serif">Saleel</span>
+      <span class="logo-sub">Parfums</span>
+      <p>Crafting luxury fragrances since 2006, blending tradition with modern elegance for discerning clients across the UAE and beyond.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="{% url 'product_list' %}">All Perfumes</a></li>
+        <li><a href="{% url 'product_list' %}?gender=M">Men's</a></li>
+        <li><a href="{% url 'product_list' %}?gender=W">Women's</a></li>
+        <li><a href="{% url 'product_list' %}?gender=U">Unisex</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="{% url 'about' %}">About Us</a></li>
+        <li><a href="{% url 'blog_list' %}">Journal</a></li>
+        <li><a href="{% url 'contact' %}">Contact</a></li>
+        <li><a href="{% url 'terms' %}">Terms & Conditions</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="#">Al Hudaiba Awards Bldg, Dubai</a></li>
+        <li><a href="mailto:info@saleelparfums.com">info@saleelparfums.com</a></li>
+        <li><a href="tel:+97142345678">+971 4 234 5678</a></li>
+        <li><a href="#">Sun – Thu: 9AM – 8PM</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Saleel Parfums. All rights reserved.</span>
+    <div class="footer-social">
+      <a href="#" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
+      <a href="#" aria-label="Facebook"><i class="ph ph-facebook-logo"></i></a>
+      <a href="#" aria-label="Twitter"><i class="ph ph-twitter-logo"></i></a>
+    </div>
+  </div>
+</footer>
+
+<!-- =========================================
+     MAIN JS
+  ========================================= -->
+<script src="{% static 'js/cart.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

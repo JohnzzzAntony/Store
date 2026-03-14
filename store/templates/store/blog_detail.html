@@ -1,0 +1,88 @@
+{% extends 'store/main.html' %}
+{% block title %}{{ blog.title }} — Saleel Parfums{% endblock %}
+{% block meta_desc %}{{ blog.excerpt|default:blog.content|truncatewords:25 }}{% endblock %}
+
+{% block content %}
+
+<!-- Blog Detail Hero -->
+<div class="blog-detail-hero">
+  {% if blog.imageURL %}
+    <img src="{{ blog.imageURL }}" alt="{{ blog.title }}" />
+  {% else %}
+    <div style="width:100%;height:100%;background:linear-gradient(135deg,#2D5A5A,#1E3E3E);"></div>
+  {% endif %}
+  <div class="blog-detail-hero-overlay">
+    <div class="blog-detail-hero-content">
+      <div class="blog-card-meta" style="color:rgba(255,255,255,0.6);margin-bottom:12px;">
+        <a href="{% url 'blog_list' %}" style="color:rgba(255,255,255,0.6);">Journal</a>
+        <div class="dot"></div>
+        <span>{{ blog.published_at|date:"M d, Y" }}</span>
+        <div class="dot"></div>
+        <span>{{ blog.reading_time }} min read</span>
+      </div>
+      <h1 class="font-serif" style="font-size:48px;font-weight:300;color:#fff;line-height:1.1;max-width:800px;">{{ blog.title }}</h1>
+      <p style="margin-top:16px;color:rgba(255,255,255,0.7);font-size:13px;letter-spacing:1px;">By {{ blog.author }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Article Body -->
+<article class="blog-detail-body">
+  {% if blog.excerpt %}
+  <p style="font-size:18px;font-family:'Cormorant Garamond',serif;color:var(--text-dark);line-height:1.7;margin-bottom:32px;font-weight:400;border-left:3px solid var(--teal);padding-left:24px;">
+    {{ blog.excerpt }}
+  </p>
+  {% endif %}
+
+  {{ blog.content|linebreaks }}
+
+  <!-- Share & Navigation -->
+  <div style="margin-top:60px;padding-top:32px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+    <a href="{% url 'blog_list' %}" class="btn-outline">
+      ← Back to Journal
+    </a>
+    <div style="display:flex;gap:12px;align-items:center;">
+      <span style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);">Share</span>
+      <a href="#" aria-label="Share on Instagram" style="color:var(--teal);font-size:20px;"><i class="ph ph-instagram-logo"></i></a>
+      <a href="#" aria-label="Share on Twitter" style="color:var(--teal);font-size:20px;"><i class="ph ph-twitter-logo"></i></a>
+      <a href="#" aria-label="Share on Facebook" style="color:var(--teal);font-size:20px;"><i class="ph ph-facebook-logo"></i></a>
+    </div>
+  </div>
+</article>
+
+<!-- Related Articles -->
+{% if related %}
+<section style="padding:0 40px 60px;background:var(--bg-light);">
+  <h2 class="font-serif" style="font-size:32px;font-weight:400;margin-bottom:32px;padding-top:40px;">More from the Journal</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;">
+    {% for rp in related %}
+    <article class="blog-card" id="related-blog-{{ rp.pk }}">
+      <a href="{% url 'blog_detail' rp.slug %}">
+        <div class="blog-card-image" style="height:160px;">
+          {% if rp.imageURL %}
+            <img src="{{ rp.imageURL }}" alt="{{ rp.title }}" loading="lazy" />
+          {% else %}
+            <div class="img-placeholder" style="height:160px;">
+              <i class="ph ph-article" style="font-size:32px;opacity:0.3;"></i>
+            </div>
+          {% endif %}
+        </div>
+      </a>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span>{{ rp.published_at|date:"M d, Y" }}</span>
+          <div class="dot"></div>
+          <span>{{ rp.reading_time }} min</span>
+        </div>
+        <h3 class="blog-card-title font-serif" style="font-size:20px;">
+          <a href="{% url 'blog_detail' rp.slug %}" style="color:inherit;">{{ rp.title }}</a>
+        </h3>
+        <a href="{% url 'blog_detail' rp.slug %}" class="blog-card-link">Read →</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

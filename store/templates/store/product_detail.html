@@ -1,0 +1,192 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} — Saleel Parfums{% endblock %}
+{% block meta_desc %}{{ product.description|truncatewords:25 }}{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<nav class="breadcrumb">
+  <a href="{% url 'store' %}">Home</a>
+  <span class="breadcrumb-sep">›</span>
+  <a href="{% url 'product_list' %}">Perfumes</a>
+  <span class="breadcrumb-sep">›</span>
+  <span>{{ product.name }}</span>
+</nav>
+
+<!-- Main PDP Layout -->
+<div class="pdp-layout">
+
+  <!-- Gallery -->
+  <div class="pdp-gallery" id="pdpGallery">
+    {% if product.imageURL %}
+      <img src="{{ product.imageURL }}" alt="{{ product.name }}" class="pdp-gallery-main" id="pdpMainImg" />
+    {% else %}
+      <div class="img-placeholder" style="height:100%;min-height:600px;">
+        <i class="ph ph-package" style="font-size:80px;opacity:0.2;"></i>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Product Info -->
+  <div class="pdp-info">
+    <p class="pdp-category">[{{ product.get_scent_profile_display|upper }} · {{ product.get_gender_display|upper }}]</p>
+    <h1 class="pdp-name font-serif">{{ product.name }}</h1>
+    <p class="pdp-price">AED {{ product.price|floatformat:0 }}</p>
+
+    <div class="pdp-divider"></div>
+
+    {% if product.description %}
+    <p class="pdp-description">{{ product.description }}</p>
+    {% endif %}
+
+    <!-- Size -->
+    <p class="pdp-size-label">Size</p>
+    <div class="pdp-sizes" id="pdpSizes">
+      <button class="pdp-size-btn active" type="button" id="size-{{ product.size_ml }}">{{ product.size_ml }}ml</button>
+    </div>
+
+    <!-- Actions -->
+    <div class="pdp-actions">
+      <div class="pdp-qty">
+        <button class="pdp-qty-btn" id="pdpQtyMinus" onclick="changeQty(-1)" aria-label="Decrease">−</button>
+        <input class="pdp-qty-val" id="pdpQtyVal" type="text" value="1" readonly aria-label="Quantity" />
+        <button class="pdp-qty-btn" id="pdpQtyPlus" onclick="changeQty(1)" aria-label="Increase">+</button>
+      </div>
+
+      <button
+        class="btn-primary update-cart"
+        data-product="{{ product.pk }}"
+        data-action="add"
+        id="pdp-add-cart"
+        style="flex:1;"
+      >
+        <i class="ph ph-shopping-bag"></i> ADD TO CART
+      </button>
+
+      <button
+        class="btn-outline"
+        id="pdpWishlistBtn"
+        aria-label="Add to wishlist"
+        style="width:52px;padding:0;display:flex;align-items:center;justify-content:center;"
+      >
+        <i class="ph ph-heart" style="font-size:20px;"></i>
+      </button>
+    </div>
+
+    <!-- BNPL Teaser -->
+    <div class="bnpl-info">
+      <div class="bnpl-item tabby">
+        <img src="https://saleelparfums.com/assets/images/payment-icons/tabby.svg" alt="Tabby" style="height:12px;">
+        <span>Split into 4 interest-free payments of <strong>AED <span id="pdpTabbyAmount">0</span></strong></span>
+      </div>
+      <div class="bnpl-item tamara">
+        <img src="https://saleelparfums.com/assets/images/payment-icons/tamara.svg" alt="Tamara" style="height:12px;">
+        <span>Split into 3 or 4 payments with Tamara</span>
+      </div>
+    </div>
+
+    <!-- Meta Info -->
+    <div class="pdp-meta">
+      <div class="pdp-meta-row">
+        <span class="pdp-meta-label">Category</span>
+        <span>{{ product.category.name|default:"Perfumes" }}</span>
+      </div>
+      <div class="pdp-meta-row">
+        <span class="pdp-meta-label">Scent</span>
+        <span>{{ product.get_scent_profile_display }}</span>
+      </div>
+      <div class="pdp-meta-row">
+        <span class="pdp-meta-label">For</span>
+        <span>{{ product.get_gender_display }}</span>
+      </div>
+      <div class="pdp-meta-row">
+        <span class="pdp-meta-label">Volume</span>
+        <span>{{ product.size_ml }} ml</span>
+      </div>
+      {% if product.in_stock %}
+      <div class="pdp-meta-row">
+        <span class="pdp-meta-label">Status</span>
+        <span style="color:#27ae60;font-weight:500;">✓ In Stock</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Related Products -->
+{% if related_products %}
+<section class="section" style="background:var(--bg-white);">
+  <div class="section-header">
+    <div>
+      <span class="section-label">You May Also Like</span>
+      <h2 class="section-title font-serif">Related Fragrances</h2>
+      <div class="section-divider"></div>
+    </div>
+  </div>
+  <div class="products-grid">
+    {% for rp in related_products %}
+    <article class="product-card" id="related-product-{{ rp.pk }}">
+      <a href="{% url 'product_detail' rp.pk %}">
+        <div class="product-card-image">
+          {% if rp.imageURL %}
+            <img src="{{ rp.imageURL }}" alt="{{ rp.name }}" loading="lazy" />
+          {% else %}
+            <div class="img-placeholder" style="height:300px;">
+              <i class="ph ph-package" style="font-size:48px;opacity:0.3;"></i>
+            </div>
+          {% endif %}
+          <div class="product-card-overlay">
+            <span style="color:#fff;font-size:11px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.5);padding-bottom:3px;">View Details</span>
+          </div>
+        </div>
+      </a>
+      <div class="product-card-info">
+        <span class="product-category-tag">[PERFUMES]</span>
+        <h3 class="product-name"><a href="{% url 'product_detail' rp.pk %}" style="color:inherit;">{{ rp.name }}</a></h3>
+        <p class="product-price">AED {{ rp.price|floatformat:0 }}</p>
+        <span class="product-size-tag">{{ rp.size_ml }}ml</span>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+var qty = 1;
+
+function changeQty(delta) {
+  qty = Math.max(1, qty + delta);
+  document.getElementById('pdpQtyVal').value = qty;
+}
+
+// Wishlist toggle
+document.getElementById('pdpWishlistBtn').addEventListener('click', function() {
+  var icon = this.querySelector('i');
+  if (icon.classList.contains('ph-heart')) {
+    icon.classList.remove('ph-heart');
+    icon.classList.add('ph-heart-fill');
+    this.style.color = '#e74c3c';
+    this.style.borderColor = '#e74c3c';
+  } else {
+    icon.classList.remove('ph-heart-fill');
+    icon.classList.add('ph-heart');
+    this.style.color = '';
+    this.style.borderColor = '';
+  }
+});
+
+// BNPL Calculation
+document.addEventListener('DOMContentLoaded', function() {
+  var price = Number("{{ product.price|floatformat:0 }}");
+  if (document.getElementById('pdpTabbyAmount')) {
+    document.getElementById('pdpTabbyAmount').textContent = Math.round(price / 4);
+  }
+});
+</script>
+{% endblock %}

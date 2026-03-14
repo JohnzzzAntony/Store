@@ -1,0 +1,264 @@
+{% extends 'store/main.html' %}
+{% block title %}Billing Address — Saleel Parfums{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="checkout-header">
+  <p class="section-label">[Billing Information]</p>
+  <h1 class="checkout-title font-serif">Billing Address</h1>
+</div>
+
+<div class="checkout-layout">
+
+  <!-- Billing Form -->
+  <div class="billing-form">
+    <h2 class="billing-section-title">Shipping Details</h2>
+
+    <!-- Same as billing toggle -->
+    <div style="margin-bottom:24px;">
+      <div class="radio-option">
+        <input type="radio" name="billingType" id="sameAddress" value="same" checked />
+        <label for="sameAddress">Same as shipping address</label>
+      </div>
+      <div class="radio-option">
+        <input type="radio" name="billingType" id="diffAddress" value="different" />
+        <label for="diffAddress">Use a different billing address</label>
+      </div>
+    </div>
+
+    <form id="checkoutForm">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label" for="billingFullName">Full Name</label>
+        <input type="text" class="form-control" id="billingFullName" name="full_name" placeholder="Your name" required />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="billingPhone">Phone Number</label>
+          <input type="tel" class="form-control" id="billingPhone" name="phone" placeholder="Enter your number" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="billingEmail">Email</label>
+          <input type="email" class="form-control" id="billingEmail" name="email" placeholder="Enter your email" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="billingAddress">Street Address</label>
+        <input type="text" class="form-control" id="billingAddress" name="address" placeholder="Apartment, street, area…" required />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="billingCity">City</label>
+          <input type="text" class="form-control" id="billingCity" name="city" placeholder="Dubai" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="billingState">State / Emirates</label>
+          <input type="text" class="form-control" id="billingState" name="state" placeholder="Dubai" required />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="billingZip">ZIP / Postal Code</label>
+          <input type="text" class="form-control" id="billingZip" name="zipcode" placeholder="00000" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="billingCountry">Country</label>
+          <select class="form-control" id="billingCountry" name="country">
+            <option value="UAE" selected>United Arab Emirates</option>
+            <option value="SA">Saudi Arabia</option>
+            <option value="KW">Kuwait</option>
+            <option value="QA">Qatar</option>
+            <option value="BH">Bahrain</option>
+            <option value="OM">Oman</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <h2 class="billing-section-title" style="margin-top:32px;">Payment Method</h2>
+
+      <div class="payment-options">
+        <div class="payment-method-card">
+          <input type="radio" name="paymentMethod" id="payCard" value="card" checked />
+          <label for="payCard">
+            <div class="payment-method-info">
+              <span class="payment-method-name">Credit / Debit Card</span>
+              <div class="payment-logos">
+                <i class="ph ph-credit-card"></i>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div class="payment-method-card tabby">
+          <input type="radio" name="paymentMethod" id="payTabby" value="tabby" />
+          <label for="payTabby">
+            <div class="payment-method-info">
+              <span class="payment-method-name">Tabby</span>
+              <span class="payment-method-hint">4 interest-free payments of AED <span id="tabbyInstallment">0</span></span>
+              <div class="payment-logos">
+                <img src="https://saleelparfums.com/assets/images/payment-icons/tabby.svg" alt="Tabby" style="height:12px;">
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div class="payment-method-card tamara">
+          <input type="radio" name="paymentMethod" id="payTamara" value="tamara" />
+          <label for="payTamara">
+            <div class="payment-method-info">
+              <span class="payment-method-name">Tamara</span>
+              <span class="payment-method-hint">Split into 3 or 4 payments</span>
+              <div class="payment-logos">
+                <img src="https://saleelparfums.com/assets/images/payment-icons/tamara.svg" alt="Tamara" style="height:12px;">
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div class="payment-method-card">
+          <input type="radio" name="paymentMethod" id="payCOD" value="cod" />
+          <label for="payCOD">
+            <div class="payment-method-info">
+              <span class="payment-method-name">Cash on Delivery</span>
+              <div class="payment-logos">
+                <i class="ph ph-money"></i>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Order Note -->
+      <div class="form-group">
+        <label class="form-label" for="orderNote">Order Notes <span style="font-weight:300;text-transform:none;font-size:11px;">(optional)</span></label>
+        <textarea class="form-control" id="orderNote" placeholder="Any special instructions for your order…" rows="3"></textarea>
+      </div>
+
+      <button type="button" class="btn-primary btn-full" id="placeOrderBtn" onclick="submitOrder()">
+        PLACE ORDER
+      </button>
+    </form>
+  </div>
+
+  <!-- Order Summary Sidebar -->
+  <div class="checkout-summary">
+    <h2 class="cart-summary-title">Your Order</h2>
+
+    {% for item in items %}
+    <div class="checkout-item-row" id="checkout-item-{{ item.id }}">
+      {% if item.product.imageURL %}
+        <img src="{{ item.product.imageURL }}" alt="{{ item.product.name }}" class="checkout-item-img" />
+      {% else %}
+        <div class="checkout-item-img img-placeholder">
+          <i class="ph ph-package" style="font-size:24px;opacity:0.3;"></i>
+        </div>
+      {% endif %}
+      <div class="checkout-item-info">
+        <p class="checkout-item-name">{{ item.product.name }}</p>
+        <p class="checkout-item-size">{{ item.product.size_ml }}ML × {{ item.quantity }}</p>
+      </div>
+      <p class="checkout-item-price">AED {% if item.get_total %}{{ item.get_total|floatformat:0 }}{% else %}{{ item.product.price|floatformat:0 }}{% endif %}</p>
+    </div>
+    {% empty %}
+    <p style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px 0;">No items in cart</p>
+    {% endfor %}
+
+    <div style="margin-top:16px;">
+      <div class="cart-summary-row">
+        <span>Subtotal</span>
+        <span>AED {{ order.get_cart_total|floatformat:0 }}</span>
+      </div>
+      <div class="cart-summary-row">
+        <span>Shipping</span>
+        <span style="color:#27ae60;font-weight:500;">
+          {% if order.shipping %}To be calculated{% else %}Free{% endif %}
+        </span>
+      </div>
+      <div class="cart-summary-total">
+        <span>Total</span>
+        <span>AED <span id="orderTotal">{{ order.get_cart_total|floatformat:0 }}</span></span>
+      </div>
+    </div>
+
+    <a href="{% url 'cart' %}" style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);display:block;text-align:center;margin-top:16px;">
+      ← Edit Cart
+    </a>
+  </div>
+
+</div><!-- end checkout-layout -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function submitOrder() {
+  var form = document.getElementById('checkoutForm');
+  var fullName = document.getElementById('billingFullName').value;
+  var phone    = document.getElementById('billingPhone').value;
+  var email    = document.getElementById('billingEmail').value;
+  var address  = document.getElementById('billingAddress').value;
+  var city     = document.getElementById('billingCity').value;
+  var state    = document.getElementById('billingState').value;
+  var zipcode  = document.getElementById('billingZip').value;
+  var total    = document.getElementById('orderTotal').textContent;
+  var payment  = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+  if (!fullName || !phone || !email || !address || !city || !state || !zipcode) {
+    alert('Please fill in all required fields.');
+    return;
+  }
+
+  var data = {
+    'form': {
+      'name': fullName,
+      'email': email,
+      'total': total,
+      'payment_method': payment,
+    },
+    'shipping': {
+      'full_name': fullName,
+      'phone': phone,
+      'address': address,
+      'city': city,
+      'state': state,
+      'zipcode': zipcode,
+    }
+  };
+
+  document.getElementById('placeOrderBtn').textContent = 'Processing…';
+  document.getElementById('placeOrderBtn').disabled = true;
+
+  fetch('/process_order/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrftoken,
+    },
+    body: JSON.stringify(data)
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    window.location.href = '{% url "store" %}?order_success=true';
+  })
+  .catch(function(err) {
+    alert('Something went wrong. Please try again.');
+    document.getElementById('placeOrderBtn').textContent = 'PLACE ORDER';
+    document.getElementById('placeOrderBtn').disabled = false;
+  });
+}
+
+// Calculate installments for preview
+document.addEventListener('DOMContentLoaded', function() {
+  var total = parseFloat(document.getElementById('orderTotal').textContent);
+  if (document.getElementById('tabbyInstallment')) {
+    document.getElementById('tabbyInstallment').textContent = (total / 4).toFixed(0);
+  }
+});
+</script>
+{% endblock %}

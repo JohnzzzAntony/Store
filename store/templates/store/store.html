@@ -1,0 +1,292 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block title %}Saleel Parfums — Luxury Fragrances from Dubai{% endblock %}
+
+{% block content %}
+
+<!-- =========================================
+     HERO SECTION — Carousel
+  ========================================= -->
+<section class="hero-section" id="heroSection">
+  <div class="hero-carousel" id="heroCarousel">
+
+    <!-- Slide 1 -->
+    <div class="hero-slide active" id="slide-0">
+      {% if featured_products.0 and featured_products.0.imageURL %}
+        <img src="{{ featured_products.0.imageURL }}" alt="{{ featured_products.0.name }}" />
+      {% else %}
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#2D5A5A,#1a3535);display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:80px;color:rgba(255,255,255,0.15);">✦</span>
+        </div>
+      {% endif %}
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-content">
+        <p class="section-label" style="color:rgba(255,255,255,0.6);">New Collection</p>
+        <h1 class="hero-title font-serif">
+          {% if featured_products.0 %}{{ featured_products.0.name }}{% else %}Swim By The Beach{% endif %}
+        </h1>
+        <p class="hero-subtitle">
+          {% if featured_products.0 and featured_products.0.description %}
+            {{ featured_products.0.description|truncatewords:18 }}
+          {% else %}
+            A fresh aquatic fragrance that captures the essence of sun, sea and freedom.
+          {% endif %}
+        </p>
+        <a href="{% if featured_products.0 %}{% url 'product_detail' featured_products.0.pk %}{% else %}{% url 'product_list' %}{% endif %}" class="btn-primary">
+          Discover Now
+        </a>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="hero-slide" id="slide-1">
+      {% if featured_products.1 and featured_products.1.imageURL %}
+        <img src="{{ featured_products.1.imageURL }}" alt="{{ featured_products.1.name }}" />
+      {% else %}
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#1E3E3E,#0d2626);display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:80px;color:rgba(255,255,255,0.1);">⬡</span>
+        </div>
+      {% endif %}
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-content">
+        <p class="section-label" style="color:rgba(255,255,255,0.6);">Signature Scent</p>
+        <h1 class="hero-title font-serif">
+          {% if featured_products.1 %}{{ featured_products.1.name }}{% else %}Aqua Marine{% endif %}
+        </h1>
+        <p class="hero-subtitle">
+          {% if featured_products.1 and featured_products.1.description %}
+            {{ featured_products.1.description|truncatewords:18 }}
+          {% else %}
+            Deep oceanic notes with a heart of driftwood and white musk.
+          {% endif %}
+        </p>
+        <a href="{% if featured_products.1 %}{% url 'product_detail' featured_products.1.pk %}{% else %}{% url 'product_list' %}{% endif %}" class="btn-primary">
+          Explore
+        </a>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="hero-slide" id="slide-2">
+      {% if featured_products.2 and featured_products.2.imageURL %}
+        <img src="{{ featured_products.2.imageURL }}" alt="{{ featured_products.2.name }}" />
+      {% else %}
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#3a4a2a,#2a3a1a);display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:80px;color:rgba(255,255,255,0.1);">✧</span>
+        </div>
+      {% endif %}
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-content">
+        <p class="section-label" style="color:rgba(255,255,255,0.6);">Bestseller</p>
+        <h1 class="hero-title font-serif">
+          {% if featured_products.2 %}{{ featured_products.2.name }}{% else %}Solaris{% endif %}
+        </h1>
+        <p class="hero-subtitle">
+          {% if featured_products.2 and featured_products.2.description %}
+            {{ featured_products.2.description|truncatewords:18 }}
+          {% else %}
+            Warm amber and precious oud with a radiant solar accord.
+          {% endif %}
+        </p>
+        <a href="{% if featured_products.2 %}{% url 'product_detail' featured_products.2.pk %}{% else %}{% url 'product_list' %}{% endif %}" class="btn-primary">
+          Shop Now
+        </a>
+      </div>
+    </div>
+
+  </div><!-- end hero-carousel -->
+
+  <!-- Controls -->
+  <div class="hero-dots" id="heroDots">
+    <div class="hero-dot active" onclick="goToSlide(0)"></div>
+    <div class="hero-dot" onclick="goToSlide(1)"></div>
+    <div class="hero-dot" onclick="goToSlide(2)"></div>
+  </div>
+  <div class="hero-nav">
+    <button class="hero-nav-btn" id="heroNavPrev" onclick="changeSlide(-1)" aria-label="Previous">&#8249;</button>
+    <button class="hero-nav-btn" id="heroNavNext" onclick="changeSlide(1)" aria-label="Next">&#8250;</button>
+  </div>
+</section>
+
+
+<!-- =========================================
+     FEATURED PRODUCTS SECTION
+  ========================================= -->
+<section class="section" style="background:var(--bg-white);">
+  <div class="section-header">
+    <div>
+      <span class="section-label">Our Collection</span>
+      <h2 class="section-title font-serif">Featured Fragrances</h2>
+      <div class="section-divider"></div>
+    </div>
+    <a href="{% url 'product_list' %}" class="btn-outline">View All</a>
+  </div>
+
+  {% if all_products %}
+  <div class="products-grid">
+    {% for product in all_products %}
+    <article class="product-card" id="product-card-{{ product.pk }}">
+      <a href="{% url 'product_detail' product.pk %}">
+        <div class="product-card-image">
+          {% if product.imageURL %}
+            <img src="{{ product.imageURL }}" alt="{{ product.name }}" loading="lazy" />
+          {% else %}
+            <div class="img-placeholder" style="width:100%;height:100%;min-height:320px;">
+              <i class="ph ph-package" style="font-size:48px;color:var(--teal);opacity:0.4;"></i>
+            </div>
+          {% endif %}
+          {% if product.is_featured %}
+            <span class="product-card-badge">Featured</span>
+          {% endif %}
+          <div class="product-card-overlay">
+            <span style="color:#fff;font-size:12px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.6);padding-bottom:4px;">View Details</span>
+          </div>
+        </div>
+      </a>
+      <button class="product-wishlist-btn" id="wishlist-{{ product.pk }}" aria-label="Add to wishlist">
+        <i class="ph ph-heart"></i>
+      </button>
+      <div class="product-card-info">
+        <span class="product-category-tag">[PERFUMES]</span>
+        <h3 class="product-name">
+          <a href="{% url 'product_detail' product.pk %}" style="color:inherit;">{{ product.name }}</a>
+        </h3>
+        <p class="product-price">AED {{ product.price|floatformat:0 }}</p>
+        <span class="product-size-tag">{{ product.size_ml }}ml</span>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
+    <i class="ph ph-package" style="font-size:48px;margin-bottom:16px;display:block;"></i>
+    <p>No products available yet. Add products through the <a href="/admin/" style="color:var(--teal);">Admin Panel</a>.</p>
+  </div>
+  {% endif %}
+</section>
+
+
+<!-- =========================================
+     BRAND STORY BANNER
+  ========================================= -->
+<section style="background:var(--teal-dark);color:#fff;padding:80px 40px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+  <div>
+    <span class="section-label" style="color:rgba(255,255,255,0.5);">Our Story</span>
+    <h2 class="font-serif" style="font-size:48px;font-weight:300;line-height:1.1;margin-bottom:24px;">A Legacy of Craftsmanship and Elegance</h2>
+    <p style="color:rgba(255,255,255,0.7);line-height:1.9;font-size:14px;margin-bottom:32px;">
+      Established in 2006, Saleel Parfums has grown into a symbol of luxury, craftsmanship, and artistry. At Saleel Parfums, fragrance is more than a product — it is an expression of identity, culture, and timeless elegance.
+    </p>
+    <a href="{% url 'about' %}" class="btn-outline" style="border-color:rgba(255,255,255,0.4);color:#fff;">
+      Our Story
+    </a>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;">
+    <div style="background:rgba(255,255,255,0.06);padding:40px 24px;text-align:center;">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:rgba(255,255,255,0.9);">18+</p>
+      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:6px;">Years of Craft</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.06);padding:40px 24px;text-align:center;">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:rgba(255,255,255,0.9);">50+</p>
+      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:6px;">Fragrances</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);padding:40px 24px;text-align:center;">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:rgba(255,255,255,0.9);">UAE</p>
+      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:6px;">Based In Dubai</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);padding:40px 24px;text-align:center;">
+      <p style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:rgba(255,255,255,0.9);">★★★★★</p>
+      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:6px;">4.6 / 5 Reviews</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================================
+     JOURNAL / BLOG PREVIEW
+  ========================================= -->
+{% if latest_blogs %}
+<section class="section">
+  <div class="section-header">
+    <div>
+      <span class="section-label">Stories & Blog</span>
+      <h2 class="section-title font-serif">The Art of Scent</h2>
+      <div class="section-divider"></div>
+    </div>
+    <a href="{% url 'blog_list' %}" class="btn-outline">All Articles</a>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;">
+    {% for blog in latest_blogs %}
+    <article class="blog-card">
+      <a href="{% url 'blog_detail' blog.slug %}">
+        <div class="blog-card-image">
+          {% if blog.imageURL %}
+            <img src="{{ blog.imageURL }}" alt="{{ blog.title }}" loading="lazy" />
+          {% else %}
+            <div class="img-placeholder" style="height:200px;">
+              <i class="ph ph-article" style="font-size:40px;opacity:0.3;"></i>
+            </div>
+          {% endif %}
+        </div>
+      </a>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span>{{ blog.published_at|date:"M d, Y" }}</span>
+          <div class="dot"></div>
+          <span>{{ blog.reading_time }} min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="{% url 'blog_detail' blog.slug %}" style="color:inherit;">{{ blog.title }}</a></h3>
+        <p class="blog-card-excerpt">{{ blog.excerpt|truncatewords:20 }}</p>
+        <a href="{% url 'blog_detail' blog.slug %}" class="blog-card-link">Read More →</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Hero Carousel
+var currentSlide = 0;
+var totalSlides = 3;
+var autoplayTimer;
+
+function goToSlide(n) {
+  document.querySelectorAll('.hero-slide').forEach(function(s, i) {
+    s.classList.toggle('active', i === n);
+  });
+  document.querySelectorAll('.hero-dot').forEach(function(d, i) {
+    d.classList.toggle('active', i === n);
+  });
+  currentSlide = n;
+  resetAutoplay();
+}
+
+function changeSlide(dir) {
+  var next = (currentSlide + dir + totalSlides) % totalSlides;
+  goToSlide(next);
+}
+
+function resetAutoplay() {
+  clearInterval(autoplayTimer);
+  autoplayTimer = setInterval(function() { changeSlide(1); }, 5000);
+}
+
+// Start autoplay
+autoplayTimer = setInterval(function() { changeSlide(1); }, 5000);
+
+// Order Success check
+if (window.location.search.includes('order_success=true')) {
+  setTimeout(function() {
+    if (window.showToast) {
+       showToast('🎉 Order placed successfully! Check your email for details.');
+    } else {
+       alert('🎉 Order placed successfully! Thank you for shopping with Saleel Parfums.');
+    }
+  }, 500);
+}
+</script>
+{% endblock %}
