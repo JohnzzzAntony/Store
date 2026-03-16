@@ -1,7 +1,7 @@
 {% extends 'store/main.html' %}
 {% load static %}
 
-{% block title %}Saleel Parfums — Luxury Fragrances from Dubai{% endblock %}
+{% block title %}Ecom — Perfumes{% endblock %}
 
 {% block content %}
 
@@ -109,6 +109,49 @@
   </div>
 </section>
 
+<!-- =========================================
+     SHOP BY CATEGORIES SECTION
+  ========================================= -->
+<section class="category-section">
+  <div class="section-header" style="justify-content:center; text-align:center;">
+    <div>
+      <h2 class="section-title font-serif">Shop by Categories</h2>
+    </div>
+  </div>
+
+  <div class="category-grid">
+    <!-- Perfumes -->
+    <a href="{% url 'product_list' %}?category=perfumes" class="category-card">
+      <img src="{% static 'images/cat_perfume.png' %}" alt="Perfumes" loading="lazy">
+      <div class="category-card-overlay"></div>
+      <div class="category-card-content">
+        <h3>Perfumes</h3>
+        <span>Shop Now</span>
+      </div>
+    </a>
+
+    <!-- Body Mist -->
+    <a href="{% url 'product_list' %}?category=body-mist" class="category-card">
+      <img src="{% static 'images/cat_bodymist.png' %}" alt="Body Mist" loading="lazy">
+      <div class="category-card-overlay"></div>
+      <div class="category-card-content">
+        <h3>Body Mist</h3>
+        <span>Shop Now</span>
+      </div>
+    </a>
+
+    <!-- Room Spray -->
+    <a href="{% url 'product_list' %}?category=room-spray" class="category-card">
+      <img src="{% static 'images/cat_roomspray.png' %}" alt="Room Spray" loading="lazy">
+      <div class="category-card-overlay"></div>
+      <div class="category-card-content">
+        <h3>Room Spray</h3>
+        <span>Shop Now</span>
+      </div>
+    </a>
+  </div>
+</section>
+
 
 <!-- =========================================
      FEATURED PRODUCTS SECTION
@@ -175,7 +218,7 @@
     <span class="section-label" style="color:rgba(255,255,255,0.5);">Our Story</span>
     <h2 class="font-serif" style="font-size:48px;font-weight:300;line-height:1.1;margin-bottom:24px;">A Legacy of Craftsmanship and Elegance</h2>
     <p style="color:rgba(255,255,255,0.7);line-height:1.9;font-size:14px;margin-bottom:32px;">
-      Established in 2006, Saleel Parfums has grown into a symbol of luxury, craftsmanship, and artistry. At Saleel Parfums, fragrance is more than a product — it is an expression of identity, culture, and timeless elegance.
+      Established in 2006, Perfumes has grown into a symbol of luxury, craftsmanship, and artistry. At Perfumes, fragrance is more than a product — it is an expression of identity, culture, and timeless elegance.
     </p>
     <a href="{% url 'about' %}" class="btn-outline" style="border-color:rgba(255,255,255,0.4);color:#fff;">
       Our Story
@@ -284,7 +327,7 @@ if (window.location.search.includes('order_success=true')) {
     if (window.showToast) {
        showToast('🎉 Order placed successfully! Check your email for details.');
     } else {
-       alert('🎉 Order placed successfully! Thank you for shopping with Saleel Parfums.');
+       alert('🎉 Order placed successfully! Thank you for shopping with Perfumes.');
     }
   }, 500);
 }

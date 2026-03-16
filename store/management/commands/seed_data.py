@@ -1,5 +1,5 @@
 """
-Management command to seed the database with initial Saleel Parfums data.
+Management command to seed the database with initial Perfumes data.
 Run with: python manage.py seed_data
 """
 
@@ -9,10 +9,10 @@ from django.utils.text import slugify
 
 
 class Command(BaseCommand):
-    help = 'Seed the database with initial Saleel Parfums data'
+    help = 'Seed the database with initial Perfumes data'
 
     def handle(self, *args, **kwargs):
-        self.stdout.write('Seeding Saleel Parfums database...')
+        self.stdout.write('Seeding Perfumes database...')
 
         # Clear existing data (optional)
         # Category, Product, BlogPost — keep existing if any
@@ -157,8 +157,8 @@ Then, layer a lighter, fresher fragrance on top. Our Citrus Garden or Swim By Th
 
 The key to successful layering is contrast. Combine a heavy oriental with a light floral, or a musky base with a fresh aquatic top. Experiment freely — there are no rules in perfumery.
 
-At Saleel Parfums, our bottles are designed to encourage exploration. Visit our boutique and speak with our fragrance consultants to discover your perfect combination.''',
-                'author': 'Saleel Parfums',
+At Perfumes, our bottles are designed to encourage exploration. Visit our boutique and speak with our fragrance consultants to discover your perfect combination.''',
+                'author': 'Perfumes',
                 'reading_time': 5,
             },
             {
@@ -169,12 +169,12 @@ At Saleel Parfums, our bottles are designed to encourage exploration. Visit our 
 
 The oud tree (Aquilaria) produces this precious resin only when under stress, typically from a fungal infection. The infected heartwood slowly transforms into a dark, fragrant substance over decades — sometimes centuries. This rarity is what gives oud its extraordinary value. Pure oud oil can sell for more per gram than gold.
 
-At Saleel Parfums, we source our oud from sustainable agarwood plantations in Cambodia, Vietnam, and Indonesia. We work directly with farmers who practice ethical harvesting, ensuring the longevity of this precious resource.
+At Perfumes, we source our oud from sustainable agarwood plantations in Cambodia, Vietnam, and Indonesia. We work directly with farmers who practice ethical harvesting, ensuring the longevity of this precious resource.
 
 In our Oud Royale, you will discover oud in its most refined form — blended with our master perfumer's signature rose absolute and a whisper of saffron. The result is a fragrance of extraordinary depth, warmth and character.
 
 Oud is not just an ingredient. It is a journey through history, culture and craft.''',
-                'author': 'Saleel Parfums',
+                'author': 'Perfumes',
                 'reading_time': 6,
             },
             {
@@ -187,10 +187,10 @@ This is not mere sentiment. It is neuroscience.
 
 The olfactory nerve connects directly to the limbic system — the part of the brain responsible for emotional processing and long-term memory. Unlike all other senses, which first pass through the thalamus before reaching the limbic system, smell takes a direct route. This direct connection explains why scent triggers memories with such speed, vividness and emotional weight.
 
-At Saleel Parfums, we think deeply about the memories our fragrances might create. When you wear Swim By The Beach and close your eyes, where do you go? Perhaps to a summer holiday, to laughter on warm sand, to freedom.
+At Perfumes, we think deeply about the memories our fragrances might create. When you wear Swim By The Beach and close your eyes, where do you go? Perhaps to a summer holiday, to laughter on warm sand, to freedom.
 
-Choosing a fragrance is choosing what memories you want to make, and what emotions you want to carry with you through the day. Choose thoughtfully. Choose Saleel.''',
-                'author': 'Saleel Parfums',
+Choosing a fragrance is choosing what memories you want to make, and what emotions you want to carry with you through the day. Choose thoughtfully. Choose Ecom.''',
+                'author': 'Perfumes',
                 'reading_time': 4,
             },
         ]

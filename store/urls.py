@@ -23,6 +23,8 @@ urlpatterns = [
     # Auth
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('firebase-sync/', views.firebase_login_sync, name='firebase-sync'),
 
     # AJAX
     path('update_item/', views.updateItem, name='update_item'),

@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('excerpt', models.TextField(blank=True)),
                 ('content', models.TextField()),
                 ('image', models.ImageField(blank=True, null=True, upload_to='blog/')),
-                ('author', models.CharField(default='Saleel Parfums', max_length=100)),
+                ('author', models.CharField(default='Perfumes', max_length=100)),
                 ('published_at', models.DateTimeField(auto_now_add=True)),
                 ('reading_time', models.IntegerField(default=5)),
             ],

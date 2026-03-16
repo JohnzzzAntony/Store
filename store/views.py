@@ -7,6 +7,33 @@ import json
 import datetime
 from .models import *
 from .utils import cookieCart, cartData, guestOrder
+from .firebase_utils import verify_token, sync_user_to_firestore, save_order_to_firestore
+
+
+def firebase_login_sync(request):
+    """Verifies Firebase token and logs user into Django."""
+    data = json.loads(request.body)
+    id_token = data.get('id_token')
+    
+    decoded_token = verify_token(id_token)
+    if decoded_token:
+        uid = decoded_token['uid']
+        email = decoded_token.get('email')
+        name = decoded_token.get('name', '')
+
+        # Get or create Django user
+        user, created = User.objects.get_or_create(username=uid, defaults={'email': email})
+        if created:
+            user.set_unusable_password()
+            user.save()
+            
+        Customer.objects.get_or_create(user=user, defaults={'name': name, 'email': email})
+        
+        login(request, user)
+        sync_user_to_firestore(decoded_token)
+        return JsonResponse({'status': 'success', 'user': email})
+    
+    return JsonResponse({'status': 'error', 'message': 'Invalid token'}, status=400)
 
 
 def store(request):
@@ -36,11 +63,14 @@ def product_list(request):
     categories = Category.objects.all()
 
     # Apply filters
+    category_slug = request.GET.get('category', '')
     gender = request.GET.get('gender', '')
     scent = request.GET.get('scent', '')
     price_max = request.GET.get('price_max', '')
     sort_by = request.GET.get('sort', '')
 
+    if category_slug:
+        products = products.filter(category__slug=category_slug)
     if gender:
         products = products.filter(gender=gender)
     if scent:
@@ -222,6 +252,17 @@ def login_view(request):
     return render(request, 'store/login.html', context)
 
 
+from django.contrib.admin.views.decorators import staff_member_required
+
+@staff_member_required
+def dashboard(request):
+    """Real-time Firebase Dashboard."""
+    data = cartData(request)
+    cartItems = data['cartItems']
+    context = {'cartItems': cartItems}
+    return render(request, 'store/dashboard.html', context)
+
+
 def logout_view(request):
     """Logout."""
     logout(request)
@@ -252,6 +293,8 @@ def updateItem(request):
 
     return JsonResponse('Item was updated', safe=False)
 
+
+from .firebase_utils import save_order_to_firestore
 
 def processOrder(request):
     """Process the order (billing + shipping info)."""
@@ -284,5 +327,14 @@ def processOrder(request):
             state=data['shipping']['state'],
             zipcode=data['shipping']['zipcode'],
         )
+
+    # Sync to Firebase for real-time tracking
+    save_order_to_firestore({
+        'transaction_id': str(transaction_id),
+        'customer_email': customer.email,
+        'total': total,
+        'payment_method': payment_method,
+        'timestamp': datetime.datetime.now().isoformat()
+    })
 
     return JsonResponse('Payment submitted..', safe=False)

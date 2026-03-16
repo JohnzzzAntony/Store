@@ -2,6 +2,11 @@ from django.contrib import admin
 from .models import (Customer, Category, Product, Order, OrderItem,
                       ShippingAddress, BlogPost, ContactMessage, Wishlist)
 
+# Branding Admin
+admin.site.site_header = "Ecom Admin"
+admin.site.site_title = "Admin"
+admin.site.index_title = "Welcome to Ecom Dashboard"
+
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):

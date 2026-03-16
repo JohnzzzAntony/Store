@@ -1,0 +1,61 @@
+query AllProducts @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  products {
+    id
+    name
+    description
+    price
+    stock
+    category
+    createdAt
+    seller {
+      id
+      displayName
+      email
+    }
+  }
+}
+
+query UserCartItems @auth(level: USER) {
+  cartItems(where: {user: {id_expr: "auth.uid"}}) {
+    id
+    quantity
+    addedAt
+    product {
+      id
+      name
+      price
+      seller {
+        displayName
+      }
+    }
+  }
+}
+
+mutation AddProductToCart($productId: UUID!, $quantity: Int!) @auth(level: USER) {
+  cartItem_upsert(
+    data: {
+      productId: $productId,
+      quantity: $quantity,
+      userId_expr: "auth.uid",
+      addedAt_expr: "request.time"
+    }
+  ) {
+    id
+  }
+}
+
+mutation CreateNewProduct($name: String!, $price: Float!, $stock: Int!, $category: String, $description: String) @auth(level: USER) {
+  product_insert(
+    data: {
+      name: $name,
+      price: $price,
+      stock: $stock,
+      category: $category,
+      description: $description,
+      sellerId_expr: "auth.uid",
+      createdAt_expr: "request.time"
+    }
+  ) {
+    id
+  }
+}

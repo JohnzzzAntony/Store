@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}Saleel Parfums — Luxury Fragrances{% endblock %}</title>
-  <meta name="description" content="{% block meta_desc %}Discover Saleel Parfums — a luxury perfume brand established in 2006, offering premium fragrances crafted with the finest ingredients.{% endblock %}" />
+  <title>{% block title %}Ecom — Perfumes{% endblock %}</title>
+  <meta name="description" content="{% block meta_desc %}Ecom — Luxury Perfumes brand offering premium fragrances.{% endblock %}" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -17,6 +17,32 @@
 
   <!-- Main CSS -->
   <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+
+  <!-- Firebase Scripts -->
+  <script type="module">
+    import * as fb from "{% static 'js/firebase-config.js' %}";
+    
+    // Listen for auth state changes
+    fb.onAuthStateChanged(fb.auth, (user) => {
+      if (user) {
+        console.log("Firebase User Active:", user.isAnonymous ? "Guest" : user.email);
+        // Track session start
+        const sessionRef = fb.doc(fb.db, "user_sessions", user.uid);
+        fb.setDoc(sessionRef, {
+          last_active: fb.serverTimestamp(),
+          email: user.email || "Guest",
+          is_anonymous: user.isAnonymous
+        }, { merge: true });
+      } else {
+        console.log("No Firebase User - signing in anonymously...");
+        fb.signInAnonymously(fb.auth).catch(err => console.error("Firebase Anon Login Failed:", err));
+      }
+    });
+
+    window.firebaseAuth = fb.auth;
+    window.firestoreDB = fb.db;
+    window.firebaseModule = fb;
+  </script>
 
   {% block extra_css %}{% endblock %}
 
@@ -115,12 +141,15 @@
   </div>
 
   <a href="{% url 'store' %}" class="header-logo" id="headerLogo">
-    <img src="{% static 'images/logo.png' %}" alt="Saleel Parfums" style="height: 48px; width: auto;">
+    <span class="logo-text font-serif">Ecom</span>
   </a>
 
   <div class="header-right">
     {% if user.is_staff %}
-    <a href="/admin/" class="header-icon-btn" title="Admin Dashboard" target="_blank">
+    <a href="{% url 'dashboard' %}" class="header-icon-btn" title="Live Dashboard">
+      <i class="ph ph-chart-line-up"></i>
+    </a>
+    <a href="/admin/" class="header-icon-btn" title="Admin Portal" target="_blank">
       <i class="ph ph-gauge"></i>
     </a>
     {% endif %}
@@ -156,8 +185,7 @@
 <footer class="site-footer">
   <div class="footer-grid">
     <div class="footer-brand">
-      <span class="logo-text font-serif">Saleel</span>
-      <span class="logo-sub">Parfums</span>
+      <span class="logo-text font-serif">Perfumes</span>
       <p>Crafting luxury fragrances since 2006, blending tradition with modern elegance for discerning clients across the UAE and beyond.</p>
     </div>
     <div class="footer-col">
@@ -182,14 +210,14 @@
       <h4>Contact</h4>
       <ul>
         <li><a href="#">Al Hudaiba Awards Bldg, Dubai</a></li>
-        <li><a href="mailto:info@saleelparfums.com">info@saleelparfums.com</a></li>
+        <li><a href="mailto:info@perfumes.com">info@perfumes.com</a></li>
         <li><a href="tel:+97142345678">+971 4 234 5678</a></li>
         <li><a href="#">Sun – Thu: 9AM – 8PM</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2024 Saleel Parfums. All rights reserved.</span>
+    <span>© 2024 Perfumes. All rights reserved.</span>
     <div class="footer-social">
       <a href="#" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
       <a href="#" aria-label="Facebook"><i class="ph ph-facebook-logo"></i></a>

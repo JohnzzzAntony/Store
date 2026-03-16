@@ -1,5 +1,5 @@
 {% extends 'store/main.html' %}
-{% block title %}Sign In — Saleel Parfums{% endblock %}
+{% block title %}Ecom — Perfumes{% endblock %}
 
 {% block content %}
 <div class="login-layout">
@@ -7,8 +7,7 @@
 
     <!-- Logo -->
     <div class="login-logo">
-      <p class="login-logo-text font-serif">Saleel</p>
-      <p class="login-logo-sub">Parfums</p>
+      <p class="login-logo-text font-serif">Ecom</p>
     </div>
 
     <!-- Tabs -->
@@ -48,6 +47,11 @@
       </form>
 
       <div class="login-divider"><span>or</span></div>
+
+      <button type="button" class="btn-outline btn-full" id="googleLoginBtn" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" height="18" alt="Google logo" />
+        CONTINUE WITH GOOGLE
+      </button>
 
       <a href="{% url 'checkout' %}" class="btn-outline btn-full" id="guestCheckoutBtn">CHECKOUT AS GUEST</a>
 
@@ -119,6 +123,45 @@ function switchTab(tab) {
   document.getElementById('tab-' + tab).classList.add('active');
   document.getElementById('content-' + tab).classList.add('active');
 }
+
+// Firebase Google Login
+document.getElementById('googleLoginBtn').addEventListener('click', function() {
+  if (window.firebaseModule) {
+    const { auth, signInWithPopup, GoogleAuthProvider } = window.firebaseModule;
+    const provider = new GoogleAuthProvider();
+    
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // Get the ID token
+        return result.user.getIdToken();
+      })
+      .then((idToken) => {
+        // Send token to Django backend
+        return fetch("{% url 'firebase-sync' %}", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': "{{ csrf_token }}"
+          },
+          body: JSON.stringify({ id_token: idToken })
+        });
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 'success') {
+          window.location.href = "{% url 'store' %}";
+        } else {
+          alert("Login Sync Failed: " + data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Google Sign-In Error:", error);
+        alert("Google Sign-In Error: " + error.message);
+      });
+  } else {
+    alert("Firebase is still loading. Please try again in a moment.");
+  }
+});
 
 // If there were errors in register form, keep register tab open
 {% if messages %}

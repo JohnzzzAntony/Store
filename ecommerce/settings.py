@@ -32,14 +32,13 @@ ALLOWED_HOSTS = ['*'] # In production, replace with your actual domain
 # Application definition
 
 INSTALLED_APPS = [
+    'store.apps.StoreConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'store.apps.StoreConfig',
 ]
 
 MIDDLEWARE = [

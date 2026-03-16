@@ -1,0 +1,96 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block title %}Ecom — Perfumes{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="font-serif">Live Sales Dashboard</h2>
+        <div class="badge bg-success p-2">Real-time Connection: Active</div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-dark text-white p-4">
+                <h6>TOTAL REVENUE</h6>
+                <h2 id="total-revenue">0.00 SAR</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-teal text-white p-4" style="background-color: #004d4d;">
+                <h6>TOTAL ORDERS</h6>
+                <h2 id="total-orders">0</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4">
+                <h6>GUEST CART SESSIONS</h6>
+                <h2 id="cart-activities">0</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">Recent Live Orders</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Customer</th>
+                            <th>Payment</th>
+                            <th>Amount</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-list">
+                        <!-- Real-time data will appear here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { db, onSnapshot, collection, query, orderBy, limit } from "{% static 'js/firebase-config.js' %}";
+    import * as fb from "{% static 'js/firebase-config.js' %}";
+
+    // 1. Listen for Real-time Orders
+    const q = query(collection(db, "orders"), orderBy("timestamp", "desc"), limit(10));
+    onSnapshot(q, (snapshot) => {
+        const list = document.getElementById('orders-list');
+        list.innerHTML = "";
+        let revenue = 0;
+        let count = snapshot.size;
+
+        snapshot.forEach((doc) => {
+            const order = doc.data();
+            revenue += parseFloat(order.total || 0);
+            
+            const row = `
+                <tr>
+                    <td><code>${order.transaction_id}</code></td>
+                    <td>${order.customer_email}</td>
+                    <td><span class="badge bg-info text-dark">${order.payment_method.toUpperCase()}</span></td>
+                    <td><strong>${order.total} SAR</strong></td>
+                    <td>${new Date(order.timestamp).toLocaleString()}</td>
+                </tr>
+            `;
+            list.innerHTML += row;
+        });
+
+        document.getElementById('total-revenue').innerText = revenue.toFixed(2) + " SAR";
+        document.getElementById('total-orders').innerText = count;
+    });
+
+    // 2. Listen for Real-time Cart Activity
+    onSnapshot(collection(db, "cart_activities"), (snapshot) => {
+        document.getElementById('cart-activities').innerText = snapshot.size;
+    });
+</script>
+{% endblock %}

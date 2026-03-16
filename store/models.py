@@ -133,7 +133,7 @@ class BlogPost(models.Model):
     excerpt = models.TextField(blank=True)
     content = models.TextField()
     image = models.ImageField(null=True, blank=True, upload_to='blog/')
-    author = models.CharField(max_length=100, default='Saleel Parfums')
+    author = models.CharField(max_length=100, default='Perfumes')
     published_at = models.DateTimeField(auto_now_add=True)
     reading_time = models.IntegerField(default=5)
 
