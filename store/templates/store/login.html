@@ -162,14 +162,16 @@ document.getElementById('googleLoginBtn').addEventListener('click', function() {
     alert("Firebase is still loading. Please try again in a moment.");
   }
 });
-
-// If there were errors in register form, keep register tab open
-{% if messages %}
-{% for message in messages %}
-  {% if 'password' in message.message|lower or 'username' in message.message|lower or 'email' in message.message|lower %}
-  // switchTab('register');
-  {% endif %}
-{% endfor %}
-{% endif %}
 </script>
+
+{% if messages %}
+  {% for message in messages %}
+    {% with msg=message.message|lower %}
+      {% if 'password' in msg or 'username' in msg or 'email' in msg %}
+        <script>document.addEventListener('DOMContentLoaded', () => switchTab('register'));</script>
+      {% endif %}
+    {% endwith %}
+  {% endfor %}
+{% endif %}
+
 {% endblock %}

@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*'] # In production, replace with your actual domain
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'store.apps.StoreConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'store.middleware.StoreMiddleware',
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'
@@ -65,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'store.context_processors.store_context',
             ],
         },
     },
@@ -138,3 +142,86 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/images/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+
+# Increase upload limits for large Figma design payloads (Set to 1024MB per user request)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1073741824 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 1073741824
+
+# Jazzmin Settings to match requested premium design
+JAZZMIN_SETTINGS = {
+    "site_title": "Saleel Admin",
+    "site_header": "Saleel",
+    "site_brand": "Saleel Admin Panel",
+    "site_logo": None,
+    "welcome_sign": "Welcome to Saleel Admin Panel",
+    "copyright": "Saleel Parfums Ltd",
+    "search_model": ["store.Store", "store.Product"],
+    "user_avatar": None,
+    "topmenu_links": [
+        {"name": "Home",  "url": "admin:index"},
+        {"model": "store.Store"},
+    ],
+    "usermenu_links": [
+        {"model": "auth.user"}
+    ],
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "hide_apps": [],
+    "hide_models": [],
+    "order_with_respect_to": ["store.FrontendMedia", "store.Store", "store.Product", "store.Category", "store.Order", "store.Customer"],
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "store.FrontendMedia": "fas fa-images",
+        "store.Store": "fas fa-store",
+        "store.Product": "fas fa-box",
+        "store.Category": "fas fa-th-large",
+        "store.Order": "fas fa-shopping-bag",
+        "store.OrderItem": "fas fa-list-ul",
+        "store.Customer": "fas fa-address-book",
+        "store.ShippingAddress": "fas fa-truck",
+        "store.BlogPost": "fas fa-edit",
+        "store.ContactMessage": "fas fa-envelope-open-text",
+        "store.Wishlist": "fas fa-heart",
+    },
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
+    "related_modal_active": False,
+    "custom_css": "admin/css/custom_admin.css",  # Custom CSS for the beige background
+    "use_google_fonts_cdn": True,
+    "show_ui_builder": False,
+    "changeform_format": "horizontal_tabs",
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": True,
+    "brand_small_text": False,
+    "brand_colour": "navbar-dark",
+    "accent": "accent-primary",
+    "navbar": "navbar-white navbar-light",
+    "no_navbar_border": True,
+    "navbar_fixed": True,
+    "layout_fixed": True,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": True,
+    "theme": "default",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}

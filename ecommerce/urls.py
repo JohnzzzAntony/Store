@@ -19,7 +19,8 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('_admin_portal/', admin.site.urls),
+    path('s/<slug:store_slug>/', include('store.urls')),
     path('', include('store.urls')),
 ]
 

@@ -1,0 +1,42 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label='store' %}">Store</a>
+&rsaquo; <a href="{% url 'admin:store_store_changelist' %}">Stores</a>
+&rsaquo; Create from Figma
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <h1>Create Store from Figma</h1>
+  <p>Provide a Figma design link and your personal access token to automatically create a store with synced design tokens.</p>
+  
+  <form method="post">
+    {% csrf_token %}
+    <fieldset class="module aligned">
+      <div class="form-row">
+        <div>
+          <label class="required" for="id_figma_url">Figma URL:</label>
+          <input type="url" name="figma_url" id="id_figma_url" class="vURLField" style="width: 80%;" placeholder="https://www.figma.com/design/..." required>
+          <div class="help">The link to your Figma file or design.</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <label class="required" for="id_access_token">Access Token:</label>
+          <input type="password" name="access_token" id="id_access_token" class="vTextField" style="width: 80%;" required>
+          <div class="help">Your Figma Personal Access Token.</div>
+        </div>
+      </div>
+    </fieldset>
+    
+    <div class="submit-row">
+      <input type="submit" value="Launch AI Store Architect" class="default" name="_save">
+    </div>
+  </form>
+</div>
+{% endblock %}

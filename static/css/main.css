@@ -1413,6 +1413,7 @@ h1, h2, h3, h4, h5 {
   transition: border-color var(--transition);
   border-radius: 0;
   -webkit-appearance: none;
+  appearance: none;
 }
 
 .form-control:focus {

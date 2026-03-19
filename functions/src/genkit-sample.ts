@@ -1,5 +1,5 @@
-import {genkit, z} from "genkit";
-import {vertexAI} from "@genkit-ai/google-genai";
+import { genkit, z } from "genkit";
+import { googleAI } from "@genkit-ai/google-genai";
 
 // Cloud Functions for Firebase supports Genkit natively. The onCallGenkit function creates a callable
 // function from a Genkit action. It automatically implements streaming if your flow does.
@@ -7,14 +7,8 @@ import {vertexAI} from "@genkit-ai/google-genai";
 // a caller's token has a specific claim (optionally matching a specific value)
 import { onCallGenkit, hasClaim } from "firebase-functions/https";
 
-// Gemini Developer API models and Vertex Express Mode models depend on an API key.
-// API keys should be stored in Cloud Secret Manager so that access to these
-// sensitive values can be controlled. defineSecret does this for you automatically.
-// If you are using Google Developer API (googleAI) you can get an API key at https://aistudio.google.com/app/apikey
-// If you are using Vertex Express Mode (vertexAI with apiKey) you can get an API key
-// from the Vertex AI Studio Express Mode setup.
-import { defineSecret } from "firebase-functions/params";
-const apiKey = defineSecret("GOOGLE_GENAI_API_KEY");
+// Genkit will automatically look for the GOOGLE_GENAI_API_KEY environment
+// variable in your .env file.
 
 // The Firebase telemetry plugin exports a combination of metrics, traces, and logs to Google Cloud
 // Observability. See https://firebase.google.com/docs/genkit/observability/telemetry-collection.
@@ -23,42 +17,39 @@ const apiKey = defineSecret("GOOGLE_GENAI_API_KEY");
 
 const ai = genkit({
   plugins: [
-    // Load the VertexAI provider. You can optionally specify your location
-    // and projectID by passing in a config object; if you don't, the provider
-    // uses the value from environment variables like GCLOUD_PROJECT and GCLOUD_LOCATION.
-    // If you want to use Vertex Express Mode, you can specify apiKey instead.
-    vertexAI({location: "global"})
+    // Load the Google AI provider (Gemini API).
+    googleAI()
   ],
 });
 
 // Define a simple flow that prompts an LLM to generate menu suggestions.
 const menuSuggestionFlow = ai.defineFlow({
-    name: "menuSuggestionFlow",
-    inputSchema: z.string().describe("A restaurant theme").default("seafood"),
-    outputSchema: z.string(),
-    streamSchema: z.string(),
-  }, async (subject, { sendChunk }) => {
-    // Construct a request and send it to the model API.
-    const prompt =
-      `Suggest an item for the menu of a ${subject} themed restaurant`;
-    const { response, stream } = ai.generateStream({
-      model: vertexAI.model("gemini-2.5-flash"),
-      prompt: prompt,
-      config: {
-        temperature: 1,
-      },
-    });
+  name: "Ecommerce-StoreSuggestionFlow",
+  inputSchema: z.string().describe("An ecommerce perfumetheme").default("Perfumes"),
+  outputSchema: z.string(),
+  streamSchema: z.string(),
+}, async (subject, { sendChunk }) => {
+  // Construct a request and send it to the model API.
+  const prompt =
+    `Suggest an item for the menu of a ${subject} themed perfume ecommerce`;
+  const { response, stream } = ai.generateStream({
+    model: googleAI.model("gemini-1.5-flash"),
+    prompt: prompt,
+    config: {
+      temperature: 1,
+    },
+  });
 
-    for await (const chunk of stream) {
-      sendChunk(chunk.text);
-    }
-
-    // Handle the response from the model API. In this sample, we just
-    // convert it to a string, but more complicated flows might coerce the
-    // response into structured output or chain the response into another
-    // LLM call, etc.
-    return (await response).text;
+  for await (const chunk of stream) {
+    sendChunk(chunk.text);
   }
+
+  // Handle the response from the model API. In this sample, we just
+  // convert it to a string, but more complicated flows might coerce the
+  // response into structured output or chain the response into another
+  // LLM call, etc.
+  return (await response).text;
+}
 );
 
 export const menuSuggestion = onCallGenkit({
@@ -71,6 +62,6 @@ export const menuSuggestion = onCallGenkit({
   // will require the user to have the email_verified claim, for example.
   // authPolicy: hasClaim("email_verified"),
 
-  // Grant access to the API key to this function:
-  secrets: [apiKey],
+  // The function will automatically use the GOOGLE_GENAI_API_KEY
+  // from your .env file or Cloud Secret Manager if configured.
 }, menuSuggestionFlow);

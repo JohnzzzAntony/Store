@@ -1,54 +1,65 @@
 import json
-from .models import *
+from .models import Product, Customer, Order, OrderItem
 
 def cookieCart(request):
-
-	#Create empty cart for now for non-logged in user
+	# Create empty cart for now for non-logged in user
 	try:
-		cart = json.loads(request.COOKIES['cart'])
-	except:
+		cart_cookie = request.COOKIES.get('cart', '{}')
+		cart = json.loads(cart_cookie)
+	except (ValueError, KeyError, TypeError):
 		cart = {}
-		print('CART:', cart)
+		print('CART error reading cookie:', cart)
 
 	items = []
-	order = {'get_cart_total':0, 'get_cart_items':0, 'shipping':False}
-	cartItems = order['get_cart_items']
+	order = {'get_cart_total': 0.0, 'get_cart_items': 0, 'shipping': False}
+	cartItems = 0
 
 	for i in cart:
-		#We use try block to prevent items in cart that may have been removed from causing error
-		try:	
-			if(cart[i]['quantity']>0): #items with negative quantity = lot of freebies  
-				cartItems += cart[i]['quantity']
+		# We use try block to prevent items in cart that may have been removed from causing error
+		try:
+			# Extra safety for IDE analyzer
+			item_data = cart.get(i)
+			if isinstance(item_data, dict) and int(item_data.get('quantity', 0)) > 0:
+				quantity = int(item_data['quantity'])
+				cartItems += quantity
 
 				product = Product.objects.get(id=i)
-				total = (product.price * cart[i]['quantity'])
+				total = (product.price * quantity)
 
 				order['get_cart_total'] += total
-				order['get_cart_items'] += cart[i]['quantity']
+				order['get_cart_items'] += quantity
 
 				item = {
-				'id':product.id,
-				'product':{'id':product.id,'name':product.name, 'price':product.price, 
-				'imageURL':product.imageURL}, 'quantity':cart[i]['quantity'],
-				'digital':product.digital,'get_total':total,
+					'id': product.id,
+					'product': {
+						'id': product.id,
+						'name': product.name, 
+						'price': product.price, 
+						'imageURL': product.imageURL
+					}, 
+					'quantity': quantity,
+					'digital': product.digital,
+					'get_total': total,
 				}
 				items.append(item)
 
 				if product.digital == False:
 					order['shipping'] = True
-		except:
-			pass
+		except Exception as e:
+			print(f"Error processing item {i}: {e}")
 			
-	return {'cartItems':cartItems ,'order':order, 'items':items}
+	return {'cartItems': int(cartItems), 'order': order, 'items': items}
+
 
 def cartData(request):
+	store = getattr(request, 'current_store', None)
 	if request.user.is_authenticated:
-		customer, created = Customer.objects.get_or_create(user=request.user)
+		customer, created = Customer.objects.get_or_create(user=request.user, defaults={'store': store})
 		if created:
 			customer.name = request.user.username
 			customer.email = request.user.email
 			customer.save()
-		order, created = Order.objects.get_or_create(customer=customer, complete=False)
+		order, created = Order.objects.get_or_create(customer=customer, store=store, complete=False)
 		items = order.orderitem_set.all()
 		cartItems = order.get_cart_items
 	else:
@@ -63,27 +74,41 @@ def cartData(request):
 def guestOrder(request, data):
 	name = data['form']['name']
 	email = data['form']['email']
+	store = getattr(request, 'current_store', None)
 
 	cookieData = cookieCart(request)
 	items = cookieData['items']
 
 	customer, created = Customer.objects.get_or_create(
 			email=email,
+			defaults={'store': store, 'name': name}
 			)
-	customer.name = name
-	customer.save()
+	if not created:
+		customer.name = name
+		customer.save()
 
 	order = Order.objects.create(
 		customer=customer,
+		store=store,
 		complete=False,
 		)
 
 	for item in items:
-		product = Product.objects.get(id=item['id'])
+		if not isinstance(item, dict):
+			continue
+		
+		product_id = item.get('id')
+		if not product_id:
+			continue
+
+		product = Product.objects.get(id=product_id)
+		quantity = int(item.get('quantity', 1))
+		
 		orderItem = OrderItem.objects.create(
 			product=product,
 			order=order,
-			quantity=(item['quantity'] if item['quantity']>0 else -1*item['quantity']), # negative quantity = freebies
+			quantity=(quantity if quantity > 0 else -1 * quantity), # negative quantity = freebies
 		)
 	return customer, order
+
 

@@ -1,16 +1,16 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpRequest
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 import json
 import datetime
-from .models import *
+from .models import Product, Customer, Order, OrderItem, ShippingAddress, Category, BlogPost, ContactMessage
 from .utils import cookieCart, cartData, guestOrder
 from .firebase_utils import verify_token, sync_user_to_firestore, save_order_to_firestore
 
 
-def firebase_login_sync(request):
+def firebase_login_sync(request, *args, **kwargs):
     """Verifies Firebase token and logs user into Django."""
     data = json.loads(request.body)
     id_token = data.get('id_token')
@@ -36,31 +36,35 @@ def firebase_login_sync(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid token'}, status=400)
 
 
-def store(request):
+def store(request, *args, **kwargs):
     """Home page with hero carousel and featured products."""
     data = cartData(request)
     cartItems = data['cartItems']
+    store = getattr(request, 'current_store', None)
 
-    featured_products = Product.objects.filter(is_featured=True, in_stock=True)[:6]
-    all_products = Product.objects.filter(in_stock=True)[:8]
-    latest_blogs = BlogPost.objects.all().order_by('-published_at')[:3]
+    featured_products = Product.objects.filter(store=store, is_featured=True, in_stock=True)[:6]
+    all_products = Product.objects.filter(store=store, in_stock=True)[:8]
+    latest_blogs = BlogPost.objects.filter(store=store).order_by('-published_at')[:3]
+    categories = Category.objects.filter(store=store)[:3]
 
     context = {
         'featured_products': featured_products,
         'all_products': all_products,
         'latest_blogs': latest_blogs,
+        'categories': categories,
         'cartItems': cartItems,
     }
     return render(request, 'store/store.html', context)
 
 
-def product_list(request):
+def product_list(request: HttpRequest, *args, **kwargs):
     """Product listing page with gender/scent/price filters."""
     data = cartData(request)
     cartItems = data['cartItems']
+    store = getattr(request, 'current_store', None)
 
-    products = Product.objects.filter(in_stock=True)
-    categories = Category.objects.all()
+    products = Product.objects.filter(store=store, in_stock=True)
+    categories = Category.objects.filter(store=store)
 
     # Apply filters
     category_slug = request.GET.get('category', '')
@@ -103,14 +107,14 @@ def product_list(request):
     return render(request, 'store/product_list.html', context)
 
 
-def product_detail(request, pk):
+def product_detail(request, pk, *args, **kwargs):
     """Product detail page with images, description, size, add to cart."""
     data = cartData(request)
     cartItems = data['cartItems']
 
-    product = get_object_or_404(Product, pk=pk)
+    product = get_object_or_404(Product, pk=pk, store=getattr(request, 'current_store', None))
     related_products = Product.objects.filter(
-        category=product.category, in_stock=True
+        store=product.store, category=product.category, in_stock=True
     ).exclude(pk=pk)[:4]
 
     context = {
@@ -121,7 +125,7 @@ def product_detail(request, pk):
     return render(request, 'store/product_detail.html', context)
 
 
-def about(request):
+def about(request, *args, **kwargs):
     """About Us page."""
     data = cartData(request)
     cartItems = data['cartItems']
@@ -129,7 +133,7 @@ def about(request):
     return render(request, 'store/about.html', context)
 
 
-def terms(request):
+def terms(request, *args, **kwargs):
     """Terms and Conditions page."""
     data = cartData(request)
     cartItems = data['cartItems']
@@ -137,26 +141,28 @@ def terms(request):
     return render(request, 'store/terms.html', context)
 
 
-def blog_list(request):
+def blog_list(request, *args, **kwargs):
     """Blog listing page."""
     data = cartData(request)
     cartItems = data['cartItems']
-    blogs = BlogPost.objects.all().order_by('-published_at')
+    store = getattr(request, 'current_store', None)
+    blogs = BlogPost.objects.filter(store=store).order_by('-published_at')
     context = {'blogs': blogs, 'cartItems': cartItems}
     return render(request, 'store/blog_list.html', context)
 
 
-def blog_detail(request, slug):
+def blog_detail(request, slug, *args, **kwargs):
     """Individual blog post."""
     data = cartData(request)
     cartItems = data['cartItems']
-    blog = get_object_or_404(BlogPost, slug=slug)
-    related = BlogPost.objects.exclude(slug=slug).order_by('-published_at')[:3]
+    store = getattr(request, 'current_store', None)
+    blog = get_object_or_404(BlogPost, slug=slug, store=store)
+    related = BlogPost.objects.filter(store=store).exclude(slug=slug).order_by('-published_at')[:3]
     context = {'blog': blog, 'related': related, 'cartItems': cartItems}
     return render(request, 'store/blog_detail.html', context)
 
 
-def contact(request):
+def contact(request, *args, **kwargs):
     """Contact Us page with form."""
     data = cartData(request)
     cartItems = data['cartItems']
@@ -165,8 +171,9 @@ def contact(request):
         name = request.POST.get('name', '')
         email = request.POST.get('email', '')
         message = request.POST.get('message', '')
+        store = getattr(request, 'current_store', None)
         if name and email and message:
-            ContactMessage.objects.create(name=name, email=email, message=message)
+            ContactMessage.objects.create(store=store, name=name, email=email, message=message)
             messages.success(request, 'Your message has been sent successfully!')
         else:
             messages.error(request, 'Please fill in all fields.')
@@ -176,7 +183,7 @@ def contact(request):
     return render(request, 'store/contact.html', context)
 
 
-def cart(request):
+def cart(request, *args, **kwargs):
     """Cart page."""
     data = cartData(request)
     cartItems = data['cartItems']
@@ -187,7 +194,7 @@ def cart(request):
     return render(request, 'store/cart.html', context)
 
 
-def checkout(request):
+def checkout(request, *args, **kwargs):
     """Billing address / checkout page."""
     data = cartData(request)
     cartItems = data['cartItems']
@@ -198,7 +205,7 @@ def checkout(request):
     return render(request, 'store/checkout.html', context)
 
 
-def login_view(request):
+def login_view(request, *args, **kwargs):
     """Login / Register page."""
     data = cartData(request)
     cartItems = data['cartItems']
@@ -240,6 +247,7 @@ def login_view(request):
                     password=password1, first_name=first_name, last_name=last_name
                 )
                 Customer.objects.create(
+                    store=getattr(request, 'current_store', None),
                     user=user,
                     name=f"{first_name} {last_name}".strip(),
                     email=email
@@ -255,7 +263,7 @@ def login_view(request):
 from django.contrib.admin.views.decorators import staff_member_required
 
 @staff_member_required
-def dashboard(request):
+def dashboard(request, *args, **kwargs):
     """Real-time Firebase Dashboard."""
     data = cartData(request)
     cartItems = data['cartItems']
@@ -263,13 +271,13 @@ def dashboard(request):
     return render(request, 'store/dashboard.html', context)
 
 
-def logout_view(request):
+def logout_view(request, *args, **kwargs):
     """Logout."""
     logout(request)
     return redirect('store')
 
 
-def updateItem(request):
+def updateItem(request, *args, **kwargs):
     """AJAX endpoint to add/remove cart items."""
     data = json.loads(request.body)
     productId = data['productId']
@@ -277,8 +285,9 @@ def updateItem(request):
 
     if request.user.is_authenticated:
         customer = request.user.customer
-        product = Product.objects.get(id=productId)
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        store = getattr(request, 'current_store', None)
+        product = Product.objects.get(id=productId, store=store)
+        order, created = Order.objects.get_or_create(customer=customer, store=store, complete=False)
         orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
 
         if action == 'add':
@@ -295,15 +304,17 @@ def updateItem(request):
 
 
 from .firebase_utils import save_order_to_firestore
+from .payment_providers import payment_registry
 
-def processOrder(request):
+def processOrder(request, *args, **kwargs):
     """Process the order (billing + shipping info)."""
     transaction_id = datetime.datetime.now().timestamp()
     data = json.loads(request.body)
 
+    store = getattr(request, 'current_store', None)
     if request.user.is_authenticated:
         customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        order, created = Order.objects.get_or_create(customer=customer, store=store, complete=False)
     else:
         customer, order = guestOrder(request, data)
 
@@ -315,6 +326,12 @@ def processOrder(request):
     if total == order.get_cart_total:
         order.complete = True
     order.save()
+
+    # Process via payment provider registry
+    provider = payment_registry.get_provider(payment_method)
+    if provider:
+        payment_result = provider.process(order, data)
+        # In a real app, we'd handle payment_result['status'] failure here
 
     if order.shipping:
         ShippingAddress.objects.create(
@@ -331,6 +348,8 @@ def processOrder(request):
     # Sync to Firebase for real-time tracking
     save_order_to_firestore({
         'transaction_id': str(transaction_id),
+        'store_id': store.id if store else None,
+        'store_name': store.name if store else "Unknown",
         'customer_email': customer.email,
         'total': total,
         'payment_method': payment_method,

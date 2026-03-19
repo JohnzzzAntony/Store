@@ -13,7 +13,9 @@
 
     <!-- Slide 1 -->
     <div class="hero-slide active" id="slide-0">
-      {% if featured_products.0 and featured_products.0.imageURL %}
+      {% if media.hero_slide_1 %}
+        <img src="{{ media.hero_slide_1.image.url }}" alt="{{ media.hero_slide_1.title|default:featured_products.0.name }}" />
+      {% elif featured_products.0 and featured_products.0.imageURL %}
         <img src="{{ featured_products.0.imageURL }}" alt="{{ featured_products.0.name }}" />
       {% else %}
         <div style="width:100%;height:100%;background:linear-gradient(135deg,#2D5A5A,#1a3535);display:flex;align-items:center;justify-content:center;">
@@ -22,12 +24,12 @@
       {% endif %}
       <div class="hero-slide-overlay"></div>
       <div class="hero-content">
-        <p class="section-label" style="color:rgba(255,255,255,0.6);">New Collection</p>
+        <p class="section-label" style="color:rgba(255,255,255,0.6);">{% if media.hero_slide_1 %}{{ media.hero_slide_1.subtitle }}{% else %}New Collection{% endif %}</p>
         <h1 class="hero-title font-serif">
-          {% if featured_products.0 %}{{ featured_products.0.name }}{% else %}Swim By The Beach{% endif %}
+          {% if media.hero_slide_1 %}{{ media.hero_slide_1.title }}{% elif featured_products.0 %}{{ featured_products.0.name }}{% else %}Swim By The Beach{% endif %}
         </h1>
         <p class="hero-subtitle">
-          {% if featured_products.0 and featured_products.0.description %}
+          {% if media.hero_slide_1 %}{{ media.hero_slide_1.subtitle }}{% elif featured_products.0 and featured_products.0.description %}
             {{ featured_products.0.description|truncatewords:18 }}
           {% else %}
             A fresh aquatic fragrance that captures the essence of sun, sea and freedom.
@@ -41,7 +43,9 @@
 
     <!-- Slide 2 -->
     <div class="hero-slide" id="slide-1">
-      {% if featured_products.1 and featured_products.1.imageURL %}
+      {% if media.hero_slide_2 %}
+        <img src="{{ media.hero_slide_2.image.url }}" alt="{{ media.hero_slide_2.title|default:featured_products.1.name }}" />
+      {% elif featured_products.1 and featured_products.1.imageURL %}
         <img src="{{ featured_products.1.imageURL }}" alt="{{ featured_products.1.name }}" />
       {% else %}
         <div style="width:100%;height:100%;background:linear-gradient(135deg,#1E3E3E,#0d2626);display:flex;align-items:center;justify-content:center;">
@@ -50,12 +54,12 @@
       {% endif %}
       <div class="hero-slide-overlay"></div>
       <div class="hero-content">
-        <p class="section-label" style="color:rgba(255,255,255,0.6);">Signature Scent</p>
+        <p class="section-label" style="color:rgba(255,255,255,0.6);">{% if media.hero_slide_2 %}{{ media.hero_slide_2.subtitle }}{% else %}Signature Scent{% endif %}</p>
         <h1 class="hero-title font-serif">
-          {% if featured_products.1 %}{{ featured_products.1.name }}{% else %}Aqua Marine{% endif %}
+          {% if media.hero_slide_2 %}{{ media.hero_slide_2.title }}{% elif featured_products.1 %}{{ featured_products.1.name }}{% else %}Aqua Marine{% endif %}
         </h1>
         <p class="hero-subtitle">
-          {% if featured_products.1 and featured_products.1.description %}
+          {% if media.hero_slide_2 %}{{ media.hero_slide_2.subtitle }}{% elif featured_products.1 and featured_products.1.description %}
             {{ featured_products.1.description|truncatewords:18 }}
           {% else %}
             Deep oceanic notes with a heart of driftwood and white musk.
@@ -69,7 +73,9 @@
 
     <!-- Slide 3 -->
     <div class="hero-slide" id="slide-2">
-      {% if featured_products.2 and featured_products.2.imageURL %}
+      {% if media.hero_slide_3 %}
+        <img src="{{ media.hero_slide_3.image.url }}" alt="{{ media.hero_slide_3.title|default:featured_products.2.name }}" />
+      {% elif featured_products.2 and featured_products.2.imageURL %}
         <img src="{{ featured_products.2.imageURL }}" alt="{{ featured_products.2.name }}" />
       {% else %}
         <div style="width:100%;height:100%;background:linear-gradient(135deg,#3a4a2a,#2a3a1a);display:flex;align-items:center;justify-content:center;">
@@ -78,12 +84,12 @@
       {% endif %}
       <div class="hero-slide-overlay"></div>
       <div class="hero-content">
-        <p class="section-label" style="color:rgba(255,255,255,0.6);">Bestseller</p>
+        <p class="section-label" style="color:rgba(255,255,255,0.6);">{% if media.hero_slide_3 %}{{ media.hero_slide_3.subtitle }}{% else %}Bestseller{% endif %}</p>
         <h1 class="hero-title font-serif">
-          {% if featured_products.2 %}{{ featured_products.2.name }}{% else %}Solaris{% endif %}
+          {% if media.hero_slide_3 %}{{ media.hero_slide_3.title }}{% elif featured_products.2 %}{{ featured_products.2.name }}{% else %}Solaris{% endif %}
         </h1>
         <p class="hero-subtitle">
-          {% if featured_products.2 and featured_products.2.description %}
+          {% if media.hero_slide_3 %}{{ media.hero_slide_3.subtitle }}{% elif featured_products.2 and featured_products.2.description %}
             {{ featured_products.2.description|truncatewords:18 }}
           {% else %}
             Warm amber and precious oud with a radiant solar accord.
@@ -120,35 +126,30 @@
   </div>
 
   <div class="category-grid">
-    <!-- Perfumes -->
-    <a href="{% url 'product_list' %}?category=perfumes" class="category-card">
-      <img src="{% static 'images/cat_perfume.png' %}" alt="Perfumes" loading="lazy">
+    {% for category in categories %}
+    <a href="{% url 'product_list' %}?category={{ category.slug }}" class="category-card">
+      {% if category.image %}
+        <img src="{{ category.image.url }}" alt="{{ category.name }}" loading="lazy">
+      {% elif category.slug == 'perfumes' %}
+        <img src="{% static 'images/cat_perfume.png' %}" alt="Perfumes" loading="lazy">
+      {% elif category.slug == 'body-mist' %}
+        <img src="{% static 'images/cat_bodymist.png' %}" alt="Body Mist" loading="lazy">
+      {% elif category.slug == 'room-spray' %}
+        <img src="{% static 'images/cat_roomspray.png' %}" alt="Room Spray" loading="lazy">
+      {% else %}
+        <div class="img-placeholder" style="width:100%;height:100%;min-height:200px;background:var(--teal-light);">
+          <i class="ph ph-tag" style="font-size:32px;color:var(--teal);opacity:0.3;"></i>
+        </div>
+      {% endif %}
       <div class="category-card-overlay"></div>
       <div class="category-card-content">
-        <h3>Perfumes</h3>
+        <h3>{{ category.name }}</h3>
         <span>Shop Now</span>
       </div>
     </a>
-
-    <!-- Body Mist -->
-    <a href="{% url 'product_list' %}?category=body-mist" class="category-card">
-      <img src="{% static 'images/cat_bodymist.png' %}" alt="Body Mist" loading="lazy">
-      <div class="category-card-overlay"></div>
-      <div class="category-card-content">
-        <h3>Body Mist</h3>
-        <span>Shop Now</span>
-      </div>
-    </a>
-
-    <!-- Room Spray -->
-    <a href="{% url 'product_list' %}?category=room-spray" class="category-card">
-      <img src="{% static 'images/cat_roomspray.png' %}" alt="Room Spray" loading="lazy">
-      <div class="category-card-overlay"></div>
-      <div class="category-card-content">
-        <h3>Room Spray</h3>
-        <span>Shop Now</span>
-      </div>
-    </a>
+    {% empty %}
+    <p style="text-align:center;width:100%;color:var(--text-muted);padding:40px;">No categories defined yet.</p>
+    {% endfor %}
   </div>
 </section>
 
@@ -204,7 +205,7 @@
   {% else %}
   <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
     <i class="ph ph-package" style="font-size:48px;margin-bottom:16px;display:block;"></i>
-    <p>No products available yet. Add products through the <a href="/admin/" style="color:var(--teal);">Admin Panel</a>.</p>
+    <p>No products available yet. Please check back later.</p>
   </div>
   {% endif %}
 </section>

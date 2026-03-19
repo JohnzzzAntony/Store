@@ -4,13 +4,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% block title %}Ecom — Perfumes{% endblock %}</title>
-  <meta name="description" content="{% block meta_desc %}Ecom — Luxury Perfumes brand offering premium fragrances.{% endblock %}" />
+  <title>{% block title %}{{ current_store.name|default:"Ecom" }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_desc %}{{ current_store.details|slice:":160"|default:"Luxury Perfumes brand offering premium fragrances." }}{% endblock %}" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+        --brand-primary: {{ current_store.primary_color|default:"#2D5A5A" }};
+        --brand-secondary: {{ current_store.secondary_color|default:"#1E3E3E" }};
+        --brand-font: {% if current_store.font_family == 'serif' %}'Cormorant Garamond', serif{% elif current_store.font_family == 'sans' %}'Inter', sans-serif{% elif current_store.font_family == 'playfair' %}'Playfair Display', serif{% else %}inherit{% endif %};
+    }
+    
+    body {
+        font-family: var(--brand-font);
+    }
+    
+    .logo-text, h1, h2, h3, h4, .font-serif {
+        font-family: var(--brand-font) !important;
+    }
+  </style>
+
+  {% if current_store.custom_css %}
+  <style>
+    /* Custom Store CSS */
+    {{ current_store.custom_css|safe }}
+  </style>
+  {% endif %}
+
+  {% if media.nav_bg %}
+  <style>
+    .nav-drawer {
+        background: linear-gradient(rgba(26, 28, 35, 0.9), rgba(26, 28, 35, 0.9)), url('{{ media.nav_bg.image.url }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+  </style>
+  {% endif %}
+
 
   <!-- Icons (Phosphor Icons CDN) -->
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1/src/index.js"></script>
@@ -141,18 +175,14 @@
   </div>
 
   <a href="{% url 'store' %}" class="header-logo" id="headerLogo">
-    <span class="logo-text font-serif">Ecom</span>
+    {% if current_store.logo %}
+      <img src="{{ current_store.logo.url }}" alt="{{ current_store.name }}" style="height: 40px;">
+    {% else %}
+      <span class="logo-text font-serif">{{ current_store.name|default:"Ecom" }}</span>
+    {% endif %}
   </a>
 
   <div class="header-right">
-    {% if user.is_staff %}
-    <a href="{% url 'dashboard' %}" class="header-icon-btn" title="Live Dashboard">
-      <i class="ph ph-chart-line-up"></i>
-    </a>
-    <a href="/admin/" class="header-icon-btn" title="Admin Portal" target="_blank">
-      <i class="ph ph-gauge"></i>
-    </a>
-    {% endif %}
     <a href="{% url 'product_list' %}?sort=" class="header-icon-btn" aria-label="Search" id="searchBtn">
       <i class="ph ph-magnifying-glass" style="font-size:22px;"></i>
     </a>
@@ -185,8 +215,8 @@
 <footer class="site-footer">
   <div class="footer-grid">
     <div class="footer-brand">
-      <span class="logo-text font-serif">Perfumes</span>
-      <p>Crafting luxury fragrances since 2006, blending tradition with modern elegance for discerning clients across the UAE and beyond.</p>
+      <span class="logo-text font-serif">{{ current_store.name|default:"Perfumes" }}</span>
+      <p>{{ current_store.details|default:"Crafting luxury fragrances since 2006, blending tradition with modern elegance for discerning clients across the UAE and beyond." }}</p>
     </div>
     <div class="footer-col">
       <h4>Shop</h4>
@@ -217,7 +247,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2024 Perfumes. All rights reserved.</span>
+    <span>© 2024 {{ current_store.name|default:"Perfumes" }}. All rights reserved.</span>
     <div class="footer-social">
       <a href="#" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>
       <a href="#" aria-label="Facebook"><i class="ph ph-facebook-logo"></i></a>

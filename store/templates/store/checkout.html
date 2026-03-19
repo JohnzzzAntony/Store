@@ -83,6 +83,7 @@
       <h2 class="billing-section-title" style="margin-top:32px;">Payment Method</h2>
 
       <div class="payment-options">
+        {% if current_store.enable_stripe %}
         <div class="payment-method-card">
           <input type="radio" name="paymentMethod" id="payCard" value="card" checked />
           <label for="payCard">
@@ -94,20 +95,24 @@
             </div>
           </label>
         </div>
+        {% endif %}
 
+        {% if current_store.enable_tabby %}
         <div class="payment-method-card tabby">
           <input type="radio" name="paymentMethod" id="payTabby" value="tabby" />
           <label for="payTabby">
             <div class="payment-method-info">
               <span class="payment-method-name">Tabby</span>
-              <span class="payment-method-hint">4 interest-free payments of AED <span id="tabbyInstallment">0</span></span>
+              <span class="payment-method-hint">4 interest-free payments of {{ current_store.currency }} <span id="tabbyInstallment">0</span></span>
               <div class="payment-logos">
-                <img src="https://perfumes.com/assets/images/payment-icons/tabby.svg" alt="Tabby" style="height:12px;">
+                <img src="/static/images/payment-icons/tabby.svg" alt="Tabby" style="height:12px;">
               </div>
             </div>
           </label>
         </div>
+        {% endif %}
 
+        {% if current_store.enable_tamara %}
         <div class="payment-method-card tamara">
           <input type="radio" name="paymentMethod" id="payTamara" value="tamara" />
           <label for="payTamara">
@@ -115,14 +120,16 @@
               <span class="payment-method-name">Tamara</span>
               <span class="payment-method-hint">Split into 3 or 4 payments</span>
               <div class="payment-logos">
-                <img src="https://perfumes.com/assets/images/payment-icons/tamara.svg" alt="Tamara" style="height:12px;">
+                <img src="/static/images/payment-icons/tamara.svg" alt="Tamara" style="height:12px;">
               </div>
             </div>
           </label>
         </div>
+        {% endif %}
 
+        {% if current_store.enable_cod %}
         <div class="payment-method-card">
-          <input type="radio" name="paymentMethod" id="payCOD" value="cod" />
+          <input type="radio" name="paymentMethod" id="payCOD" value="cod" {% if not current_store.enable_stripe and not current_store.enable_tabby and not current_store.enable_tamara %}checked{% endif %} />
           <label for="payCOD">
             <div class="payment-method-info">
               <span class="payment-method-name">Cash on Delivery</span>
@@ -132,6 +139,7 @@
             </div>
           </label>
         </div>
+        {% endif %}
       </div>
 
       <!-- Order Note -->
@@ -163,7 +171,7 @@
         <p class="checkout-item-name">{{ item.product.name }}</p>
         <p class="checkout-item-size">{{ item.product.size_ml }}ML × {{ item.quantity }}</p>
       </div>
-      <p class="checkout-item-price">AED {% if item.get_total %}{{ item.get_total|floatformat:0 }}{% else %}{{ item.product.price|floatformat:0 }}{% endif %}</p>
+      <p class="checkout-item-price">{{ current_store.currency }} {% if item.get_total %}{{ item.get_total|floatformat:0 }}{% else %}{{ item.product.price|floatformat:0 }}{% endif %}</p>
     </div>
     {% empty %}
     <p style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px 0;">No items in cart</p>
@@ -172,7 +180,7 @@
     <div style="margin-top:16px;">
       <div class="cart-summary-row">
         <span>Subtotal</span>
-        <span>AED {{ order.get_cart_total|floatformat:0 }}</span>
+        <span>{{ current_store.currency }} {{ order.get_cart_total|floatformat:0 }}</span>
       </div>
       <div class="cart-summary-row">
         <span>Shipping</span>
@@ -182,7 +190,7 @@
       </div>
       <div class="cart-summary-total">
         <span>Total</span>
-        <span>AED <span id="orderTotal">{{ order.get_cart_total|floatformat:0 }}</span></span>
+        <span>{{ current_store.currency }} <span id="orderTotal">{{ order.get_cart_total|floatformat:0 }}</span></span>
       </div>
     </div>
 
