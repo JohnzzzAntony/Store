@@ -111,23 +111,40 @@ document.addEventListener('DOMContentLoaded', function () {
   addToCartBtns.forEach(function(btn) {
     btn.addEventListener('click', function() {
       if (this.dataset.action === 'add') {
-        showCartToast();
+        showToast('✓ Added to cart successfully', 'success');
       }
     });
   });
 
-  function showCartToast() {
+  // Check for specialized payment success from redirects
+  var urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('payment_success') === 'true') {
+    var provider = urlParams.get('provider') || 'payment';
+    var providerName = provider.charAt(0).toUpperCase() + provider.slice(1);
+    setTimeout(function() {
+      showToast('🎉 ' + providerName + ' payment successful! Your order is being processed.', 'success');
+    }, 800);
+  }
+
+  window.showToast = function(message, type) {
     var toast = document.createElement('div');
-    toast.className = 'alert alert-success';
-    toast.innerHTML = '✓ Added to cart successfully';
-    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:3000;box-shadow:0 4px 20px rgba(0,0,0,0.15);border-left:4px solid #27ae60;background:#fff;padding:14px 20px;font-size:13px;min-width:220px;';
+    var isError = type === 'error';
+    toast.className = 'alert alert-' + (type || 'success');
+    toast.innerHTML = message;
+    toast.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:3000;box-shadow:0 4px 20px rgba(0,0,0,0.15);border-left:4px solid ' + (isError ? '#e74c3c' : '#27ae60') + ';background:#fff;padding:14px 24px;font-size:13px;min-width:260px;transform:translateY(100px);opacity:0;transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);';
     document.body.appendChild(toast);
+    
+    // Animate in
+    requestAnimationFrame(function() {
+      toast.style.transform = 'translateY(0)';
+      toast.style.opacity = '1';
+    });
+    
     setTimeout(function () {
       toast.style.opacity = '0';
       toast.style.transform = 'translateY(20px)';
-      toast.style.transition = 'all 0.3s ease';
-      setTimeout(function () { toast.remove(); }, 300);
-    }, 2500);
+      setTimeout(function () { toast.remove(); }, 400);
+    }, 4500);
   }
 
   // ---- Search Overlay (simple redirect to products) ----

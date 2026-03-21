@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import (Store, Customer, Category, Product, Order, OrderItem,
-                      ShippingAddress, BlogPost, ContactMessage, Wishlist, FrontendMedia)
+                      ShippingAddress, BlogPost, ContactMessage, Wishlist, FrontendMedia,
+                      PromoBanner, OfferSection, CategoryOffer, BOGOOffer)
 from .figma_utils import fetch_figma_design_data, create_store_from_figma
 from django.urls import path
 from django.shortcuts import render, redirect
@@ -195,3 +196,130 @@ class FrontendMediaAdmin(admin.ModelAdmin):
     list_display = ['section_name', 'store', 'is_active', 'title']
     list_filter = ['store', 'section_name', 'is_active']
     search_fields = ['title', 'subtitle']
+
+
+# ─── PROMOTIONAL BANNERS ADMIN ───────────────────────────────────────────────
+
+@admin.register(PromoBanner)
+class PromoBannerAdmin(admin.ModelAdmin):
+    list_display = ['title', 'store', 'position', 'order', 'is_active', 'ends_at']
+    list_filter = ['store', 'position', 'is_active']
+    list_editable = ['order', 'is_active']
+    search_fields = ['title', 'subtitle']
+    ordering = ['store', 'order']
+
+    fieldsets = (
+        ('Banner Content', {
+            'fields': ('store', 'title', 'subtitle', 'badge_text')
+        }),
+        ('Call to Action', {
+            'fields': ('cta_text', 'cta_url')
+        }),
+        ('Media', {
+            'fields': ('image', 'image_external_url'),
+            'description': 'Upload a banner image or provide an external URL.'
+        }),
+        ('Display Settings', {
+            'fields': ('position', 'bg_color', 'text_color', 'order', 'is_active')
+        }),
+        ('Scheduling', {
+            'fields': ('starts_at', 'ends_at'),
+            'classes': ('collapse',),
+        }),
+    )
+
+
+# ─── OFFER SECTIONS ADMIN ────────────────────────────────────────────────────
+
+@admin.register(OfferSection)
+class OfferSectionAdmin(admin.ModelAdmin):
+    list_display = ['title', 'store', 'offer_type', 'discount_value', 'promo_code', 'order', 'is_active', 'ends_at']
+    list_filter = ['store', 'offer_type', 'is_active']
+    list_editable = ['order', 'is_active', 'discount_value']
+    search_fields = ['title', 'promo_code']
+    ordering = ['store', 'order']
+
+    fieldsets = (
+        ('Offer Content', {
+            'fields': ('store', 'title', 'description', 'badge_text')
+        }),
+        ('Offer Details', {
+            'fields': ('offer_type', 'discount_value', 'promo_code'),
+            'description': 'Set the offer type and discount value.'
+        }),
+        ('Call to Action', {
+            'fields': ('cta_text', 'cta_url')
+        }),
+        ('Media', {
+            'fields': ('image', 'image_external_url')
+        }),
+        ('Display Settings', {
+            'fields': ('bg_color', 'order', 'is_active')
+        }),
+        ('Countdown Timer', {
+            'fields': ('ends_at',),
+            'description': 'Set an end date/time to show a countdown timer on the frontend.',
+            'classes': ('collapse',),
+        }),
+    )
+
+
+# ─── CATEGORY OFFER ADMIN ────────────────────────────────────────────────────
+
+@admin.register(CategoryOffer)
+class CategoryOfferAdmin(admin.ModelAdmin):
+    list_display = ['title', 'category', 'store', 'discount_label', 'order', 'is_active']
+    list_filter = ['store', 'category', 'is_active']
+    list_editable = ['order', 'is_active']
+    search_fields = ['title', 'subtitle', 'discount_label']
+    ordering = ['store', 'order']
+
+    fieldsets = (
+        ('Offer Content', {
+            'fields': ('store', 'category', 'title', 'subtitle', 'discount_label', 'badge_text')
+        }),
+        ('Call to Action', {
+            'fields': ('cta_text',)
+        }),
+        ('Media', {
+            'fields': ('image', 'image_external_url')
+        }),
+        ('Display Settings', {
+            'fields': ('bg_color', 'order', 'is_active', 'ends_at')
+        }),
+    )
+
+
+# ─── BOGO OFFER ADMIN ────────────────────────────────────────────────────────
+
+@admin.register(BOGOOffer)
+class BOGOOfferAdmin(admin.ModelAdmin):
+    list_display = ['title', 'store', 'bogo_type', 'promo_code', 'order', 'is_active']
+    list_filter = ['store', 'bogo_type', 'is_active']
+    list_editable = ['order', 'is_active']
+    search_fields = ['title', 'description', 'promo_code']
+    filter_horizontal = ['applicable_products', 'applicable_categories']
+    ordering = ['store', 'order']
+
+    fieldsets = (
+        ('BOGO Content', {
+            'fields': ('store', 'title', 'description')
+        }),
+        ('Offer Configuration', {
+            'fields': ('bogo_type', 'promo_code'),
+            'description': 'Select the deal type. Products/categories are optional — leave blank to apply store-wide.'
+        }),
+        ('Applicable To (Optional)', {
+            'fields': ('applicable_products', 'applicable_categories'),
+            'classes': ('collapse',),
+        }),
+        ('Call to Action', {
+            'fields': ('cta_text', 'cta_url')
+        }),
+        ('Media', {
+            'fields': ('image', 'image_external_url')
+        }),
+        ('Display Settings', {
+            'fields': ('bg_color', 'order', 'is_active', 'ends_at')
+        }),
+    )

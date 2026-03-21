@@ -1,0 +1,21 @@
+name,slug,store,Category,price,description,gender,scent_profile,size_ml,is_featured,image_external_url
+Aqua Essence,aqua-essence,Default Luxe Store,Body Mist,250,"A crisp, refreshing aquatic fragrance with notes of sea salt and bergamot.",U,aquatic,100,TRUE,https://picsum.photos/seed/perfume1/600/600
+Midnight Oud,midnight-oud,Default Luxe Store,Room Spray,480,Deep and mysterious oud wood blended with spicy saffron and leather.,M,woody,50,TRUE,https://picsum.photos/seed/perfume2/600/600
+Velvet Rose,velvet-rose,Default Luxe Store,Perfumes,180,Elegant damask rose with hints of sweet vanilla and white musk.,W,floral,100,TRUE,https://picsum.photos/seed/perfume3/600/600
+Desert Sun,desert-sun,Default Luxe Store,Body Mist,120,"A warm, golden mist capturing the essence of desert blooms and amber.",U,oriental,150,FALSE,https://picsum.photos/seed/perfume4/600/600
+Forest Mist,forest-mist,Default Luxe Store,Room Spray,95,Bring the outdoors in with this blend of cedarwood and fresh pine.,U,woody,250,FALSE,https://picsum.photos/seed/perfume5/600/600
+Golden Citrus,golden-citrus,Default Luxe Store,Perfumes,210,Bright and energizing citrus notes with a heart of jasmine.,W,citrus,100,FALSE,https://picsum.photos/seed/perfume6/600/600
+Mountain Spruce,mountain-spruce,Default Luxe Store,Body Mist,310,Cool and grounding scents of mountain spruce and cold mountain air.,M,fresh,100,TRUE,https://picsum.photos/seed/perfume7/600/600
+Lavender Dreams,lavender-dreams,Default Luxe Store,Room Spray,140,Calming lavender and chamomile mist for relaxation before sleep.,U,floral,150,FALSE,https://picsum.photos/seed/perfume8/600/600
+Zen Bamboo,zen-bamboo,Default Luxe Store,Perfumes,115,A clean and peaceful scent of fresh bamboo and green tea.,U,fresh,250,FALSE,https://picsum.photos/seed/perfume9/600/600
+Spiced Amber,spiced-amber,Default Luxe Store,,420,Warm amber notes with a spicy kick of cinnamon and clove.,U,oriental,50,TRUE,https://picsum.photos/seed/perfume10/600/600
+Ocean Breeze,ocean-breeze,Default Luxe Store,Body Mist,230,The refreshing scent of a coastal breeze with salty sea spray.,U,aquatic,100,FALSE,https://picsum.photos/seed/perfume11/600/600
+Silver Moss,silver-moss,Default Luxe Store,Room Spray,340,Earthy and sophisticated moss with a touch of silver birch.,M,musky,100,TRUE,https://picsum.photos/seed/perfume12/600/600
+Berry Sorbet,berry-sorbet,Default Luxe Store,Perfumes,160,Sweet and playful berry notes with a splash of cool sorbet.,W,floral,150,FALSE,https://picsum.photos/seed/perfume13/600/600
+Fresh Linens,fresh-linens,Default Luxe Store,Room Spray,85,The comforting scent of freshly laundered linens drying in the sun.,U,fresh,250,FALSE,https://picsum.photos/seed/perfume14/600/600
+Black Pepper,black-pepper,Default Luxe Store,Perfumes,390,Sharp and invigorating black pepper with woody undertones.,M,oriental,50,TRUE,https://picsum.photos/seed/perfume15/600/600
+Gardenia Bloom,gardenia-bloom,Default Luxe Store,Body Mist,280,A rich and heady floral bouquet of blooming gardenias.,W,floral,100,TRUE,https://picsum.photos/seed/perfume16/600/600
+Arctic Mint,arctic-mint,Default Luxe Store,Room Spray,130,Super-cool mint and eucalyptus for an instant refresh.,U,fresh,150,FALSE,https://picsum.photos/seed/perfume17/600/600
+Sandalwood Serenity,sandalwood-serenity,Default Luxe Store,Body Mist,145,Grounding sandalwood and exotic incense for a peaceful space.,U,woody,250,FALSE,https://picsum.photos/seed/perfume18/600/600
+Imperial Rose,imperial-rose,Default Luxe Store,Room Spray,550,Regal Bulgarian rose with a heart of patchouli and rare oud.,W,floral,100,TRUE,https://picsum.photos/seed/perfume19/600/600
+Island Coconut,island-coconut,Default Luxe Store,Perfumes,175,A tropical escape with creamy coconut and sweet island papaya.,W,fresh,150,FALSE,https://picsum.photos/seed/perfume20/600/600

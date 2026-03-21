@@ -2,12 +2,16 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse, HttpRequest
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q
 import json
 import datetime
-from .models import Product, Customer, Order, OrderItem, ShippingAddress, Category, BlogPost, ContactMessage
+from .models import (Product, Customer, Order, OrderItem, ShippingAddress, Category,
+                     BlogPost, ContactMessage, PromoBanner, OfferSection, CategoryOffer, BOGOOffer, FrontendMedia)
 from .utils import cookieCart, cartData, guestOrder
 from .firebase_utils import verify_token, sync_user_to_firestore, save_order_to_firestore
+from .payment_providers import payment_registry
 
 
 def firebase_login_sync(request, *args, **kwargs):
@@ -37,15 +41,46 @@ def firebase_login_sync(request, *args, **kwargs):
 
 
 def store(request, *args, **kwargs):
-    """Home page with hero carousel and featured products."""
+    """Home page with hero carousel, banners, offers, and featured products."""
     data = cartData(request)
     cartItems = data['cartItems']
     store = getattr(request, 'current_store', None)
+
+    now = datetime.datetime.now()
 
     featured_products = Product.objects.filter(store=store, is_featured=True, in_stock=True)[:6]
     all_products = Product.objects.filter(store=store, in_stock=True)[:8]
     latest_blogs = BlogPost.objects.filter(store=store).order_by('-published_at')[:3]
     categories = Category.objects.filter(store=store)[:3]
+
+    # Promotional content — only active, not yet expired
+    promo_banners = PromoBanner.objects.filter(
+        store=store, is_active=True
+    ).filter(
+        Q(ends_at__isnull=True) | Q(ends_at__gt=now)
+    )
+
+    offer_sections = OfferSection.objects.filter(
+        store=store, is_active=True
+    ).filter(
+        Q(ends_at__isnull=True) | Q(ends_at__gt=now)
+    )
+
+    category_offers = CategoryOffer.objects.filter(
+        store=store, is_active=True
+    ).filter(
+        Q(ends_at__isnull=True) | Q(ends_at__gt=now)
+    ).select_related('category')
+
+    bogo_offers = BOGOOffer.objects.filter(
+        store=store, is_active=True
+    ).filter(
+        Q(ends_at__isnull=True) | Q(ends_at__gt=now)
+    )
+
+    # Frontend Media
+    media_assets = FrontendMedia.objects.filter(store=store, is_active=True)
+    media = {asset.section_name: asset for asset in media_assets}
 
     context = {
         'featured_products': featured_products,
@@ -53,8 +88,14 @@ def store(request, *args, **kwargs):
         'latest_blogs': latest_blogs,
         'categories': categories,
         'cartItems': cartItems,
+        'promo_banners': promo_banners,
+        'offer_sections': offer_sections,
+        'category_offers': category_offers,
+        'bogo_offers': bogo_offers,
+        'media': media,
     }
     return render(request, 'store/store.html', context)
+
 
 
 def product_list(request: HttpRequest, *args, **kwargs):
@@ -282,6 +323,11 @@ def updateItem(request, *args, **kwargs):
     data = json.loads(request.body)
     productId = data['productId']
     action = data['action']
+    quantity = data.get('quantity', 1)
+
+    print('Action:', action)
+    print('Product:', productId)
+    print('Quantity:', quantity)
 
     if request.user.is_authenticated:
         customer = request.user.customer
@@ -291,7 +337,7 @@ def updateItem(request, *args, **kwargs):
         orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
 
         if action == 'add':
-            orderItem.quantity = (orderItem.quantity + 1)
+            orderItem.quantity = (orderItem.quantity + quantity)
         elif action == 'remove':
             orderItem.quantity = (orderItem.quantity - 1)
 
@@ -301,6 +347,58 @@ def updateItem(request, *args, **kwargs):
             orderItem.delete()
 
     return JsonResponse('Item was updated', safe=False)
+
+
+@login_required
+def clear_products(request):
+    """Secret/Admin view to clear all products for re-import"""
+    count = Product.objects.all().count()
+    Product.objects.all().delete()
+    from django.contrib import messages
+    messages.success(request, f"Successfully deleted {count} products.")
+    return redirect('admin:store_product_changelist')
+
+
+def tabby_payment(request):
+    """Mock Tabby Payment Page"""
+    order_id = request.GET.get('order_id')
+    if order_id:
+        try:
+            order = Order.objects.get(id=order_id)
+            total = order.get_cart_total
+        except Order.DoesNotExist:
+            return redirect('store')
+    else:
+        data = cartData(request)
+        order = data['order']
+        if hasattr(order, 'get_cart_total'):
+            total = order.get_cart_total
+        else:
+            total = order.get('get_cart_total', 0.0)
+        
+    context = {'total': total, 'installment': round(total / 4, 2)}
+    return render(request, 'store/tabby_payment.html', context)
+
+
+def tamara_payment(request):
+    """Mock Tamara Payment Page"""
+    order_id = request.GET.get('order_id')
+    if order_id:
+        try:
+            order = Order.objects.get(id=order_id)
+            total = order.get_cart_total
+        except Order.DoesNotExist:
+            return redirect('store')
+    else:
+        data = cartData(request)
+        order = data['order']
+        if hasattr(order, 'get_cart_total'):
+            total = order.get_cart_total
+        else:
+            total = order.get('get_cart_total', 0.0)
+        
+    context = {'total': total}
+    return render(request, 'store/tamara_payment.html', context)
 
 
 from .firebase_utils import save_order_to_firestore
@@ -356,4 +454,35 @@ def processOrder(request, *args, **kwargs):
         'timestamp': datetime.datetime.now().isoformat()
     })
 
-    return JsonResponse('Payment submitted..', safe=False)
+    # Return the payment result back to the frontend for handling redirects/success
+    success_redirect_url = f"/order-success/?transaction_id={transaction_id}"
+    
+    if provider and 'payment_result' in locals():
+        if payment_result.get('status') == 'success':
+             payment_result['redirect_url'] = success_redirect_url
+        return JsonResponse(payment_result)
+    
+    return JsonResponse({'status': 'success', 'redirect_url': success_redirect_url})
+
+def order_success(request):
+    """Page shown after successful order placement"""
+    transaction_id = request.GET.get('transaction_id')
+    order = None
+    items = []
+    
+    if transaction_id:
+        try:
+            order = Order.objects.get(transaction_id=transaction_id)
+            items = order.orderitem_set.all()
+        except Order.DoesNotExist:
+            pass
+            
+    # Recommendations (categories or featured)
+    categories = Category.objects.all()[:3]
+    
+    context = {
+        'order': order,
+        'items': items,
+        'categories': categories,
+    }
+    return render(request, 'store/order_success.html', context)

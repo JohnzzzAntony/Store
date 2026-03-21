@@ -21,17 +21,27 @@ class TabbyProvider(BasePaymentProvider):
     name: str = "Tabby"
     
     def process(self, order: Any, data: Dict[str, Any]) -> Dict[str, Any]:
-        # Implementation for Tabby API
-        print(f"Processing Tabby payment for order {getattr(order, 'id', 'unknown')}")
-        return {"status": "success", "provider": self.name}
+        # In a real integration, this is where we'd call Tabby's API
+        # but here we simulate a successful redirect-based response.
+        print(f"Tabby Processing - Order {getattr(order, 'id', 'unknown')}")
+        return {
+            "status": "redirect", 
+            "redirect_url": f"/payment/tabby/?order_id={getattr(order, 'id', '')}",
+            "provider": self.name
+        }
 
 class TamaraProvider(BasePaymentProvider):
     name: str = "Tamara"
     
     def process(self, order: Any, data: Dict[str, Any]) -> Dict[str, Any]:
-        # Implementation for Tamara API
-        print(f"Processing Tamara payment for order {getattr(order, 'id', 'unknown')}")
-        return {"status": "success", "provider": self.name}
+        # In a real integration, this is where we'd call Tamara's API
+        # but here we simulate a successful redirect-based response.
+        print(f"Tamara Processing - Order {getattr(order, 'id', 'unknown')}")
+        return {
+            "status": "redirect", 
+            "redirect_url": f"/payment/tamara/?order_id={getattr(order, 'id', '')}",
+            "provider": self.name
+        }
 
 class CODProvider(BasePaymentProvider):
     name: str = "Cash on Delivery"

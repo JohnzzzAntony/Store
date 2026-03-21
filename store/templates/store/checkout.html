@@ -85,7 +85,7 @@
       <div class="payment-options">
         {% if current_store.enable_stripe %}
         <div class="payment-method-card">
-          <input type="radio" name="paymentMethod" id="payCard" value="card" checked />
+          <input type="radio" name="paymentOption" id="payCard" value="card" checked onchange="toggleEMI(false)"/>
           <label for="payCard">
             <div class="payment-method-info">
               <span class="payment-method-name">Credit / Debit Card</span>
@@ -94,42 +94,74 @@
               </div>
             </div>
           </label>
+
+          <div id="cardDetailsContainer" class="card-details-form" style="padding: 0 20px 20px 50px;">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label class="form-label" style="font-size: 10px;">Card Number</label>
+              <input type="text" class="form-control" name="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" />
+            </div>
+            <div class="form-row" style="gap: 12px;">
+              <div class="form-group">
+                <label class="form-label" style="font-size: 10px;">Expiry Date</label>
+                <input type="text" class="form-control" name="cardExpiry" placeholder="MM / YY" maxlength="5" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" style="font-size: 10px;">CVV</label>
+                <input type="password" class="form-control" name="cardCVV" placeholder="***" maxlength="3" />
+              </div>
+            </div>
+          </div>
         </div>
         {% endif %}
 
-        {% if current_store.enable_tabby %}
-        <div class="payment-method-card tabby">
-          <input type="radio" name="paymentMethod" id="payTabby" value="tabby" />
-          <label for="payTabby">
+        {% if current_store.enable_tabby or current_store.enable_tamara %}
+        <div class="payment-method-card">
+          <input type="radio" name="paymentOption" id="payEMI" value="emi" onchange="toggleEMI(true)"/>
+          <label for="payEMI">
             <div class="payment-method-info">
-              <span class="payment-method-name">Tabby</span>
-              <span class="payment-method-hint">4 interest-free payments of {{ current_store.currency }} <span id="tabbyInstallment">0</span></span>
+              <span class="payment-method-name">Pay as EMI (Tabby / Tamara)</span>
+              <span class="payment-method-hint">Split your payment into installments with 0% interest</span>
               <div class="payment-logos">
-                <img src="/static/images/payment-icons/tabby.svg" alt="Tabby" style="height:12px;">
+                <i class="ph ph-calendar-check"></i>
               </div>
             </div>
           </label>
-        </div>
-        {% endif %}
+          
+          <div id="emiOptions" class="emi-sub-options" style="display:none; padding: 0 20px 20px 50px;">
+            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase;">Select your provider:</p>
+            
+            {% if current_store.enable_tabby %}
+            <div class="emi-radio-option">
+              <input type="radio" name="emiProvider" id="tabbyProvider" value="tabby" checked />
+              <label for="tabbyProvider">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <img src="/static/images/payment-icons/tabby.svg" alt="Tabby" style="height:15px;">
+                  <span class="emi-provider-name">Tabby</span>
+                </div>
+                <span class="emi-provider-hint">4 interest-free payments of {{ current_store.currency }} <span class="tabbyAmount">0</span></span>
+              </label>
+            </div>
+            {% endif %}
 
-        {% if current_store.enable_tamara %}
-        <div class="payment-method-card tamara">
-          <input type="radio" name="paymentMethod" id="payTamara" value="tamara" />
-          <label for="payTamara">
-            <div class="payment-method-info">
-              <span class="payment-method-name">Tamara</span>
-              <span class="payment-method-hint">Split into 3 or 4 payments</span>
-              <div class="payment-logos">
-                <img src="/static/images/payment-icons/tamara.svg" alt="Tamara" style="height:12px;">
-              </div>
+            {% if current_store.enable_tamara %}
+            <div class="emi-radio-option">
+              <input type="radio" name="emiProvider" id="tamaraProvider" value="tamara" {% if not current_store.enable_tabby %}checked{% endif %} />
+              <label for="tamaraProvider">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <img src="/static/images/payment-icons/tamara.svg" alt="Tamara" style="height:15px;">
+                  <span class="emi-provider-name">Tamara</span>
+                </div>
+                <span class="emi-provider-hint">Split into 3 or 4 payments</span>
+              </label>
             </div>
-          </label>
+            {% endif %}
+          </div>
         </div>
         {% endif %}
 
         {% if current_store.enable_cod %}
         <div class="payment-method-card">
-          <input type="radio" name="paymentMethod" id="payCOD" value="cod" {% if not current_store.enable_stripe and not current_store.enable_tabby and not current_store.enable_tamara %}checked{% endif %} />
+          <input type="radio" name="paymentOption" id="payCOD" value="cod" {% if not current_store.enable_stripe and not current_store.enable_tabby and not current_store.enable_tamara %}checked{% endif %} onchange="toggleEMI(false)"/>
           <label for="payCOD">
             <div class="payment-method-info">
               <span class="payment-method-name">Cash on Delivery</span>
@@ -215,7 +247,19 @@ function submitOrder() {
   var state    = document.getElementById('billingState').value;
   var zipcode  = document.getElementById('billingZip').value;
   var total    = document.getElementById('orderTotal').textContent;
-  var payment  = document.querySelector('input[name="paymentMethod"]:checked').value;
+  
+  var paymentOption = document.querySelector('input[name="paymentOption"]:checked').value;
+  var payment = paymentOption;
+  
+  if (paymentOption === 'emi') {
+    var emiProvider = document.querySelector('input[name="emiProvider"]:checked');
+    if (emiProvider) {
+      payment = emiProvider.value;
+    } else {
+      alert('Please select an EMI provider.');
+      return;
+    }
+  }
 
   if (!fullName || !phone || !email || !address || !city || !state || !zipcode) {
     alert('Please fill in all required fields.');
@@ -252,7 +296,21 @@ function submitOrder() {
   })
   .then(function(res) { return res.json(); })
   .then(function(data) {
-    window.location.href = '{% url "store" %}?order_success=true';
+    if (data.status === 'success' || (data.status === 'redirect' && data.redirect_url)) {
+      // Clear cart
+      cart = {};
+      document.cookie = 'cart=' + JSON.stringify(cart) + ";path=/";
+
+      if (data.status === 'redirect') {
+        window.location.href = data.redirect_url;
+      } else {
+        window.location.href = '{% url "store" %}?order_success=true';
+      }
+    } else {
+      alert(data.message || 'An error occurred during payment processing.');
+      document.getElementById('placeOrderBtn').textContent = 'Place Order';
+      document.getElementById('placeOrderBtn').disabled = false;
+    }
   })
   .catch(function(err) {
     alert('Something went wrong. Please try again.');
@@ -261,12 +319,75 @@ function submitOrder() {
   });
 }
 
+// EMI & Card Toggler
+function toggleEMI(isEMI) {
+  var emiDiv = document.getElementById('emiOptions');
+  var cardDiv = document.getElementById('cardDetailsContainer');
+  
+  if (emiDiv) {
+    emiDiv.style.display = isEMI ? 'block' : 'none';
+  }
+  
+  if (cardDiv) {
+    // Show card details only if card is NOT selected for EMI/COD
+    var isCard = document.getElementById('payCard').checked;
+    cardDiv.style.display = isCard ? 'block' : 'none';
+  }
+}
+
 // Calculate installments for preview
 document.addEventListener('DOMContentLoaded', function() {
   var total = parseFloat(document.getElementById('orderTotal').textContent);
-  if (document.getElementById('tabbyInstallment')) {
-    document.getElementById('tabbyInstallment').textContent = (total / 4).toFixed(0);
-  }
+  var tabbyAmounts = document.querySelectorAll('.tabbyAmount');
+  tabbyAmounts.forEach(function(el) {
+    el.textContent = (total / 4).toFixed(0);
+  });
 });
 </script>
+
+<style>
+.emi-sub-options {
+  border-top: 1px dashed var(--border);
+  margin-top: 5px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.emi-radio-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.emi-radio-option input[type="radio"] {
+  accent-color: var(--teal);
+  margin-top: 4px;
+  width: 16px;
+  height: 16px;
+}
+
+.emi-radio-option label {
+  display: flex;
+  flex-direction: column;
+  padding: 0 !important;
+  cursor: pointer;
+}
+
+.emi-provider-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.emi-provider-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+</style>
 {% endblock %}

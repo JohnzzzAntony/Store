@@ -1,0 +1,101 @@
+name,slug,price,store,category,description,gender,scent_profile,size_ml,in_stock,is_featured,digital
+White Shadow,white-shadow,551,Default Luxe Store,Room Spray,Experience the white allure of Shadow. A masterfully crafted floral fragrance that evokes natural beauty.,U,fresh,200,TRUE,TRUE,FALSE
+Imperial Elegance,imperial-elegance,209,Default Luxe Store,Body Mist,Experience the imperial allure of Elegance. A masterfully crafted citrus fragrance that evokes modern sophistication.,W,citrus,50,TRUE,FALSE,FALSE
+Black Bloom,black-bloom,792,Default Luxe Store,Perfumes,Experience the black allure of Bloom. A masterfully crafted floral fragrance that evokes modern sophistication.,M,woody,30,TRUE,FALSE,FALSE
+Desert Dream,desert-dream,928,Default Luxe Store,Body Mist,Experience the desert allure of Dream. A masterfully crafted oriental fragrance that evokes modern sophistication.,M,floral,150,TRUE,FALSE,FALSE
+Aqua Soul,aqua-soul,332,Default Luxe Store,Perfumes,Experience the aqua allure of Soul. A masterfully crafted oriental fragrance that evokes bold confidence.,W,citrus,150,TRUE,FALSE,FALSE
+Golden Essence,golden-essence,935,Default Luxe Store,Room Spray,Experience the golden allure of Essence. A masterfully crafted floral fragrance that evokes natural beauty.,U,woody,100,TRUE,FALSE,FALSE
+Black Rose,black-rose,704,Default Luxe Store,Perfumes,Experience the black allure of Rose. A masterfully crafted aquatic fragrance that evokes modern sophistication.,M,citrus,30,TRUE,FALSE,FALSE
+Royal Rose,royal-rose,936,Default Luxe Store,Body Mist,Experience the royal allure of Rose. A masterfully crafted aquatic fragrance that evokes modern sophistication.,M,citrus,50,TRUE,TRUE,FALSE
+Velvet Diamond,velvet-diamond,487,Default Luxe Store,Body Mist,Experience the velvet allure of Diamond. A masterfully crafted oriental fragrance that evokes natural beauty.,M,fresh,150,TRUE,TRUE,FALSE
+Eternal Pearl,eternal-pearl,255,Default Luxe Store,Body Mist,Experience the eternal allure of Pearl. A masterfully crafted citrus fragrance that evokes bold confidence.,U,woody,150,TRUE,FALSE,FALSE
+White Obsession,white-obsession,1060,Default Luxe Store,Body Mist,Experience the white allure of Obsession. A masterfully crafted fresh fragrance that evokes modern sophistication.,U,floral,200,TRUE,FALSE,FALSE
+Solar Spirit,solar-spirit,311,Default Luxe Store,Body Mist,Experience the solar allure of Spirit. A masterfully crafted citrus fragrance that evokes modern sophistication.,U,oriental,30,TRUE,FALSE,FALSE
+Radiant Essence,radiant-essence,471,Default Luxe Store,Body Mist,Experience the radiant allure of Essence. A masterfully crafted aquatic fragrance that evokes bold confidence.,U,aquatic,50,TRUE,FALSE,FALSE
+Oceanic Elegance,oceanic-elegance,898,Default Luxe Store,Perfumes,Experience the oceanic allure of Elegance. A masterfully crafted oriental fragrance that evokes timeless elegance.,M,oriental,30,TRUE,TRUE,FALSE
+Imperial Breeze,imperial-breeze,960,Default Luxe Store,Body Mist,Experience the imperial allure of Breeze. A masterfully crafted musky fragrance that evokes modern sophistication.,M,floral,200,TRUE,FALSE,FALSE
+Aqua Essence,aqua-essence,1015,Default Luxe Store,Room Spray,Experience the aqua allure of Essence. A masterfully crafted fresh fragrance that evokes bold confidence.,U,fresh,50,TRUE,FALSE,FALSE
+Desert Shadow,desert-shadow,840,Default Luxe Store,Body Mist,Experience the desert allure of Shadow. A masterfully crafted oriental fragrance that evokes natural beauty.,M,oriental,150,TRUE,FALSE,FALSE
+Solar Pearl,solar-pearl,541,Default Luxe Store,Room Spray,Experience the solar allure of Pearl. A masterfully crafted woody fragrance that evokes natural beauty.,U,aquatic,100,TRUE,FALSE,FALSE
+Pure Obsession,pure-obsession,1104,Default Luxe Store,Body Mist,Experience the pure allure of Obsession. A masterfully crafted floral fragrance that evokes natural beauty.,W,citrus,100,TRUE,FALSE,FALSE
+White Spirit,white-spirit,874,Default Luxe Store,Perfumes,Experience the white allure of Spirit. A masterfully crafted fresh fragrance that evokes natural beauty.,M,musky,150,TRUE,FALSE,FALSE
+Eternal Dream,eternal-dream,658,Default Luxe Store,Room Spray,Experience the eternal allure of Dream. A masterfully crafted musky fragrance that evokes natural beauty.,W,fresh,30,TRUE,FALSE,FALSE
+Golden Nights,golden-nights,1181,Default Luxe Store,Perfumes,Experience the golden allure of Nights. A masterfully crafted oriental fragrance that evokes natural beauty.,M,oriental,50,TRUE,FALSE,FALSE
+White Passion,white-passion,233,Default Luxe Store,Body Mist,Experience the white allure of Passion. A masterfully crafted musky fragrance that evokes bold confidence.,W,floral,150,TRUE,TRUE,FALSE
+Infinity Oud,infinity-oud,363,Default Luxe Store,Room Spray,Experience the infinity allure of Oud. A masterfully crafted fresh fragrance that evokes modern sophistication.,U,fresh,30,TRUE,FALSE,FALSE
+Radiant Musk,radiant-musk,839,Default Luxe Store,Perfumes,Experience the radiant allure of Musk. A masterfully crafted oriental fragrance that evokes natural beauty.,U,aquatic,50,TRUE,FALSE,FALSE
+Silver Obsession,silver-obsession,509,Default Luxe Store,Room Spray,Experience the silver allure of Obsession. A masterfully crafted aquatic fragrance that evokes bold confidence.,M,citrus,100,TRUE,FALSE,FALSE
+Desert Shadow 27,desert-shadow-27,628,Default Luxe Store,Body Mist,Experience the desert allure of Shadow. A masterfully crafted musky fragrance that evokes natural beauty.,U,citrus,30,TRUE,FALSE,FALSE
+Midnight Oud,midnight-oud,585,Default Luxe Store,Body Mist,Experience the midnight allure of Oud. A masterfully crafted citrus fragrance that evokes timeless elegance.,U,fresh,30,TRUE,TRUE,FALSE
+Oceanic Passion,oceanic-passion,1149,Default Luxe Store,Body Mist,Experience the oceanic allure of Passion. A masterfully crafted woody fragrance that evokes modern sophistication.,W,oriental,100,TRUE,TRUE,FALSE
+White Dream,white-dream,382,Default Luxe Store,Perfumes,Experience the white allure of Dream. A masterfully crafted woody fragrance that evokes bold confidence.,W,woody,150,TRUE,TRUE,FALSE
+Eternal Citrus,eternal-citrus,431,Default Luxe Store,Perfumes,Experience the eternal allure of Citrus. A masterfully crafted musky fragrance that evokes natural beauty.,U,musky,150,TRUE,TRUE,FALSE
+Nomad Dream,nomad-dream,1052,Default Luxe Store,Perfumes,Experience the nomad allure of Dream. A masterfully crafted floral fragrance that evokes modern sophistication.,M,oriental,150,TRUE,FALSE,FALSE
+Velvet Breeze,velvet-breeze,716,Default Luxe Store,Perfumes,Experience the velvet allure of Breeze. A masterfully crafted woody fragrance that evokes timeless elegance.,M,musky,150,TRUE,FALSE,FALSE
+Velvet Elegance,velvet-elegance,977,Default Luxe Store,Perfumes,Experience the velvet allure of Elegance. A masterfully crafted fresh fragrance that evokes natural beauty.,M,woody,200,TRUE,FALSE,FALSE
+Mystic Dream,mystic-dream,745,Default Luxe Store,Body Mist,Experience the mystic allure of Dream. A masterfully crafted aquatic fragrance that evokes natural beauty.,M,musky,200,TRUE,TRUE,FALSE
+Desert Essence,desert-essence,213,Default Luxe Store,Perfumes,Experience the desert allure of Essence. A masterfully crafted woody fragrance that evokes modern sophistication.,M,citrus,50,TRUE,FALSE,FALSE
+Silver Shadow,silver-shadow,1062,Default Luxe Store,Body Mist,Experience the silver allure of Shadow. A masterfully crafted oriental fragrance that evokes timeless elegance.,M,floral,100,TRUE,FALSE,FALSE
+Oceanic Dream,oceanic-dream,964,Default Luxe Store,Body Mist,Experience the oceanic allure of Dream. A masterfully crafted woody fragrance that evokes bold confidence.,W,woody,200,TRUE,FALSE,FALSE
+Nomad Oud,nomad-oud,960,Default Luxe Store,Perfumes,Experience the nomad allure of Oud. A masterfully crafted fresh fragrance that evokes modern sophistication.,U,floral,30,TRUE,FALSE,FALSE
+Velvet Elegance 40,velvet-elegance-40,160,Default Luxe Store,Perfumes,Experience the velvet allure of Elegance. A masterfully crafted woody fragrance that evokes timeless elegance.,M,citrus,30,TRUE,FALSE,FALSE
+Pure Citrus,pure-citrus,637,Default Luxe Store,Room Spray,Experience the pure allure of Citrus. A masterfully crafted floral fragrance that evokes bold confidence.,U,oriental,150,TRUE,FALSE,FALSE
+Radiant Gold,radiant-gold,469,Default Luxe Store,Perfumes,Experience the radiant allure of Gold. A masterfully crafted floral fragrance that evokes bold confidence.,U,fresh,150,TRUE,FALSE,FALSE
+White Pearl,white-pearl,1017,Default Luxe Store,Perfumes,Experience the white allure of Pearl. A masterfully crafted citrus fragrance that evokes natural beauty.,U,oriental,100,TRUE,FALSE,FALSE
+Wild Rose,wild-rose,704,Default Luxe Store,Body Mist,Experience the wild allure of Rose. A masterfully crafted oriental fragrance that evokes natural beauty.,U,woody,30,TRUE,TRUE,FALSE
+Desert Pearl,desert-pearl,1142,Default Luxe Store,Perfumes,Experience the desert allure of Pearl. A masterfully crafted woody fragrance that evokes modern sophistication.,W,citrus,150,TRUE,FALSE,FALSE
+Midnight Elegance,midnight-elegance,392,Default Luxe Store,Room Spray,Experience the midnight allure of Elegance. A masterfully crafted woody fragrance that evokes natural beauty.,U,aquatic,100,TRUE,TRUE,FALSE
+Nomad Shadow,nomad-shadow,909,Default Luxe Store,Body Mist,Experience the nomad allure of Shadow. A masterfully crafted musky fragrance that evokes timeless elegance.,M,musky,200,TRUE,FALSE,FALSE
+Imperial Diamond,imperial-diamond,809,Default Luxe Store,Perfumes,Experience the imperial allure of Diamond. A masterfully crafted woody fragrance that evokes bold confidence.,U,citrus,100,TRUE,FALSE,FALSE
+Aqua Dream,aqua-dream,569,Default Luxe Store,Body Mist,Experience the aqua allure of Dream. A masterfully crafted aquatic fragrance that evokes bold confidence.,W,oriental,30,TRUE,FALSE,FALSE
+Velvet Nights,velvet-nights,485,Default Luxe Store,Body Mist,Experience the velvet allure of Nights. A masterfully crafted citrus fragrance that evokes bold confidence.,W,floral,150,TRUE,FALSE,FALSE
+Silver Obsession 51,silver-obsession-51,739,Default Luxe Store,Perfumes,Experience the silver allure of Obsession. A masterfully crafted aquatic fragrance that evokes natural beauty.,U,oriental,150,TRUE,FALSE,FALSE
+Solar Oud,solar-oud,602,Default Luxe Store,Body Mist,Experience the solar allure of Oud. A masterfully crafted aquatic fragrance that evokes timeless elegance.,U,floral,50,TRUE,FALSE,FALSE
+Mystic Diamond,mystic-diamond,199,Default Luxe Store,Room Spray,Experience the mystic allure of Diamond. A masterfully crafted citrus fragrance that evokes bold confidence.,M,citrus,150,TRUE,FALSE,FALSE
+Wild Sandalwood,wild-sandalwood,489,Default Luxe Store,Perfumes,Experience the wild allure of Sandalwood. A masterfully crafted floral fragrance that evokes modern sophistication.,W,citrus,50,TRUE,FALSE,FALSE
+Silver Diamond,silver-diamond,800,Default Luxe Store,Body Mist,Experience the silver allure of Diamond. A masterfully crafted aquatic fragrance that evokes bold confidence.,U,fresh,30,TRUE,FALSE,FALSE
+Celestial Obsession,celestial-obsession,507,Default Luxe Store,Perfumes,Experience the celestial allure of Obsession. A masterfully crafted oriental fragrance that evokes natural beauty.,W,citrus,150,TRUE,FALSE,FALSE
+White Oud,white-oud,384,Default Luxe Store,Room Spray,Experience the white allure of Oud. A masterfully crafted citrus fragrance that evokes timeless elegance.,U,citrus,150,TRUE,FALSE,FALSE
+Velvet Dream,velvet-dream,939,Default Luxe Store,Perfumes,Experience the velvet allure of Dream. A masterfully crafted musky fragrance that evokes modern sophistication.,M,woody,30,TRUE,FALSE,FALSE
+Pure Musk,pure-musk,900,Default Luxe Store,Room Spray,Experience the pure allure of Musk. A masterfully crafted oriental fragrance that evokes modern sophistication.,U,musky,30,TRUE,FALSE,FALSE
+White Amber,white-amber,777,Default Luxe Store,Perfumes,Experience the white allure of Amber. A masterfully crafted fresh fragrance that evokes bold confidence.,W,fresh,30,TRUE,FALSE,FALSE
+Aqua Soul 61,aqua-soul-61,1047,Default Luxe Store,Body Mist,Experience the aqua allure of Soul. A masterfully crafted woody fragrance that evokes bold confidence.,M,floral,200,TRUE,FALSE,FALSE
+Celestial Spirit,celestial-spirit,562,Default Luxe Store,Body Mist,Experience the celestial allure of Spirit. A masterfully crafted oriental fragrance that evokes bold confidence.,U,oriental,100,TRUE,FALSE,FALSE
+Solar Pearl 63,solar-pearl-63,975,Default Luxe Store,Body Mist,Experience the solar allure of Pearl. A masterfully crafted oriental fragrance that evokes natural beauty.,U,floral,50,TRUE,TRUE,FALSE
+Nomad Obsession,nomad-obsession,901,Default Luxe Store,Room Spray,Experience the nomad allure of Obsession. A masterfully crafted musky fragrance that evokes modern sophistication.,M,aquatic,200,TRUE,FALSE,FALSE
+Silver Pearl,silver-pearl,273,Default Luxe Store,Room Spray,Experience the silver allure of Pearl. A masterfully crafted fresh fragrance that evokes modern sophistication.,M,musky,100,TRUE,FALSE,FALSE
+Imperial Oud,imperial-oud,972,Default Luxe Store,Body Mist,Experience the imperial allure of Oud. A masterfully crafted musky fragrance that evokes bold confidence.,U,floral,150,TRUE,FALSE,FALSE
+Nomad Breeze,nomad-breeze,1075,Default Luxe Store,Room Spray,Experience the nomad allure of Breeze. A masterfully crafted fresh fragrance that evokes bold confidence.,U,aquatic,150,TRUE,FALSE,FALSE
+Nomad Pearl,nomad-pearl,775,Default Luxe Store,Room Spray,Experience the nomad allure of Pearl. A masterfully crafted fresh fragrance that evokes modern sophistication.,U,citrus,150,TRUE,FALSE,FALSE
+Silver Oud,silver-oud,881,Default Luxe Store,Body Mist,Experience the silver allure of Oud. A masterfully crafted fresh fragrance that evokes bold confidence.,U,woody,50,TRUE,FALSE,FALSE
+Infinity Nights,infinity-nights,236,Default Luxe Store,Room Spray,Experience the infinity allure of Nights. A masterfully crafted citrus fragrance that evokes modern sophistication.,M,musky,150,TRUE,FALSE,FALSE
+Midnight Rose,midnight-rose,405,Default Luxe Store,Perfumes,Experience the midnight allure of Rose. A masterfully crafted aquatic fragrance that evokes timeless elegance.,W,floral,100,TRUE,FALSE,FALSE
+Solar Shadow,solar-shadow,899,Default Luxe Store,Perfumes,Experience the solar allure of Shadow. A masterfully crafted musky fragrance that evokes timeless elegance.,M,floral,200,TRUE,FALSE,FALSE
+Golden Dream,golden-dream,152,Default Luxe Store,Perfumes,Experience the golden allure of Dream. A masterfully crafted woody fragrance that evokes modern sophistication.,W,musky,200,TRUE,FALSE,FALSE
+Aqua Rose,aqua-rose,619,Default Luxe Store,Body Mist,Experience the aqua allure of Rose. A masterfully crafted woody fragrance that evokes modern sophistication.,W,citrus,200,TRUE,FALSE,FALSE
+Infinity Amber,infinity-amber,404,Default Luxe Store,Room Spray,Experience the infinity allure of Amber. A masterfully crafted woody fragrance that evokes modern sophistication.,W,citrus,100,TRUE,FALSE,FALSE
+Solar Nights,solar-nights,360,Default Luxe Store,Perfumes,Experience the solar allure of Nights. A masterfully crafted fresh fragrance that evokes timeless elegance.,W,woody,50,TRUE,FALSE,FALSE
+Velvet Rose,velvet-rose,162,Default Luxe Store,Room Spray,Experience the velvet allure of Rose. A masterfully crafted floral fragrance that evokes bold confidence.,U,musky,30,TRUE,FALSE,FALSE
+Velvet Rose 78,velvet-rose-78,350,Default Luxe Store,Body Mist,Experience the velvet allure of Rose. A masterfully crafted oriental fragrance that evokes timeless elegance.,W,woody,150,TRUE,FALSE,FALSE
+Eternal Sandalwood,eternal-sandalwood,958,Default Luxe Store,Perfumes,Experience the eternal allure of Sandalwood. A masterfully crafted musky fragrance that evokes modern sophistication.,U,woody,150,TRUE,FALSE,FALSE
+Imperial Rose,imperial-rose,167,Default Luxe Store,Perfumes,Experience the imperial allure of Rose. A masterfully crafted citrus fragrance that evokes natural beauty.,U,aquatic,200,TRUE,FALSE,FALSE
+Golden Obsession,golden-obsession,497,Default Luxe Store,Body Mist,Experience the golden allure of Obsession. A masterfully crafted citrus fragrance that evokes bold confidence.,U,fresh,30,TRUE,FALSE,FALSE
+Royal Gold,royal-gold,212,Default Luxe Store,Room Spray,Experience the royal allure of Gold. A masterfully crafted floral fragrance that evokes bold confidence.,W,fresh,30,TRUE,TRUE,FALSE
+Celestial Breeze,celestial-breeze,801,Default Luxe Store,Room Spray,Experience the celestial allure of Breeze. A masterfully crafted musky fragrance that evokes natural beauty.,U,fresh,100,TRUE,FALSE,FALSE
+Royal Obsession,royal-obsession,798,Default Luxe Store,Room Spray,Experience the royal allure of Obsession. A masterfully crafted musky fragrance that evokes natural beauty.,M,oriental,200,TRUE,TRUE,FALSE
+Mystic Diamond 85,mystic-diamond-85,798,Default Luxe Store,Room Spray,Experience the mystic allure of Diamond. A masterfully crafted floral fragrance that evokes bold confidence.,M,floral,50,TRUE,FALSE,FALSE
+Pure Citrus 86,pure-citrus-86,980,Default Luxe Store,Perfumes,Experience the pure allure of Citrus. A masterfully crafted musky fragrance that evokes natural beauty.,W,musky,50,TRUE,TRUE,FALSE
+Aqua Oud,aqua-oud,698,Default Luxe Store,Perfumes,Experience the aqua allure of Oud. A masterfully crafted citrus fragrance that evokes natural beauty.,W,floral,30,TRUE,FALSE,FALSE
+Wild Oud,wild-oud,562,Default Luxe Store,Room Spray,Experience the wild allure of Oud. A masterfully crafted aquatic fragrance that evokes timeless elegance.,M,woody,200,TRUE,TRUE,FALSE
+Infinity Rose,infinity-rose,150,Default Luxe Store,Perfumes,Experience the infinity allure of Rose. A masterfully crafted oriental fragrance that evokes timeless elegance.,M,fresh,150,TRUE,FALSE,FALSE
+Wild Essence,wild-essence,1169,Default Luxe Store,Perfumes,Experience the wild allure of Essence. A masterfully crafted musky fragrance that evokes bold confidence.,W,woody,200,TRUE,TRUE,FALSE
+White Obsession 91,white-obsession-91,1146,Default Luxe Store,Body Mist,Experience the white allure of Obsession. A masterfully crafted citrus fragrance that evokes natural beauty.,M,aquatic,150,TRUE,TRUE,FALSE
+Imperial Sandalwood,imperial-sandalwood,1098,Default Luxe Store,Body Mist,Experience the imperial allure of Sandalwood. A masterfully crafted floral fragrance that evokes bold confidence.,U,woody,200,TRUE,FALSE,FALSE
+Mystic Dream 93,mystic-dream-93,451,Default Luxe Store,Room Spray,Experience the mystic allure of Dream. A masterfully crafted aquatic fragrance that evokes natural beauty.,U,woody,100,TRUE,FALSE,FALSE
+Royal Oud,royal-oud,625,Default Luxe Store,Perfumes,Experience the royal allure of Oud. A masterfully crafted musky fragrance that evokes bold confidence.,W,musky,200,TRUE,FALSE,FALSE
+Infinity Bloom,infinity-bloom,1187,Default Luxe Store,Perfumes,Experience the infinity allure of Bloom. A masterfully crafted floral fragrance that evokes timeless elegance.,M,aquatic,100,TRUE,FALSE,FALSE
+Eternal Passion,eternal-passion,1123,Default Luxe Store,Perfumes,Experience the eternal allure of Passion. A masterfully crafted aquatic fragrance that evokes modern sophistication.,U,oriental,150,TRUE,FALSE,FALSE
+Velvet Gold,velvet-gold,1060,Default Luxe Store,Room Spray,Experience the velvet allure of Gold. A masterfully crafted aquatic fragrance that evokes natural beauty.,M,oriental,200,TRUE,FALSE,FALSE
+Imperial Elegance 98,imperial-elegance-98,578,Default Luxe Store,Body Mist,Experience the imperial allure of Elegance. A masterfully crafted aquatic fragrance that evokes natural beauty.,W,musky,200,TRUE,FALSE,FALSE
+Solar Gold,solar-gold,235,Default Luxe Store,Perfumes,Experience the solar allure of Gold. A masterfully crafted citrus fragrance that evokes bold confidence.,M,aquatic,200,TRUE,FALSE,FALSE
+Celestial Shadow,celestial-shadow,981,Default Luxe Store,Perfumes,Experience the celestial allure of Shadow. A masterfully crafted floral fragrance that evokes modern sophistication.,U,floral,30,TRUE,TRUE,FALSE

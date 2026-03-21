@@ -29,4 +29,8 @@ urlpatterns = [
     # AJAX
     path('update_item/', views.updateItem, name='update_item'),
     path('process_order/', views.processOrder, name='process_order'),
+    path('order-success/', views.order_success, name='order_success'),
+    path('clear_products/', views.clear_products, name='clear_products'),
+    path('payment/tabby/', views.tabby_payment, name='tabby_payment'),
+    path('payment/tamara/', views.tamara_payment, name='tamara_payment'),
 ]

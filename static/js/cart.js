@@ -10,23 +10,24 @@ document.addEventListener('DOMContentLoaded', function () {
     btn.addEventListener('click', function () {
       var productId = this.dataset.product;
       var action    = this.dataset.action;
+      var quantity  = this.dataset.quantity ? parseInt(this.dataset.quantity) : 1;
 
       if (isAuthenticated === true || isAuthenticated === 'true') {
-        updateServerCart(productId, action);
+        updateServerCart(productId, action, quantity);
       } else {
-        updateCookieCart(productId, action);
+        updateCookieCart(productId, action, quantity);
       }
     });
   });
 
-  function updateServerCart(productId, action) {
+  function updateServerCart(productId, action, quantity = 1) {
     fetch('/update_item/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-CSRFToken': csrftoken,
       },
-      body: JSON.stringify({ productId: productId, action: action }),
+      body: JSON.stringify({ productId: productId, action: action, quantity: quantity }),
     })
       .then(function (res) { return res.json(); })
       .then(function () {
@@ -51,13 +52,13 @@ document.addEventListener('DOMContentLoaded', function () {
       });
   }
 
-  function updateCookieCart(productId, action) {
+  function updateCookieCart(productId, action, quantity = 1) {
     if (cart[productId] === undefined) {
       cart[productId] = { quantity: 0 };
     }
 
     if (action === 'add') {
-      cart[productId]['quantity'] += 1;
+      cart[productId]['quantity'] += quantity;
     } else if (action === 'remove') {
       cart[productId]['quantity'] -= 1;
       if (cart[productId]['quantity'] <= 0) {

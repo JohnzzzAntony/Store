@@ -1,192 +1,159 @@
 {% extends 'store/main.html' %}
 {% load static %}
 
-{% block title %}Ecom — Perfumes{% endblock %}
+{% block title %}{{ product.name }} | Premium Fragrances{% endblock %}
 {% block meta_desc %}{{ product.description|truncatewords:25 }}{% endblock %}
 
 {% block content %}
-
 <!-- Breadcrumb -->
 <nav class="breadcrumb">
-  <a href="{% url 'store' %}">Home</a>
-  <span class="breadcrumb-sep">›</span>
-  <a href="{% url 'product_list' %}">Perfumes</a>
-  <span class="breadcrumb-sep">›</span>
-  <span>{{ product.name }}</span>
+  <a href="{% url 'store' %}">The Maison</a>
+  <span class="breadcrumb-sep">/</span>
+  <a href="{% url 'product_list' %}">Collection</a>
+  <span class="breadcrumb-sep">/</span>
+  <span style="color: var(--lux-gold);">{{ product.name }}</span>
 </nav>
 
 <!-- Main PDP Layout -->
-<div class="pdp-layout">
-
-  <!-- Gallery -->
-  <div class="pdp-gallery" id="pdpGallery">
+<section class="pdp-main">
+  <!-- Left Side: Image -->
+  <div class="pdp-image-container">
     {% if product.imageURL %}
-      <img src="{{ product.imageURL }}" alt="{{ product.name }}" class="pdp-gallery-main" id="pdpMainImg" />
+      <img src="{{ product.imageURL }}" alt="{{ product.name }}" id="pdpMainImg" />
     {% else %}
-      <div class="img-placeholder" style="height:100%;min-height:600px;">
-        <i class="ph ph-package" style="font-size:80px;opacity:0.2;"></i>
+      <div class="img-placeholder" style="width:100%; height:500px; display:flex; align-items:center; justify-content:center; background:#f9f9f9;">
+        <i class="ph ph-package" style="font-size:80px; opacity:0.1;"></i>
       </div>
     {% endif %}
   </div>
 
-  <!-- Product Info -->
-  <div class="pdp-info">
-    <p class="pdp-category">[{{ product.get_scent_profile_display|upper }} · {{ product.get_gender_display|upper }}]</p>
-    <h1 class="pdp-name font-serif">{{ product.name }}</h1>
-    <p class="pdp-price">AED {{ product.price|floatformat:0 }}</p>
+  <!-- Right Side: Details -->
+  <div class="pdp-details">
+    <h1 class="pdp-title">{{ product.name }}</h1>
+    <span class="pdp-price-tag">{{ current_store.currency|default:"AED" }} {{ product.price|floatformat:0 }}</span>
+    
+    <p class="pdp-short-desc">
+      {{ product.description|default:"An exquisite blend of premium essences, embodying sophistication and allure in every drop." }}
+    </p>
 
-    <div class="pdp-divider"></div>
-
-    {% if product.description %}
-    <p class="pdp-description">{{ product.description }}</p>
-    {% endif %}
-
-    <!-- Size -->
-    <p class="pdp-size-label">Size</p>
-    <div class="pdp-sizes" id="pdpSizes">
-      <button class="pdp-size-btn active" type="button" id="size-{{ product.size_ml }}">{{ product.size_ml }}ml</button>
-    </div>
-
-    <!-- Actions -->
-    <div class="pdp-actions">
-      <div class="pdp-qty">
-        <button class="pdp-qty-btn" id="pdpQtyMinus" onclick="changeQty(-1)" aria-label="Decrease">−</button>
-        <input class="pdp-qty-val" id="pdpQtyVal" type="text" value="1" readonly aria-label="Quantity" />
-        <button class="pdp-qty-btn" id="pdpQtyPlus" onclick="changeQty(1)" aria-label="Increase">+</button>
-      </div>
-
-      <button
-        class="btn-primary update-cart"
-        data-product="{{ product.pk }}"
+    <!-- Qty & Add to Cart -->
+    <div class="pdp-actions-v2">
+      <button 
+        class="btn-add-cart update-cart" 
+        data-product="{{ product.id }}" 
         data-action="add"
-        id="pdp-add-cart"
-        style="flex:1;"
       >
-        <i class="ph ph-shopping-bag"></i> ADD TO CART
+        ADD TO CART
       </button>
 
-      <button
-        class="btn-outline"
-        id="pdpWishlistBtn"
-        aria-label="Add to wishlist"
-        style="width:52px;padding:0;display:flex;align-items:center;justify-content:center;"
-      >
-        <i class="ph ph-heart" style="font-size:20px;"></i>
-      </button>
-    </div>
-
-    <!-- BNPL Teaser -->
-    <div class="bnpl-info">
-      <div class="bnpl-item tabby">
-        <img src="https://perfumes.com/assets/images/payment-icons/tabby.svg" alt="Tabby" style="height:12px;">
-        <span>Split into 4 interest-free payments of <strong>AED <span id="pdpTabbyAmount">0</span></strong></span>
-      </div>
-      <div class="bnpl-item tamara">
-        <img src="https://perfumes.com/assets/images/payment-icons/tamara.svg" alt="Tamara" style="height:12px;">
-        <span>Split into 3 or 4 payments with Tamara</span>
+      <div class="pdp-qty-selector">
+        <label class="pdp-qty-label">Quantity</label>
+        <div class="qty-input-group">
+          <button type="button" onclick="changeQty(-1)">−</button>
+          <input type="text" id="pdpQtyVal" value="1" readonly />
+          <button type="button" onclick="changeQty(1)">+</button>
+        </div>
       </div>
     </div>
 
-    <!-- Meta Info -->
-    <div class="pdp-meta">
-      <div class="pdp-meta-row">
-        <span class="pdp-meta-label">Category</span>
-        <span>{{ product.category.name|default:"Perfumes" }}</span>
-      </div>
-      <div class="pdp-meta-row">
-        <span class="pdp-meta-label">Scent</span>
-        <span>{{ product.get_scent_profile_display }}</span>
-      </div>
-      <div class="pdp-meta-row">
-        <span class="pdp-meta-label">For</span>
-        <span>{{ product.get_gender_display }}</span>
-      </div>
-      <div class="pdp-meta-row">
-        <span class="pdp-meta-label">Volume</span>
-        <span>{{ product.size_ml }} ml</span>
-      </div>
-      {% if product.in_stock %}
-      <div class="pdp-meta-row">
-        <span class="pdp-meta-label">Status</span>
-        <span style="color:#27ae60;font-weight:500;">✓ In Stock</span>
-      </div>
-      {% endif %}
+    <!-- BNPL Teaser Mini -->
+    {% if current_store.enable_tabby or current_store.enable_tamara %}
+    <div style="margin-top: 40px; padding: 20px; border: 1px solid var(--lux-border); background: #fff;">
+       <p style="font-size: 13px; color: var(--lux-green); margin: 0;">
+         {% if current_store.enable_tabby %}
+         <img src="https://checkout.tabby.ai/assets/tabby-logo.svg" style="height:14px; margin-right:8px;" alt="Tabby" />
+         Or 4 interest-free payments of <strong>{{ current_store.currency }} <span id="pdpTabbyAmount">0</span></strong>
+         {% endif %}
+       </p>
     </div>
+    {% endif %}
   </div>
-</div>
+</section>
+
+<!-- Fragrance Notes Section -->
+<section class="fragrance-notes-section">
+  <h2 class="notes-title font-serif">Fragrance Notes:</h2>
+  <div class="notes-content">
+    {% if product.top_notes %}
+    <span class="note-line"><span class="note-label">Top:</span> {{ product.top_notes }}</span>
+    {% endif %}
+    {% if product.heart_notes %}
+    <span class="note-line"><span class="note-label">Heart:</span> {{ product.heart_notes }}</span>
+    {% endif %}
+    {% if product.base_notes %}
+    <span class="note-line"><span class="note-label">Base:</span> {{ product.base_notes }}</span>
+    {% endif %}
+    
+    {% if not product.top_notes and not product.heart_notes %}
+    <span class="note-line">A bespoke composition of rare ingredients and aromatic layers.</span>
+    {% endif %}
+  </div>
+</section>
 
 <!-- Related Products -->
 {% if related_products %}
-<section class="section" style="background:var(--bg-white);">
-  <div class="section-header">
-    <div>
-      <span class="section-label">You May Also Like</span>
-      <h2 class="section-title font-serif">Related Fragrances</h2>
-      <div class="section-divider"></div>
-    </div>
-  </div>
-  <div class="products-grid">
-    {% for rp in related_products %}
-    <article class="product-card" id="related-product-{{ rp.pk }}">
-      <a href="{% url 'product_detail' rp.pk %}">
-        <div class="product-card-image">
-          {% if rp.imageURL %}
-            <img src="{{ rp.imageURL }}" alt="{{ rp.name }}" loading="lazy" />
-          {% else %}
-            <div class="img-placeholder" style="height:300px;">
-              <i class="ph ph-package" style="font-size:48px;opacity:0.3;"></i>
-            </div>
-          {% endif %}
-          <div class="product-card-overlay">
-            <span style="color:#fff;font-size:11px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.5);padding-bottom:3px;">View Details</span>
+<section class="related-products-section">
+  <h2 class="related-title font-serif">Related Products</h2>
+  <div class="related-grid">
+    {% for rp in related_products|slice:":3" %}
+    <article class="product-card" style="box-shadow: 0 10px 40px rgba(0,0,0,0.03);">
+        <a href="{% url 'product_detail' rp.pk %}">
+          <div class="pdp-image-container" style="padding:40px; border-bottom: none; border-radius: 0;">
+             <img src="{{ rp.imageURL }}" alt="{{ rp.name }}" style="max-height: 250px;" />
           </div>
+        </a>
+        <div class="product-card-info" style="padding: 30px; text-align: center;">
+            <h3 class="product-name" style="font-size: 24px;">{{ rp.name }}</h3>
+            <p class="product-price" style="font-size: 18px; color: var(--lux-green);">{{ current_store.currency|default:"AED" }} {{ rp.price|floatformat:0 }}</p>
+            <a href="{% url 'product_detail' rp.pk %}" class="btn-primary" style="display:inline-block; padding: 12px 40px; font-size: 12px;">VIEW</a>
         </div>
-      </a>
-      <div class="product-card-info">
-        <span class="product-category-tag">[PERFUMES]</span>
-        <h3 class="product-name"><a href="{% url 'product_detail' rp.pk %}" style="color:inherit;">{{ rp.name }}</a></h3>
-        <p class="product-price">AED {{ rp.price|floatformat:0 }}</p>
-        <span class="product-size-tag">{{ rp.size_ml }}ml</span>
-      </div>
     </article>
     {% endfor %}
   </div>
 </section>
 {% endif %}
 
+<!-- Legacy Section -->
+<section class="legacy-stats-section">
+    <h2 class="legacy-title">A Legacy of Craftsmanship and Elegance</h2>
+    <div class="stats-grid">
+        <div class="stat-item">
+            <span class="stat-num">250+</span>
+            <span class="stat-label">Bespoke Scents</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">120</span>
+            <span class="stat-label">Exclusive Boutiques</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">300+</span>
+            <span class="stat-label">Heritage Sources</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">1000+</span>
+            <span class="stat-label">Sublime Reviews</span>
+        </div>
+    </div>
+    <a href="{% url 'about' %}" class="btn-legacy">OUR STORY</a>
+</section>
+
 {% endblock %}
 
 {% block extra_js %}
 <script>
 var qty = 1;
-
 function changeQty(delta) {
-  qty = Math.max(1, qty + delta);
-  document.getElementById('pdpQtyVal').value = qty;
+    qty = Math.max(1, qty + delta);
+    document.getElementById('pdpQtyVal').value = qty;
+    // Update data attribute on button
+    document.querySelector('.btn-add-cart').setAttribute('data-quantity', qty);
 }
 
-// Wishlist toggle
-document.getElementById('pdpWishlistBtn').addEventListener('click', function() {
-  var icon = this.querySelector('i');
-  if (icon.classList.contains('ph-heart')) {
-    icon.classList.remove('ph-heart');
-    icon.classList.add('ph-heart-fill');
-    this.style.color = '#e74c3c';
-    this.style.borderColor = '#e74c3c';
-  } else {
-    icon.classList.remove('ph-heart-fill');
-    icon.classList.add('ph-heart');
-    this.style.color = '';
-    this.style.borderColor = '';
-  }
-});
-
-// BNPL Calculation
 document.addEventListener('DOMContentLoaded', function() {
-  var price = Number("{{ product.price|floatformat:0 }}");
-  if (document.getElementById('pdpTabbyAmount')) {
-    document.getElementById('pdpTabbyAmount').textContent = Math.round(price / 4);
-  }
+    var price = Number("{{ product.price|floatformat:0 }}");
+    if (document.getElementById('pdpTabbyAmount')) {
+        document.getElementById('pdpTabbyAmount').textContent = Math.round(price / 4);
+    }
 });
 </script>
 {% endblock %}

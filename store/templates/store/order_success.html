@@ -1,0 +1,87 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block title %}Order Confirmed | Premium Boutique{% endblock %}
+
+{% block content %}
+<section class="success-page">
+    <div class="success-header">
+        <h1 class="font-serif">Thank You for <br>Your Order.</h1>
+        <p class="order-meta-info">Order Number: #{{ order.transaction_id|default:"123456789" }}</p>
+        <p style="color: rgba(0,0,0,0.5); font-weight: 300;">A confirmation has been sent to your email.</p>
+    </div>
+
+    <!-- Order Summary Card -->
+    <div class="success-card">
+        <h2 class="success-card-title">Order Summary</h2>
+        
+        <div class="order-items-list">
+            {% for item in items %}
+            <div class="order-summary-item">
+                <img src="{{ item.product.imageURL }}" class="summary-item-img" alt="{{ item.product.name }}">
+                <div class="summary-item-details">
+                    <h3>{{ item.product.name }}</h3>
+                    <p>{{ item.product.size_ml }}ml - Quantity: {{ item.quantity }}</p>
+                    <p>Price: AED {{ item.product.price|floatformat:0 }}</p>
+                </div>
+            </div>
+            {% endfor %}
+            
+            {% if not items %}
+            <div class="order-summary-item" style="justify-content: center; text-align: center;">
+                <p>Order details will be updated shortly.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="order-final-total">
+            Total: AED {{ order.get_cart_total|floatformat:0 }}
+        </div>
+    </div>
+
+    <!-- Delivery Box -->
+    <div class="success-card" style="margin-top: 40px;">
+        <h2 class="success-card-title">Estimated Delivery:</h2>
+        <div class="est-delivery">{{ order.date_ordered|date:"M d, Y" }} - {% with order.date_ordered|date:"d" as day %}{{ order.date_ordered|date:"M " }}{{ day|add:"5" }}, {{ order.date_ordered|date:"Y" }}{% endwith %}</div>
+        <button class="btn-track">TRACK ORDER</button>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="you-might-like">
+        <h2 class="like-title font-serif">You Might Also Like</h2>
+        <div class="like-grid">
+            {% for category in categories %}
+            <div class="like-card">
+                <img src="{{ category.image.url|default:'/static/images/hero_perfume.png' }}" alt="{{ category.name }}">
+                <div class="like-card-label">{{ category.name }}</div>
+            </div>
+            {% endfor %}
+            
+            {% if not categories %}
+            <div class="like-card">
+                 <div class="like-card-label">Men's Collection</div>
+            </div>
+            <div class="like-card">
+                 <div class="like-card-label">Women's Florals</div>
+            </div>
+             <div class="like-card">
+                 <div class="like-card-label">Unisex Scents</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Legacy Section -->
+<section class="legacy-stats-section">
+    <h2 class="legacy-title">A Legacy of Craftsmanship and Elegance</h2>
+    <div class="stats-grid">
+        <div class="stat-item"><span class="stat-num">250+</span><span class="stat-label">Bespoke Scents</span></div>
+        <div class="stat-item"><span class="stat-num">320</span><span class="stat-label">Heritage Artisans</span></div>
+        <div class="stat-item"><span class="stat-num">300+</span><span class="stat-label">Global Boutiques</span></div>
+        <div class="stat-item"><span class="stat-num">1000+</span><span class="stat-label">Sublime Reviews</span></div>
+    </div>
+    <a href="{% url 'about' %}" class="btn-legacy">OUR STORY</a>
+</section>
+
+{% endblock %}

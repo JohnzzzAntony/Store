@@ -1,0 +1,11 @@
+name,slug,price,brand,category,description,gender,top_notes,size_ml,is_featured,is_active,enable_tabby
+Azure Breeze,azure-breeze,450.00,Perfumes,perfumes,A refreshing aquatic scent with notes of sea salt and citrus.,U,"Sea Salt, Lemon",100,True,True,True
+Midnight Oud,midnight-oud,850.00,Perfumes,perfumes,Deep and mysterious oud with a hint of spicy saffron.,M,"Oud, Saffron",50,True,True,True
+Velvet Rose,velvet-rose,520.00,Perfumes,perfumes,Elegant damask rose blended with sweet vanilla and musk.,W,"Rose, Vanilla",100,True,True,True
+Desert Sun,desert-sun,380.00,Perfumes,body-mist,A warm and sunny mist that captures the essence of the desert.,U,"Amber, Sandalwood",150,False,True,True
+Mountain Air,mountain-air,290.00,Perfumes,room-spray,Bring the freshness of the mountains into your home with this crisp spray.,U,"Cedar, Eucalyptus",250,False,True,True
+Golden Amber,golden-amber,670.00,Perfumes,perfumes,Rich amber notes with a heart of labdanum and patchouli.,U,"Amber, Patchouli",100,True,True,True
+Silk Whisper,silk-whisper,480.00,Perfumes,perfumes,A delicate floral scent with a soft powdery finish.,W,"Iris, White Musk",100,False,True,True
+Oceanic Mist,oceanic-mist,320.00,Perfumes,body-mist,Light and airy mist for an all-day fresh feeling.,U,"Seaweed, Bergamot",150,False,True,True
+Forest Path,forest-path,310.00,Perfumes,room-spray,Earthy notes of pine and damp earth for a grounding atmosphere.,U,"Pine, Moss",250,False,True,True
+Spiced Noir,spiced-noir,720.00,Perfumes,perfumes,A bold and spicy fragrance for the confident individual.,M,"Black Pepper, Tobacco",50,True,True,True

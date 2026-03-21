@@ -2272,3 +2272,584 @@ textarea.form-control {
   }
   .category-card-content h3 { font-size: 28px; }
 }
+
+
+/* ============================================================
+   PROMO TICKER BANNER
+   ============================================================ */
+
+@keyframes tickerShimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.promo-ticker {
+  width: 100%;
+  padding: 12px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+
+.promo-ticker-inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.promo-ticker-badge {
+  background: rgba(255,255,255,0.2);
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.promo-ticker-text {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  opacity: 0.95;
+}
+
+.promo-ticker-cta {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+.promo-ticker-cta:hover { opacity: 1; }
+
+.promo-ticker-sep {
+  opacity: 0.4;
+  font-size: 16px;
+}
+
+.promo-countdown .countdown-val {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+
+/* ============================================================
+   OFFER CARDS SECTION
+   ============================================================ */
+
+.offers-section {
+  padding: 80px 40px;
+  background: var(--bg-light);
+}
+
+.offers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.offer-card {
+  background: var(--bg-white);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  position: relative;
+}
+
+.offer-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal), var(--gold), var(--teal));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.offer-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+.offer-card:hover::before { transform: scaleX(1); }
+
+.offer-card-img {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.offer-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.offer-card:hover .offer-card-img img { transform: scale(1.07); }
+
+.offer-card-img-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.offer-icon {
+  font-size: 56px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.offer-card-body {
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+}
+
+.offer-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #b8860b, var(--gold));
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 2px;
+  align-self: flex-start;
+  box-shadow: 0 2px 8px rgba(184,134,11,0.35);
+}
+
+.offer-discount-bubble {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--teal);
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.offer-card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--text-dark);
+  line-height: 1.2;
+}
+
+.offer-card-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.offer-promo-code {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-light);
+  border: 1px dashed var(--teal);
+  padding: 8px 14px;
+  border-radius: 3px;
+}
+
+.promo-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.promo-code {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--teal);
+  letter-spacing: 2px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.promo-copy-btn {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  padding: 5px 12px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.promo-copy-btn:hover { background: var(--teal-dark); transform: scale(1.05); }
+.promo-copy-btn.copied { background: #2ecc71; }
+
+.offer-countdown {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.countdown-label { text-transform: uppercase; letter-spacing: 1px; font-size: 10px; }
+.offer-countdown strong { color: var(--teal); font-size: 13px; }
+
+.offer-cta-btn {
+  display: inline-block;
+  margin-top: auto;
+  padding: 12px 24px;
+  background: var(--teal-dark);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+  transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+  border-radius: 2px;
+}
+.offer-cta-btn:hover {
+  background: var(--teal);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(45,90,90,0.3);
+  color: #fff;
+}
+
+
+/* ============================================================
+   CATEGORY OFFER BANNERS
+   ============================================================ */
+
+.cat-offers-section {
+  padding: 80px 40px;
+  background: var(--bg-white);
+}
+
+.cat-offers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.cat-offer-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  aspect-ratio: 4/3;
+  display: block;
+  cursor: pointer;
+}
+
+.cat-offer-card img,
+.cat-offer-placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s ease;
+}
+
+.cat-offer-card:hover img,
+.cat-offer-card:hover .cat-offer-placeholder {
+  transform: scale(1.07);
+}
+
+.cat-offer-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.78) 0%,
+    rgba(0,0,0,0.25) 50%,
+    rgba(0,0,0,0.06) 100%
+  );
+  transition: opacity 0.35s;
+}
+.cat-offer-card:hover .cat-offer-overlay { opacity: 0.85; }
+
+.cat-offer-content {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 28px 24px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transform: translateY(6px);
+  transition: transform 0.4s ease;
+}
+.cat-offer-card:hover .cat-offer-content { transform: translateY(0); }
+
+.cat-offer-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 2px;
+  align-self: flex-start;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.cat-offer-discount {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+  color: rgba(255,255,255,0.95);
+  letter-spacing: -0.5px;
+}
+
+.cat-offer-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.cat-offer-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.5;
+}
+
+.cat-offer-cta {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 2px;
+  align-self: flex-start;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.35s ease 0.05s, transform 0.35s ease 0.05s;
+}
+.cat-offer-card:hover .cat-offer-cta { opacity: 1; transform: translateY(0); }
+
+
+/* ============================================================
+   BOGO OFFERS SECTION
+   ============================================================ */
+
+.bogo-section {
+  background: linear-gradient(135deg, #0d1f1f 0%, #1a3535 40%, #0d2626 100%);
+  padding: 90px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.bogo-section::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(45,90,90,0.4) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.bogo-section::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: -80px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.bogo-section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.bogo-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.bogo-title {
+  color: #fff !important;
+  font-size: 48px !important;
+  margin-bottom: 16px;
+}
+
+.bogo-subtitle {
+  color: rgba(255,255,255,0.6);
+  font-size: 15px;
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.bogo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.bogo-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s;
+}
+
+.bogo-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  border-color: rgba(201,168,76,0.4);
+}
+
+.bogo-card-image {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.bogo-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.bogo-card:hover .bogo-card-image img { transform: scale(1.07); }
+
+.bogo-card-placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.bogo-type-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: linear-gradient(135deg, var(--gold), #e8c44a);
+  color: #1a1a1a;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 3px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.4);
+}
+
+.bogo-card-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bogo-card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.bogo-card-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.8;
+}
+
+.bogo-card .offer-promo-code {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(201,168,76,0.5);
+}
+
+.bogo-card .promo-label { color: rgba(255,255,255,0.5); }
+.bogo-card .promo-code { color: var(--gold); }
+
+.bogo-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 20px;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.9);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  border-radius: 3px;
+  margin-top: auto;
+}
+.bogo-cta-btn span { transition: transform 0.3s ease; }
+.bogo-cta-btn:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #1a1a1a;
+}
+.bogo-cta-btn:hover span { transform: translateX(4px); }
+
+
+/* ============================================================
+   RESPONSIVE — OFFERS & BOGO
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .offers-section { padding: 60px 24px; }
+  .cat-offers-section { padding: 60px 24px; }
+  .cat-offers-grid { grid-template-columns: repeat(2, 1fr); }
+  .bogo-section { padding: 60px 0; }
+  .bogo-section-inner { padding: 0 24px; }
+}
+
+@media (max-width: 768px) {
+  .offers-grid { grid-template-columns: 1fr; }
+  .cat-offers-grid { grid-template-columns: 1fr; gap: 16px; }
+  .cat-offer-card { aspect-ratio: 16/9; }
+  .cat-offer-cta { opacity: 1; transform: translateY(0); }
+  .bogo-grid { grid-template-columns: 1fr; }
+  .bogo-title { font-size: 36px !important; }
+  .promo-ticker { padding: 10px 20px; }
+  .promo-ticker-inner { gap: 12px; }
+  .cat-offers-section { padding: 40px 20px; }
+  .offers-section { padding: 50px 20px; }
+}

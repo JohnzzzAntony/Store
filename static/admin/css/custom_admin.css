@@ -1,28 +1,30 @@
-/* Custom Admin Styles for Premium Saleel Admin Panel */
+/* Custom Admin Styles for Premium Saleel Admin Panel — Luxury Branding */
 :root {
-    --primary-teal: #2d5a5a;
-    --beige-bg: #f8f7f4; /* Matching the store's background color */
-    --sidebar-bg: #1a1c23; /* Dark sidebar from the image */
-    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    --border-soft: #f0eeea;
+    --primary-lux: #0F2E23; /* Deep Forest Green */
+    --gold-lux: #C5A03D;   /* Premium Gold */
+    --cream-lux: #F9F7F2;  /* High-end Cream */
+    --sidebar-lux: #0a1f18; /* Darker Green for Sidebar */
+    --card-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    --border-lux: rgba(15, 46, 35, 0.1);
 }
 
 /* Sidebar Styling */
 .main-sidebar, .sidebar {
-    background-color: var(--sidebar-bg) !important;
+    background-color: var(--sidebar-lux) !important;
 }
 
 .nav-sidebar .nav-item .nav-link {
-    font-size: 0.875rem !important;
-    padding: 0.75rem 1rem !important;
-    color: #a0aec0 !important;
-    letter-spacing: 0.025em;
+    font-size: 0.9rem !important;
+    padding: 12px 20px !important;
+    color: rgba(255,255,255,0.7) !important;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
 }
 
 .nav-sidebar .nav-item > .nav-link.active {
-    background-color: rgba(45, 90, 90, 0.15) !important;
-    color: #fff !important;
-    border-left: 3px solid var(--primary-teal);
+    background-color: rgba(197, 160, 61, 0.1) !important;
+    color: var(--gold-lux) !important;
+    border-left: 4px solid var(--gold-lux);
 }
 
 .nav-sidebar .nav-item:hover > .nav-link {
@@ -30,91 +32,94 @@
     color: #fff !important;
 }
 
+/* Brand Logo */
 .brand-link {
-    background-color: var(--sidebar-bg) !important;
+    background-color: var(--sidebar-lux) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-    padding: 1.5rem 1rem !important;
+    padding: 25px 20px !important;
 }
 
 .brand-text {
-    font-weight: 300 !important;
-    letter-spacing: 1px;
-    font-family: 'Cormorant Garamond', serif !important;
-    font-size: 1.25rem !important;
+    font-family: 'Playfair Display', serif !important;
+    font-weight: 500 !important;
+    letter-spacing: 2px;
+    font-size: 1.4rem !important;
+    color: var(--gold-lux) !important;
 }
 
 /* Global Background */
 .content-wrapper {
-    background-color: var(--beige-bg) !important;
+    background-color: var(--cream-lux) !important;
+}
+
+/* Content Area refinement */
+.content-header h1 {
+    font-family: 'Playfair Display', serif !important;
+    font-weight: 400 !important;
+    font-size: 2rem !important;
+    color: var(--primary-lux);
 }
 
 /* Header Styling */
 .main-header {
     background-color: #ffffff !important;
-    border-bottom: 1px solid var(--border-soft) !important;
-    box-shadow: none !important;
-}
-
-/* Content Area refinement */
-.content-header h1 {
-    font-family: 'Cormorant Garamond', serif !important;
-    font-weight: 400 !important;
-    font-size: 1.875rem !important;
-    color: #111827;
+    border-bottom: 1px solid var(--border-lux) !important;
 }
 
 /* Tables and Cards */
 .card {
-    border: 1px solid var(--border-soft) !important;
+    border: none !important;
     box-shadow: var(--card-shadow) !important;
-    border-radius: 12px !important;
-    overflow: hidden;
+    border-radius: 0 !important;
 }
 
 .card-header {
     background-color: #fff !important;
-    border-bottom: 1px solid var(--border-soft) !important;
-    padding: 1.25rem !important;
+    border-bottom: 1px solid var(--border-lux) !important;
+    padding: 20px !important;
+}
+
+.card-title {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.8rem;
+    color: var(--gold-lux);
 }
 
 .table thead th {
     background-color: #faf9f7 !important;
-    font-size: 0.7rem !important;
+    font-size: 11px !important;
     text-transform: uppercase !important;
-    letter-spacing: 0.05em !important;
+    letter-spacing: 1px !important;
+    font-weight: 700 !important;
+    color: var(--primary-lux) !important;
+    border-bottom: 1px solid var(--border-lux) !important;
+}
+
+/* Primary Action Buttons */
+.btn-primary, .btn-info {
+    background: var(--primary-lux) !important;
+    border: 1px solid var(--primary-lux) !important;
     font-weight: 600 !important;
-    color: #9ca3af !important;
-    border-bottom: 1px solid var(--border-soft) !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    padding: 8px 18px !important;
+    border-radius: 0 !important;
 }
 
-.table tbody td {
-    border-bottom: 1px solid var(--border-soft) !important;
-    vertical-align: middle !important;
-    color: #4b5563;
+.btn-primary:hover {
+    background: var(--gold-lux) !important;
+    border-color: var(--gold-lux) !important;
 }
 
-/* Status Badges */
-.badge {
-    padding: 0.35em 0.65em !important;
-    font-weight: 500 !important;
-    border-radius: 4px !important;
+.btn-success {
+    background: #2D5A5A !important;
+    border-radius: 0 !important;
 }
 
-/* Forms in Admin */
-.module h2 {
-    background-color: var(--primary-teal) !important;
-    font-size: 0.875rem !important;
-}
-
-/* Top bar buttons */
-.btn-primary {
-    background-color: var(--primary-teal) !important;
-    border-color: var(--primary-teal) !important;
-    border-radius: 6px !important;
-    font-weight: 500 !important;
-}
-
-/* Admin Dashboard "Overview" look */
+/* Dashboard Home */
 #content-main {
-    padding: 2rem !important;
+    padding: 40px !important;
 }

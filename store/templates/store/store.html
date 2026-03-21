@@ -18,138 +18,383 @@
       {% elif featured_products.0 and featured_products.0.imageURL %}
         <img src="{{ featured_products.0.imageURL }}" alt="{{ featured_products.0.name }}" />
       {% else %}
-        <div style="width:100%;height:100%;background:linear-gradient(135deg,#2D5A5A,#1a3535);display:flex;align-items:center;justify-content:center;">
-          <span style="font-family:'Cormorant Garamond',serif;font-size:80px;color:rgba(255,255,255,0.15);">✦</span>
+        <div style="width:100%;height:100%;background:var(--lux-green);display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:'Playfair Display',serif;font-size:120px;color:rgba(197, 160, 61, 0.1);">✧</span>
         </div>
       {% endif %}
       <div class="hero-slide-overlay"></div>
       <div class="hero-content">
-        <p class="section-label" style="color:rgba(255,255,255,0.6);">{% if media.hero_slide_1 %}{{ media.hero_slide_1.subtitle }}{% else %}New Collection{% endif %}</p>
-        <h1 class="hero-title font-serif">
-          {% if media.hero_slide_1 %}{{ media.hero_slide_1.title }}{% elif featured_products.0 %}{{ featured_products.0.name }}{% else %}Swim By The Beach{% endif %}
+        <p class="section-label" style="color:var(--lux-gold); font-size:12px; letter-spacing:5px;">{% if media.hero_slide_1 %}{{ media.hero_slide_1.subtitle }}{% else %}ESSENCE OF LUXURY{% endif %}</p>
+        <h1 class="hero-title">
+          {% if media.hero_slide_1 %}{{ media.hero_slide_1.title }}{% elif featured_products.0 %}{{ featured_products.0.name }}{% else %}Eternal Elegance{% endif %}
         </h1>
         <p class="hero-subtitle">
           {% if media.hero_slide_1 %}{{ media.hero_slide_1.subtitle }}{% elif featured_products.0 and featured_products.0.description %}
-            {{ featured_products.0.description|truncatewords:18 }}
+            {{ featured_products.0.description|truncatewords:20 }}
           {% else %}
-            A fresh aquatic fragrance that captures the essence of sun, sea and freedom.
+            Discover a curated collection of artisanal fragrances that define your unique identity.
           {% endif %}
         </p>
-        <a href="{% if featured_products.0 %}{% url 'product_detail' featured_products.0.pk %}{% else %}{% url 'product_list' %}{% endif %}" class="btn-primary">
-          Discover Now
-        </a>
+        <div style="margin-top:40px;">
+          <a href="{% if featured_products.0 %}{% url 'product_detail' featured_products.0.pk %}{% else %}{% url 'product_list' %}{% endif %}" class="btn-primary">
+            Explore Collection
+          </a>
+        </div>
       </div>
     </div>
 
     <!-- Slide 2 -->
     <div class="hero-slide" id="slide-1">
       {% if media.hero_slide_2 %}
-        <img src="{{ media.hero_slide_2.image.url }}" alt="{{ media.hero_slide_2.title|default:featured_products.1.name }}" />
+        <img src="{{ media.hero_slide_2.image.url }}" alt="{{ media.hero_slide_2.title }}" />
       {% elif featured_products.1 and featured_products.1.imageURL %}
         <img src="{{ featured_products.1.imageURL }}" alt="{{ featured_products.1.name }}" />
       {% else %}
-        <div style="width:100%;height:100%;background:linear-gradient(135deg,#1E3E3E,#0d2626);display:flex;align-items:center;justify-content:center;">
-          <span style="font-family:'Cormorant Garamond',serif;font-size:80px;color:rgba(255,255,255,0.1);">⬡</span>
-        </div>
+        <img src="/static/images/frontend/hero_2.png" alt="Pure Escapism" />
       {% endif %}
       <div class="hero-slide-overlay"></div>
       <div class="hero-content">
-        <p class="section-label" style="color:rgba(255,255,255,0.6);">{% if media.hero_slide_2 %}{{ media.hero_slide_2.subtitle }}{% else %}Signature Scent{% endif %}</p>
-        <h1 class="hero-title font-serif">
-          {% if media.hero_slide_2 %}{{ media.hero_slide_2.title }}{% elif featured_products.1 %}{{ featured_products.1.name }}{% else %}Aqua Marine{% endif %}
+        <p class="section-label" style="color:var(--lux-gold); font-size:12px; letter-spacing:5px;">{% if media.hero_slide_2 %}{{ media.hero_slide_2.subtitle }}{% else %}LEGACY OF LUXURY{% endif %}</p>
+        <h1 class="hero-title">
+          {% if media.hero_slide_2 %}{{ media.hero_slide_2.title }}{% elif featured_products.1 %}{{ featured_products.1.name }}{% else %}Imperial Forest{% endif %}
         </h1>
         <p class="hero-subtitle">
-          {% if media.hero_slide_2 %}{{ media.hero_slide_2.subtitle }}{% elif featured_products.1 and featured_products.1.description %}
-            {{ featured_products.1.description|truncatewords:18 }}
-          {% else %}
-            Deep oceanic notes with a heart of driftwood and white musk.
-          {% endif %}
+          {% if media.hero_slide_2 %}{{ media.hero_slide_2.subtitle }}{% else %}A bold journey into the heart of the forest, defined by cedar and rich leather.{% endif %}
         </p>
-        <a href="{% if featured_products.1 %}{% url 'product_detail' featured_products.1.pk %}{% else %}{% url 'product_list' %}{% endif %}" class="btn-primary">
-          Explore
-        </a>
+        <div style="margin-top:40px;">
+          <a href="{% url 'product_list' %}" class="btn-primary">Explore Collection</a>
+        </div>
       </div>
     </div>
 
     <!-- Slide 3 -->
     <div class="hero-slide" id="slide-2">
       {% if media.hero_slide_3 %}
-        <img src="{{ media.hero_slide_3.image.url }}" alt="{{ media.hero_slide_3.title|default:featured_products.2.name }}" />
+        <img src="{{ media.hero_slide_3.image.url }}" alt="{{ media.hero_slide_3.title }}" />
       {% elif featured_products.2 and featured_products.2.imageURL %}
         <img src="{{ featured_products.2.imageURL }}" alt="{{ featured_products.2.name }}" />
       {% else %}
-        <div style="width:100%;height:100%;background:linear-gradient(135deg,#3a4a2a,#2a3a1a);display:flex;align-items:center;justify-content:center;">
-          <span style="font-family:'Cormorant Garamond',serif;font-size:80px;color:rgba(255,255,255,0.1);">✧</span>
-        </div>
+        <img src="/static/images/frontend/hero_3.png" alt="Pure Escapism" />
       {% endif %}
       <div class="hero-slide-overlay"></div>
       <div class="hero-content">
-        <p class="section-label" style="color:rgba(255,255,255,0.6);">{% if media.hero_slide_3 %}{{ media.hero_slide_3.subtitle }}{% else %}Bestseller{% endif %}</p>
-        <h1 class="hero-title font-serif">
-          {% if media.hero_slide_3 %}{{ media.hero_slide_3.title }}{% elif featured_products.2 %}{{ featured_products.2.name }}{% else %}Solaris{% endif %}
+        <p class="section-label" style="color:var(--lux-gold); font-size:12px; letter-spacing:5px;">{% if media.hero_slide_3 %}{{ media.hero_slide_3.subtitle }}{% else %}UNISEX EXCELLENCE{% endif %}</p>
+        <h1 class="hero-title">
+          {% if media.hero_slide_3 %}{{ media.hero_slide_3.title }}{% elif featured_products.2 %}{{ featured_products.2.name }}{% else %}Midnight Bloom{% endif %}
         </h1>
         <p class="hero-subtitle">
-          {% if media.hero_slide_3 %}{{ media.hero_slide_3.subtitle }}{% elif featured_products.2 and featured_products.2.description %}
-            {{ featured_products.2.description|truncatewords:18 }}
-          {% else %}
-            Warm amber and precious oud with a radiant solar accord.
-          {% endif %}
+          {% if media.hero_slide_3 %}{{ media.hero_slide_3.subtitle }}{% else %}Universal appeal, timeless design. The fragrance that transcends gender.{% endif %}
         </p>
-        <a href="{% if featured_products.2 %}{% url 'product_detail' featured_products.2.pk %}{% else %}{% url 'product_list' %}{% endif %}" class="btn-primary">
-          Shop Now
-        </a>
+        <div style="margin-top:40px;">
+          <a href="{% url 'product_list' %}" class="btn-primary">Shop Now</a>
+        </div>
       </div>
     </div>
-
-  </div><!-- end hero-carousel -->
+  </div>
 
   <!-- Controls -->
-  <div class="hero-dots" id="heroDots">
-    <div class="hero-dot active" onclick="goToSlide(0)"></div>
+  <div class="hero-dots" id="heroDots" style="bottom:60px;">
+    <div class="hero-dot active" onclick="goToSlide(0)" style="background:var(--lux-gold);"></div>
     <div class="hero-dot" onclick="goToSlide(1)"></div>
     <div class="hero-dot" onclick="goToSlide(2)"></div>
   </div>
-  <div class="hero-nav">
-    <button class="hero-nav-btn" id="heroNavPrev" onclick="changeSlide(-1)" aria-label="Previous">&#8249;</button>
-    <button class="hero-nav-btn" id="heroNavNext" onclick="changeSlide(1)" aria-label="Next">&#8250;</button>
+</section>
+
+
+<!-- =========================================
+     PROMO TICKER / TOP BANNER
+  ========================================= -->
+<div class="promo-ticker" style="background:var(--lux-gold); color:var(--lux-green); font-weight:600; font-size:12px; height:45px;">
+  <div class="promo-ticker-inner">
+    <span class="promo-ticker-badge" style="background:var(--lux-green); color:var(--lux-gold);">EXCLUSIVES</span>
+    <span class="promo-ticker-text">Summer Couture — Up to 40% Off Our Signature Collection</span>
+    <a href="{% url 'product_list' %}" class="promo-ticker-cta" style="color:inherit; border-bottom:1px solid var(--lux-green);">Shop Collection →</a>
+  </div>
+</div>
+
+
+<!-- =========================================
+     OFFERS SECTION — Deal Cards Grid
+  ========================================= -->
+<section class="offers-section" id="offersSection">
+  <div class="section-header" style="justify-content:center;text-align:center;margin-bottom:60px;">
+    <div>
+      <span class="section-label">THE LUXURY EDIT</span>
+      <h2 class="section-title">Today's Best Offers</h2>
+      <div class="luxury-gold-bar"></div>
+    </div>
+  </div>
+
+  <div class="offers-grid">
+    {% if offer_sections %}
+      {% for offer in offer_sections %}
+      <div class="offer-card">
+        <span class="section-label" style="font-size:10px;">{{ offer.badge_text|default:"EXCLUSIVE" }}</span>
+        <h3 class="offer-card-title">{{ offer.title }}</h3>
+        <p class="offer-card-desc" style="font-size:14px; color:rgba(0,0,0,0.6); line-height:1.6; margin-bottom:30px;">
+          {{ offer.description|default:"Experience the pinnacle of olfactory craftsmanship with our curated seasonal offers." }}
+        </p>
+        <a href="{{ offer.cta_url }}" class="offer-cta-btn">{{ offer.cta_text }}</a>
+      </div>
+      {% endfor %}
+    {% else %}
+    <div class="offer-card">
+        <span class="section-label" style="font-size:10px;">LIMITED TIME</span>
+        <h3 class="offer-card-title">Summer Gala</h3>
+        <p class="offer-card-desc" style="font-size:14px; color:rgba(0,0,0,0.6); line-height:1.6; margin-bottom:30px;">
+          Enjoy a complimentary travel-size mist with any purchase above AED 450.
+        </p>
+        <a href="{% url 'product_list' %}" class="offer-cta-btn">Discover More</a>
+      </div>
+      <div class="offer-card" style="border-color:var(--lux-gold);">
+        <span class="section-label" style="font-size:10px; color:var(--lux-gold);">SIGNATURE DEAL</span>
+        <h3 class="offer-card-title">Private Reserve</h3>
+        <p class="offer-card-desc" style="font-size:14px; color:rgba(0,0,0,0.6); line-height:1.6; margin-bottom:30px;">
+          40% exclusive saving on our heritage collection, for a limited time only.
+        </p>
+        <a href="{% url 'product_list' %}" class="offer-cta-btn" style="background:var(--lux-gold); border-color:var(--lux-gold);">Shop Collection</a>
+      </div>
+      <div class="offer-card">
+        <span class="section-label" style="font-size:10px;">COMPLIMENTARY</span>
+        <h3 class="offer-card-title">Free Delivery</h3>
+        <p class="offer-card-desc" style="font-size:14px; color:rgba(0,0,0,0.6); line-height:1.6; margin-bottom:30px;">
+          White-glove delivery service on all orders across the UAE.
+        </p>
+        <a href="{% url 'product_list' %}" class="offer-cta-btn">Shop Now</a>
+      </div>
+    {% endif %}
   </div>
 </section>
+
+
+<!-- =========================================
+     CATEGORY LEVEL OFFERS
+  ========================================= -->
+{% if category_offers or True %}
+<section class="cat-offers-section" id="catOffersSection">
+  <div class="section-header" style="justify-content:center;text-align:center;margin-bottom:32px;">
+    <div>
+      <span class="section-label">Shop by Deal</span>
+      <h2 class="section-title font-serif">Category Offers</h2>
+      <div class="section-divider" style="margin:0 auto;"></div>
+    </div>
+  </div>
+
+  <div class="cat-offers-grid">
+    {% if category_offers %}
+      {% for co in category_offers %}
+      <a href="{% url 'product_list' %}?category={{ co.category.slug }}" class="cat-offer-card">
+        {% if co.imageURL %}
+          <img src="{{ co.imageURL }}" alt="{{ co.title }}" loading="lazy">
+        {% elif co.category.image %}
+          <img src="{{ co.category.image.url }}" alt="{{ co.category.name }}" loading="lazy">
+        {% else %}
+          <div class="cat-offer-placeholder" style="background:{{ co.bg_color }};"></div>
+        {% endif %}
+        <div class="cat-offer-overlay"></div>
+        <div class="cat-offer-content">
+          {% if co.badge_text %}<span class="cat-offer-badge">{{ co.badge_text }}</span>{% endif %}
+          {% if co.discount_label %}<div class="cat-offer-discount">{{ co.discount_label }}</div>{% endif %}
+          <h3 class="cat-offer-title">{{ co.title }}</h3>
+          {% if co.subtitle %}<p class="cat-offer-sub">{{ co.subtitle }}</p>{% endif %}
+          <span class="cat-offer-cta">{{ co.cta_text }} →</span>
+        </div>
+      </a>
+      {% endfor %}
+    {% else %}
+    <!-- Demo category offers -->
+    <a href="{% url 'product_list' %}?gender=M" class="cat-offer-card cat-offer-card--men">
+      <img src="{% static 'images/offer_banner_men_bogo.png' %}" alt="Men's Offer" loading="lazy">
+      <div class="cat-offer-overlay"></div>
+      <div class="cat-offer-content">
+        <span class="cat-offer-badge">EXCLUSIVE</span>
+        <div class="cat-offer-discount">Buy 1 Get 1 Free</div>
+        <h3 class="cat-offer-title">Men's Collection</h3>
+        <p class="cat-offer-sub">Selected woody & oriental fragrances</p>
+        <span class="cat-offer-cta">Shop Men's →</span>
+      </div>
+    </a>
+    <a href="{% url 'product_list' %}?gender=W" class="cat-offer-card cat-offer-card--women">
+      <img src="{% static 'images/offer_banner_women.png' %}" alt="Women's Offer" loading="lazy">
+      <div class="cat-offer-overlay"></div>
+      <div class="cat-offer-content">
+        <span class="cat-offer-badge">WOMEN'S SPECIAL</span>
+        <div class="cat-offer-discount">Up to 30% Off</div>
+        <h3 class="cat-offer-title">Women's Florals</h3>
+        <p class="cat-offer-sub">Floral & fruity collection exclusively</p>
+        <span class="cat-offer-cta">Shop Women's →</span>
+      </div>
+    </a>
+    <a href="{% url 'product_list' %}?gender=U" class="cat-offer-card cat-offer-card--unisex">
+      <div class="cat-offer-placeholder" style="background:linear-gradient(135deg,#2D5A5A 0%,#0d2626 100%);"></div>
+      <div class="cat-offer-overlay"></div>
+      <div class="cat-offer-content">
+        <span class="cat-offer-badge">UNISEX</span>
+        <div class="cat-offer-discount">20% Off</div>
+        <h3 class="cat-offer-title">Unisex Scents</h3>
+        <p class="cat-offer-sub">Fragrances crafted for everyone</p>
+        <span class="cat-offer-cta">Shop Unisex →</span>
+      </div>
+    </a>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+
+<!-- =========================================
+     BUY ONE GET ONE SECTION
+  ========================================= -->
+<section class="bogo-section" id="bogoSection">
+  <div class="bogo-section-inner">
+    <div class="bogo-header">
+      <span class="section-label" style="color:rgba(255,255,255,0.5);">Best Value</span>
+      <h2 class="section-title font-serif bogo-title">Buy One, Get One Deals</h2>
+      <p class="bogo-subtitle">Double the luxury without doubling the spend. Our best BOGO offers, curated for you.</p>
+    </div>
+
+    <div class="bogo-grid">
+      {% if bogo_offers %}
+        {% for bogo in bogo_offers %}
+        <div class="bogo-card">
+          <div class="bogo-card-image">
+            {% if bogo.imageURL %}
+              <img src="{{ bogo.imageURL }}" alt="{{ bogo.title }}" loading="lazy">
+            {% else %}
+              <div class="bogo-card-placeholder" style="background:{{ bogo.bg_color }};"></div>
+            {% endif %}
+            <div class="bogo-type-badge">{{ bogo.get_bogo_type_display }}</div>
+          </div>
+          <div class="bogo-card-body">
+            <h3 class="bogo-card-title">{{ bogo.title }}</h3>
+            {% if bogo.description %}<p class="bogo-card-desc">{{ bogo.description|truncatewords:20 }}</p>{% endif %}
+            {% if bogo.promo_code %}
+            <div class="offer-promo-code" style="margin-bottom:16px;">
+              <span class="promo-label">CODE:</span>
+              <span class="promo-code" id="bogo-code-{{ forloop.counter }}" onclick="copyCode('bogo-code-{{ forloop.counter }}','{{ bogo.promo_code }}')">{{ bogo.promo_code }}</span>
+              <button class="promo-copy-btn" onclick="copyCode('bogo-code-{{ forloop.counter }}','{{ bogo.promo_code }}')">Copy</button>
+            </div>
+            {% endif %}
+            {% if bogo.ends_at %}
+            <div class="offer-countdown"><span class="countdown-label">Ends in:</span> <strong class="promo-countdown" data-ends="{{ bogo.ends_at|date:'c' }}"><span class="countdown-val"></span></strong></div>
+            {% endif %}
+            <a href="{{ bogo.cta_url }}" class="bogo-cta-btn">{{ bogo.cta_text }} <span>→</span></a>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+      <!-- Demo BOGO offers -->
+      <div class="bogo-card">
+        <div class="bogo-card-image">
+          <img src="{% static 'images/offer_banner_men_bogo.png' %}" alt="Men BOGO" loading="lazy">
+          <div class="bogo-type-badge">Buy 1 Get 1 Free</div>
+        </div>
+        <div class="bogo-card-body">
+          <h3 class="bogo-card-title">Men's BOGO Bonanza</h3>
+          <p class="bogo-card-desc">Buy any men's fragrance and get one of equal or lesser value absolutely free. Mix &amp; match your favourites.</p>
+          <div class="offer-promo-code">
+            <span class="promo-label">CODE:</span>
+            <span class="promo-code" id="bogo-demo1" onclick="copyCode('bogo-demo1','BOGO1FREE')">BOGO1FREE</span>
+            <button class="promo-copy-btn" onclick="copyCode('bogo-demo1','BOGO1FREE')">Copy</button>
+          </div>
+          <a href="{% url 'product_list' %}?gender=M" class="bogo-cta-btn">Shop Men's <span>→</span></a>
+        </div>
+      </div>
+      <div class="bogo-card">
+        <div class="bogo-card-image">
+          <img src="{% static 'images/offer_banner_women.png' %}" alt="Women BOGO" loading="lazy">
+          <div class="bogo-type-badge">Buy 2 Get 1 Free</div>
+        </div>
+        <div class="bogo-card-body">
+          <h3 class="bogo-card-title">Women's Triple Deal</h3>
+          <p class="bogo-card-desc">Add any 2 women's fragrances to your cart and get a third one free. Perfect for gifting.</p>
+          <div class="offer-promo-code">
+            <span class="promo-label">CODE:</span>
+            <span class="promo-code" id="bogo-demo2" onclick="copyCode('bogo-demo2','B2G1LADY')">B2G1LADY</span>
+            <button class="promo-copy-btn" onclick="copyCode('bogo-demo2','B2G1LADY')">Copy</button>
+          </div>
+          <a href="{% url 'product_list' %}?gender=W" class="bogo-cta-btn">Shop Women's <span>→</span></a>
+        </div>
+      </div>
+      <div class="bogo-card">
+        <div class="bogo-card-image">
+          <div class="bogo-card-placeholder" style="background:linear-gradient(135deg,#b8860b,#5C3D00);"></div>
+          <div class="bogo-type-badge">Buy 1 Get 1 at 50% Off</div>
+        </div>
+        <div class="bogo-card-body">
+          <h3 class="bogo-card-title">Unisex Half-Price Deal</h3>
+          <p class="bogo-card-desc">Purchase one unisex scent and get a second one at half price. Share or keep both.</p>
+          <div class="offer-promo-code">
+            <span class="promo-label">CODE:</span>
+            <span class="promo-code" id="bogo-demo3" onclick="copyCode('bogo-demo3','HALF4YOU')">HALF4YOU</span>
+            <button class="promo-copy-btn" onclick="copyCode('bogo-demo3','HALF4YOU')">Copy</button>
+          </div>
+          <a href="{% url 'product_list' %}?gender=U" class="bogo-cta-btn">Shop Unisex <span>→</span></a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
 
 <!-- =========================================
      SHOP BY CATEGORIES SECTION
   ========================================= -->
-<section class="category-section">
-  <div class="section-header" style="justify-content:center; text-align:center;">
-    <div>
-      <h2 class="section-title font-serif">Shop by Categories</h2>
-    </div>
-  </div>
-
+<section class="category-section" id="categorySection">
   <div class="category-grid">
-    {% for category in categories %}
-    <a href="{% url 'product_list' %}?category={{ category.slug }}" class="category-card">
-      {% if category.image %}
-        <img src="{{ category.image.url }}" alt="{{ category.name }}" loading="lazy">
-      {% elif category.slug == 'perfumes' %}
-        <img src="{% static 'images/cat_perfume.png' %}" alt="Perfumes" loading="lazy">
-      {% elif category.slug == 'body-mist' %}
-        <img src="{% static 'images/cat_bodymist.png' %}" alt="Body Mist" loading="lazy">
-      {% elif category.slug == 'room-spray' %}
-        <img src="{% static 'images/cat_roomspray.png' %}" alt="Room Spray" loading="lazy">
-      {% else %}
-        <div class="img-placeholder" style="width:100%;height:100%;min-height:200px;background:var(--teal-light);">
-          <i class="ph ph-tag" style="font-size:32px;color:var(--teal);opacity:0.3;"></i>
+    {% if categories %}
+      {% for category in categories|slice:":3" %}
+      <a href="{% url 'product_list' %}{% if category.slug %}?category={{ category.slug }}{% endif %}" class="category-card">
+        {% if category.image %}
+          <img src="{{ category.image.url }}" alt="{{ category.name }}">
+        {% else %}
+          <div style="width:100%;height:100%;background:var(--lux-green);opacity:0.8;"></div>
+        {% endif %}
+        <div class="category-card-overlay"></div>
+        <div class="category-card-content">
+          <span class="section-label" style="color:var(--lux-gold); font-size:10px;">CURATED</span>
+          <h3>{{ category.name }}</h3>
+          <span>Discovery →</span>
         </div>
-      {% endif %}
-      <div class="category-card-overlay"></div>
-      <div class="category-card-content">
-        <h3>{{ category.name }}</h3>
-        <span>Shop Now</span>
-      </div>
-    </a>
-    {% empty %}
-    <p style="text-align:center;width:100%;color:var(--text-muted);padding:40px;">No categories defined yet.</p>
-    {% endfor %}
+      </a>
+      {% endfor %}
+    {% else %}
+      <!-- Demo Categories -->
+      <a href="#" class="category-card">
+        <div style="width:100%;height:100%;background:#1A3535;display:flex;align-items:center;justify-content:center;">
+          <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=800" alt="Fragrance" style="opacity:0.7;">
+        </div>
+        <div class="category-card-overlay"></div>
+        <div class="category-card-content">
+          <span class="section-label" style="color:var(--lux-gold); font-size:10px;">ESSENCE</span>
+          <h3>For Her</h3>
+          <span>Explore →</span>
+        </div>
+      </a>
+      <a href="#" class="category-card">
+        <div style="width:100%;height:100%;background:#0F2323;display:flex;align-items:center;justify-content:center;">
+          <img src="https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&q=80&w=800" alt="Fragrance" style="opacity:0.7;">
+        </div>
+        <div class="category-card-overlay"></div>
+        <div class="category-card-content">
+          <span class="section-label" style="color:var(--lux-gold); font-size:10px;">STRENGTH</span>
+          <h3>For Him</h3>
+          <span>Explore →</span>
+        </div>
+      </a>
+      <a href="#" class="category-card">
+        <div style="width:100%;height:100%;background:#2D4A4A;display:flex;align-items:center;justify-content:center;">
+          <img src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&q=80&w=800" alt="Fragrance" style="opacity:0.7;">
+        </div>
+        <div class="category-card-overlay"></div>
+        <div class="category-card-content">
+          <span class="section-label" style="color:var(--lux-gold); font-size:10px;">BALANCE</span>
+          <h3>Unisex</h3>
+          <span>Explore →</span>
+        </div>
+      </a>
+    {% endif %}
   </div>
 </section>
 
@@ -157,8 +402,11 @@
 <!-- =========================================
      FEATURED PRODUCTS SECTION
   ========================================= -->
-<section class="section" style="background:var(--bg-white);">
-  <div class="section-header">
+<section class="section" style="background:var(--bg-white); position: relative; overflow: hidden;">
+  <!-- Decorative background element -->
+  <div style="position:absolute; top:-100px; right:-100px; width:400px; height:400px; background:radial-gradient(circle, var(--teal-light), transparent); opacity:0.1; pointer-events:none; z-index:0;"></div>
+  
+  <div class="section-header" style="position:relative; z-index:1;">
     <div>
       <span class="section-label">Our Collection</span>
       <h2 class="section-title font-serif">Featured Fragrances</h2>
@@ -167,9 +415,9 @@
     <a href="{% url 'product_list' %}" class="btn-outline">View All</a>
   </div>
 
-  {% if all_products %}
-  <div class="products-grid">
-    {% for product in all_products %}
+  {% if featured_products %}
+  <div class="products-grid" style="position:relative; z-index:1;">
+    {% for product in featured_products %}
     <article class="product-card" id="product-card-{{ product.pk }}">
       <a href="{% url 'product_detail' product.pk %}">
         <div class="product-card-image">
@@ -214,33 +462,36 @@
 <!-- =========================================
      BRAND STORY BANNER
   ========================================= -->
-<section style="background:var(--teal-dark);color:#fff;padding:80px 40px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+<section style="background:var(--lux-green); color:#fff; padding:120px 40px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; position:relative; overflow:hidden;">
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0.05; pointer-events:none; background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');"></div>
+  
   <div>
-    <span class="section-label" style="color:rgba(255,255,255,0.5);">Our Story</span>
-    <h2 class="font-serif" style="font-size:48px;font-weight:300;line-height:1.1;margin-bottom:24px;">A Legacy of Craftsmanship and Elegance</h2>
-    <p style="color:rgba(255,255,255,0.7);line-height:1.9;font-size:14px;margin-bottom:32px;">
-      Established in 2006, Perfumes has grown into a symbol of luxury, craftsmanship, and artistry. At Perfumes, fragrance is more than a product — it is an expression of identity, culture, and timeless elegance.
+    <span class="section-label" style="color:var(--lux-gold);">HERITAGE & ARTISTRY</span>
+    <h2 style="font-size:56px; font-weight:400; line-height:1.1; margin:24px 0; font-family:'Playfair Display',serif;">A Legacy of Pure Elegance</h2>
+    <p style="color:rgba(255,255,255,0.7); line-height:2; font-size:16px; margin-bottom:40px; font-weight:300;">
+      Since 2006, Perfumes has been at the forefront of luxury olfactory creation. We blend the finest Middle Eastern traditions with modern French perfumery to create scents that are not just fragrances, but timeless statements of identity.
     </p>
-    <a href="{% url 'about' %}" class="btn-outline" style="border-color:rgba(255,255,255,0.4);color:#fff;">
-      Our Story
+    <a href="{% url 'about' %}" class="btn-primary" style="background:transparent !important; border-color:var(--lux-gold) !important; color:var(--lux-gold) !important;">
+      Our Legacy
     </a>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;">
-    <div style="background:rgba(255,255,255,0.06);padding:40px 24px;text-align:center;">
-      <p style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:rgba(255,255,255,0.9);">18+</p>
-      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:6px;">Years of Craft</p>
+  
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px;">
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(197, 160, 61, 0.2); padding:50px 30px; text-align:center;">
+      <p style="font-family:'Playfair Display',serif; font-size:64px; color:var(--lux-gold);">18</p>
+      <p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">Years of Mastery</p>
     </div>
-    <div style="background:rgba(255,255,255,0.06);padding:40px 24px;text-align:center;">
-      <p style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:rgba(255,255,255,0.9);">50+</p>
-      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:6px;">Fragrances</p>
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(197, 160, 61, 0.2); padding:50px 30px; text-align:center;">
+      <p style="font-family:'Playfair Display',serif; font-size:64px; color:var(--lux-gold);">50+</p>
+      <p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">Rare Essences</p>
     </div>
-    <div style="background:rgba(255,255,255,0.04);padding:40px 24px;text-align:center;">
-      <p style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:rgba(255,255,255,0.9);">UAE</p>
-      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:6px;">Based In Dubai</p>
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(197, 160, 61, 0.2); padding:50px 30px; text-align:center;">
+      <p style="font-family:'Playfair Display',serif; font-size:64px; color:var(--lux-gold);">UAE</p>
+      <p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">Dubai Studio</p>
     </div>
-    <div style="background:rgba(255,255,255,0.04);padding:40px 24px;text-align:center;">
-      <p style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:rgba(255,255,255,0.9);">★★★★★</p>
-      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:6px;">4.6 / 5 Reviews</p>
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(197, 160, 61, 0.2); padding:50px 30px; text-align:center;">
+      <p style="font-family:'Playfair Display',serif; font-size:64px; color:var(--lux-gold);">★</p>
+      <p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">Excellence Awarded</p>
     </div>
   </div>
 </section>
@@ -250,14 +501,11 @@
      JOURNAL / BLOG PREVIEW
   ========================================= -->
 {% if latest_blogs %}
-<section class="section">
-  <div class="section-header">
-    <div>
-      <span class="section-label">Stories & Blog</span>
-      <h2 class="section-title font-serif">The Art of Scent</h2>
-      <div class="section-divider"></div>
-    </div>
-    <a href="{% url 'blog_list' %}" class="btn-outline">All Articles</a>
+<section class="featured-section" id="featuredSection" style="padding:120px 40px; background:#fff;">
+  <div class="section-header" style="text-align:center; margin-bottom:80px;">
+    <span class="section-label">CURATED COLLECTION</span>
+    <h2 class="section-title">Newest Creations</h2>
+    <div class="luxury-gold-bar"></div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;">
     {% for blog in latest_blogs %}
@@ -332,5 +580,52 @@ if (window.location.search.includes('order_success=true')) {
     }
   }, 500);
 }
+
+// ── Copy Promo Code ──────────────────────────────────────────
+function copyCode(spanId, code) {
+  navigator.clipboard.writeText(code).catch(function() {
+    var ta = document.createElement('textarea');
+    ta.value = code;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+  var btn = document.querySelector('#' + spanId)?.closest('.offer-promo-code')?.querySelector('.promo-copy-btn');
+  if (btn) {
+    var orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = orig;
+      btn.classList.remove('copied');
+    }, 2000);
+  }
+}
+
+// ── Countdown Timers ─────────────────────────────────────────
+function pad(n) { return n < 10 ? '0' + n : n; }
+
+function updateCountdowns() {
+  var now = new Date();
+  document.querySelectorAll('.promo-countdown[data-ends]').forEach(function(el) {
+    var end = new Date(el.getAttribute('data-ends'));
+    var diff = end - now;
+    var valEl = el.querySelector('.countdown-val') || el;
+    if (diff <= 0) {
+      valEl.textContent = 'Expired';
+      return;
+    }
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    var str = d > 0 ? d + 'd ' + pad(h) + 'h ' + pad(m) + 'm' : pad(h) + ':' + pad(m) + ':' + pad(s);
+    valEl.textContent = str;
+  });
+}
+updateCountdowns();
+setInterval(updateCountdowns, 1000);
 </script>
 {% endblock %}
+

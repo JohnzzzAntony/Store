@@ -80,6 +80,6 @@ exports.menuSuggestion = (0, https_1.onCallGenkit)({
     // will require the user to have the email_verified claim, for example.
     // authPolicy: hasClaim("email_verified"),
     // Grant access to the API key to this function:
-    secrets: [apiKey],
+    secrets: [AIzaSyBy900aC8NgoT4mNIT09f44d2dzlBpR6Kc],
 }, menuSuggestionFlow);
-//# sourceMappingURL=genkit-sample.js.map
+// # sourceMappingURL=genkit-sample.js.map

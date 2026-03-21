@@ -1,0 +1,21 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6" style="margin-top: 50px; margin-bottom: 50px;">
+        <div class="box-element text-center" style="border: 2px solid #3DFFB4; border-radius: 12px; padding: 40px;">
+            <img src="/static/images/payment-icons/tabby.svg" alt="Tabby" style="height: 40px; margin-bottom: 20px;">
+            <h2>Finish your purchase</h2>
+            <p>You are about to split your payment into 4 interest-free installments.</p>
+            <hr>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
+                <p><strong>Order Total:</strong> {{ current_store.currency }} {{ total }}</p>
+                <p><strong>Installment:</strong> {{ current_store.currency }} {{ installment }} x 4</p>
+            </div>
+            <a href="{% url 'store' %}?order_success=true&payment_success=true&provider=tabby" class="btn btn-success btn-block" style="background:#3DFFB4; border:none; color:black; font-weight:bold; padding: 15px;">Pay with Tabby</a>
+            <br>
+            <a href="{% url 'checkout' %}" class="btn btn-link" style="color: #888;">Go back to checkout</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
