@@ -1,7 +1,7 @@
-django>=3.0
-Pillow>=8.0
-gunicorn>=23.0.0
-setuptools
+django==3.2.20
+Pillow==10.1.0
+gunicorn==23.0.0
+setuptools==69.0.0
 whitenoise==6.2.0
 dj-database-url==1.0.0
 psycopg2-binary==2.9.3
@@ -10,4 +10,4 @@ django-jazzmin==2.6.0
 django-cleanup==7.0.0
 django-crispy-forms==2.0
 crispy-bootstrap5==0.7
-django-import-export>=3.0.0
+django-import-export==3.3.1
