@@ -1,21 +1,82 @@
 {% extends 'store/main.html' %}
 {% load static %}
+
+{% block title %}Tabby Payment — {{ current_store.name }}{% endblock %}
+
+{% block extra_head %}
+<style>
+    .payment-container {
+        max-width: 500px;
+        margin: 80px auto;
+        background: #fff;
+        padding: 50px;
+        border: 1px solid var(--border);
+        text-align: center;
+        box-shadow: var(--shadow-lg);
+    }
+    .tabby-logo {
+        height: 35px;
+        margin-bottom: 30px;
+    }
+    .payment-summary {
+        background: #fcfcfc;
+        padding: 25px;
+        border: 1px dashed var(--border);
+        margin: 30px 0;
+        text-align: left;
+    }
+    .installment-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 15px;
+    }
+    .btn-tabby {
+        background: #3DFFB4;
+        color: #000;
+        font-weight: 700;
+        letter-spacing: 2px;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        cursor: pointer;
+        display: block;
+        text-decoration: none;
+    }
+    .btn-tabby:hover {
+        background: #2ee6a3;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-6" style="margin-top: 50px; margin-bottom: 50px;">
-        <div class="box-element text-center" style="border: 2px solid #3DFFB4; border-radius: 12px; padding: 40px;">
-            <img src="/static/images/payment-icons/tabby.svg" alt="Tabby" style="height: 40px; margin-bottom: 20px;">
-            <h2>Finish your purchase</h2>
-            <p>You are about to split your payment into 4 interest-free installments.</p>
-            <hr>
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
-                <p><strong>Order Total:</strong> {{ current_store.currency }} {{ total }}</p>
-                <p><strong>Installment:</strong> {{ current_store.currency }} {{ installment }} x 4</p>
-            </div>
-            <a href="{% url 'store' %}?order_success=true&payment_success=true&provider=tabby" class="btn btn-success btn-block" style="background:#3DFFB4; border:none; color:black; font-weight:bold; padding: 15px;">Pay with Tabby</a>
-            <br>
-            <a href="{% url 'checkout' %}" class="btn btn-link" style="color: #888;">Go back to checkout</a>
+<div class="payment-container">
+    <img src="https://checkout.tabby.ai/assets/logo.svg" class="tabby-logo" alt="Tabby">
+    <h2 class="font-serif" style="font-size:28px;">Finish your purchase</h2>
+    <p style="color:var(--text-muted); line-height:1.6; margin-top:10px;">
+        You're splitting your payment into 4 interest-free installments. No hidden fees, no interest.
+    </p>
+
+    <div class="payment-summary">
+        <div class="installment-row">
+            <span>Order Total</span>
+            <span style="font-weight:600;">{{ current_store.currency|default:"AED" }} {{ total }}</span>
         </div>
+        <div class="installment-row" style="color:var(--teal); font-weight:700;">
+            <span>4 × Installments of</span>
+            <span>{{ current_store.currency|default:"AED" }} {{ installment }}</span>
+        </div>
+        <p style="font-size:11px; color:#888; margin-top:15px; border-top:1px solid #eee; pt:10px;">
+            * First installment paid now, others every 30 days.
+        </p>
     </div>
+
+    <a href="{% url 'order_success' %}?transaction_id=TABBY_{{ order_id|default:'12345' }}" class="btn-tabby">
+        PROCESS PAYMENT
+    </a>
+    
+    <a href="{% url 'checkout' %}" style="display:block; margin-top:20px; font-size:12px; color:var(--text-muted); text-transform:uppercase;">
+        Cancel and return 
+    </a>
 </div>
-{% endblock content %}
+{% endblock %}

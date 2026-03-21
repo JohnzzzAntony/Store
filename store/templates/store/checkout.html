@@ -1,393 +1,426 @@
 {% extends 'store/main.html' %}
-{% block title %}Ecom — Perfumes{% endblock %}
+{% load static %}
+
+{% block title %}Checkout — {{ current_store.name|default:"Perfumes" }}{% endblock %}
+
+{% block extra_head %}
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+    .payment-method-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .payment-box {
+        border: 1px solid var(--border);
+        background: #fff;
+        padding: 24px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .payment-box.active {
+        border: 2px solid var(--teal);
+        box-shadow: var(--shadow-md);
+    }
+
+    .payment-box-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .payment-box-title {
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+        color: var(--text-dark);
+    }
+
+    .payment-box-icon {
+        color: var(--teal);
+        font-size: 28px;
+    }
+
+    .payment-box-details {
+        margin-top: 15px;
+        display: none;
+        animation: fadeIn 0.4s ease;
+    }
+
+    .payment-box.active .payment-box-details {
+        display: block;
+    }
+
+    .emi-providers-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .emi-provider-label {
+        border: 1px solid var(--border);
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .emi-provider-label:hover {
+        background: var(--bg-light);
+    }
+
+    .emi-provider-label input[type="radio"] {
+        display: none;
+    }
+
+    .emi-provider-label.selected {
+        border-color: var(--teal);
+        background: var(--teal-mist);
+    }
+
+    .stripe-card-container {
+        padding: 15px;
+        border: 1px solid var(--border);
+        background: #fcfcfc;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .checkout-grid {
+        display: grid;
+        grid-template-columns: 1.6fr 1.1fr;
+        gap: 60px;
+        margin-top: 40px;
+    }
+
+    @media (max-width: 992px) {
+        .checkout-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block content %}
+<div class="section" style="padding-top:40px;">
+    <div class="section-header" style="margin-bottom:20px;">
+        <h1 class="font-serif" style="font-size:42px;">Checkout</h1>
+    </div>
 
-<!-- Header -->
-<div class="checkout-header">
-  <p class="section-label">[Billing Information]</p>
-  <h1 class="checkout-title font-serif">Billing Address</h1>
+    <div class="checkout-grid">
+        <!-- Left Column: Shipping & Payment -->
+        <div class="checkout-main">
+            <form id="checkout-form">
+                {% csrf_token %}
+                <h5 class="font-serif" style="font-size:24px; margin-bottom:20px;">Shipping Details</h5>
+                
+                <div class="form-row">
+                    <div class="form-group" style="flex:1;">
+                        <label class="section-label">FULL NAME</label>
+                        <input type="text" name="name" class="form-control" placeholder="John Doe" required style="width:100%; padding:12px; border:1px solid var(--border);">
+                    </div>
+                </div>
+                
+                <div class="form-row" style="display:flex; gap:20px; margin-top:15px;">
+                    <div class="form-group" style="flex:1;">
+                        <label class="section-label">EMAIL ADDRESS</label>
+                        <input type="email" name="email" class="form-control" placeholder="john@example.com" required style="width:100%; padding:12px; border:1px solid var(--border);">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label class="section-label">PHONE NUMBER</label>
+                        <input type="tel" name="phone" class="form-control" placeholder="+971 50 123 4567" required style="width:100%; padding:12px; border:1px solid var(--border);">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top:15px;">
+                    <label class="section-label">STREET ADDRESS</label>
+                    <input type="text" name="address" class="form-control" placeholder="Apt, Street, Building..." required style="width:100%; padding:12px; border:1px solid var(--border);">
+                </div>
+
+                <div class="form-row" style="display:flex; gap:20px; margin-top:15px;">
+                    <div class="form-group" style="flex:1;">
+                        <label class="section-label">CITY</label>
+                        <input type="text" name="city" class="form-control" placeholder="Dubai" required style="width:100%; padding:12px; border:1px solid var(--border);">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label class="section-label">STATE / EMIRATE</label>
+                        <input type="text" name="state" class="form-control" placeholder="Dubai" required style="width:100%; padding:12px; border:1px solid var(--border);">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label class="section-label">ZIP CODE</label>
+                        <input type="text" name="zipcode" class="form-control" placeholder="00000" required style="width:100%; padding:12px; border:1px solid var(--border);">
+                    </div>
+                </div>
+
+                <hr style="margin:40px 0; border:0; border-top:1px solid var(--border);">
+
+                <h5 class="font-serif" style="font-size:24px; margin-bottom:24px;">Payment Method</h5>
+
+                <div class="payment-method-container">
+                    <!-- Stripe Card Box -->
+                    <div class="payment-box active" id="card-box" onclick="selectPayment('card')">
+                        <div class="payment-box-header">
+                            <span class="payment-box-title">Credit / Debit Card</span>
+                            <i class="ph ph-credit-card payment-box-icon"></i>
+                        </div>
+                        <div class="payment-box-details" style="display:block;">
+                            <label class="section-label" style="font-size:10px; margin-bottom:12px;">CARD DETAILS</label>
+                            <div class="stripe-card-container">
+                                <div id="card-element"></div>
+                            </div>
+                            <div id="card-errors" role="alert" style="color:#e74c3c; font-size:12px; margin-top:8px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- EMI Box -->
+                    <div class="payment-box" id="emi-box" onclick="selectPayment('emi')">
+                        <div class="payment-box-header">
+                            <div>
+                                <span class="payment-box-title">Pay as EMI (Tabby / Tamara)</span>
+                                <p style="font-size:13px; color:var(--text-muted); margin-top:5px;">Split your payment into installments with 0% interest</p>
+                            </div>
+                            <i class="ph ph-calendar-check payment-box-icon"></i>
+                        </div>
+                        <div class="payment-box-details">
+                            <label class="section-label" style="font-size:10px;">SELECT PROVIDER</label>
+                            <div class="emi-providers-grid">
+                                <label class="emi-provider-label selected" id="tabby-label" onclick="selectEMI('tabby')">
+                                    <input type="radio" name="emi_provider" value="tabby" checked>
+                                    <img src="https://checkout.tabby.ai/assets/logo.svg" alt="Tabby" style="height:20px;">
+                                    <span style="font-size:11px; color:var(--text-muted);">4 interest-free payments</span>
+                                </label>
+                                <label class="emi-provider-label" id="tamara-label" onclick="selectEMI('tamara')">
+                                    <input type="radio" name="emi_provider" value="tamara">
+                                    <img src="https://cdn.tamara.co/assets/logo.svg" alt="Tamara" style="height:20px;">
+                                    <span style="font-size:11px; color:var(--text-muted);">Split into 3 or 4</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" id="place-order-btn" class="btn-dark btn-full" style="margin-top:30px; padding:18px;">
+                    COMPLETE PURCHASE
+                </button>
+            </form>
+        </div>
+
+        <!-- Right Column: Summary -->
+        <div class="checkout-sidebar">
+            <div class="box-element" style="background:#fff; padding:30px; border:1px solid var(--border);">
+                <h5 class="font-serif" style="font-size:24px; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:15px;">Order Summary</h5>
+                
+                {% for item in items %}
+                <div style="display:flex; gap:15px; margin-bottom:20px; align-items:center;">
+                    <div style="width:60px; height:80px; background:#f8f7f4; border:1px solid var(--border);">
+                        {% if item.product.imageURL %}
+                            <img src="{{ item.product.imageURL }}" style="width:100%; height:100%; object-fit:cover;">
+                        {% endif %}
+                    </div>
+                    <div style="flex:1;">
+                        <p style="font-size:14px; font-weight:600; margin:0;">{{ item.product.name }}</p>
+                        <p style="font-size:12px; color:var(--text-muted); margin:4px 0;">Qty: {{ item.quantity }} × {{ item.product.size_ml }}ML</p>
+                    </div>
+                    <p style="font-size:14px; font-weight:600;">{{ current_store.currency|default:"AED" }} {{ item.get_total|floatformat:0 }}</p>
+                </div>
+                {% endfor %}
+
+                <div style="margin-top:30px; border-top:1px solid var(--border); padding-top:20px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span style="color:var(--text-muted);">Subtotal</span>
+                        <span>{{ current_store.currency|default:"AED" }} {{ order.get_cart_total|floatformat:0 }}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span style="color:var(--text-muted);">Shipping</span>
+                        <span style="color:#27ae60; font-weight:600;">FREE</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:20px; font-size:20px; font-weight:700;">
+                        <span>Total</span>
+                        <span style="color:var(--teal);">{{ current_store.currency|default:"AED" }} <span id="total-val">{{ order.get_cart_total|floatformat:0 }}</span></span>
+                    </div>
+                </div>
+                
+                <p style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:30px; line-height:1.6;">
+                    <i class="ph ph-lock-key" style="vertical-align:middle; margin-right:4px;"></i> 
+                    Secure encrypted checkout. Your data is protected by industry standard SSL.
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
-
-<div class="checkout-layout">
-
-  <!-- Billing Form -->
-  <div class="billing-form">
-    <h2 class="billing-section-title">Shipping Details</h2>
-
-    <!-- Same as billing toggle -->
-    <div style="margin-bottom:24px;">
-      <div class="radio-option">
-        <input type="radio" name="billingType" id="sameAddress" value="same" checked />
-        <label for="sameAddress">Same as shipping address</label>
-      </div>
-      <div class="radio-option">
-        <input type="radio" name="billingType" id="diffAddress" value="different" />
-        <label for="diffAddress">Use a different billing address</label>
-      </div>
-    </div>
-
-    <form id="checkoutForm">
-      {% csrf_token %}
-      <div class="form-group">
-        <label class="form-label" for="billingFullName">Full Name</label>
-        <input type="text" class="form-control" id="billingFullName" name="full_name" placeholder="Your name" required />
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label" for="billingPhone">Phone Number</label>
-          <input type="tel" class="form-control" id="billingPhone" name="phone" placeholder="Enter your number" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="billingEmail">Email</label>
-          <input type="email" class="form-control" id="billingEmail" name="email" placeholder="Enter your email" required />
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="billingAddress">Street Address</label>
-        <input type="text" class="form-control" id="billingAddress" name="address" placeholder="Apartment, street, area…" required />
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label" for="billingCity">City</label>
-          <input type="text" class="form-control" id="billingCity" name="city" placeholder="Dubai" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="billingState">State / Emirates</label>
-          <input type="text" class="form-control" id="billingState" name="state" placeholder="Dubai" required />
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label" for="billingZip">ZIP / Postal Code</label>
-          <input type="text" class="form-control" id="billingZip" name="zipcode" placeholder="00000" required />
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="billingCountry">Country</label>
-          <select class="form-control" id="billingCountry" name="country">
-            <option value="UAE" selected>United Arab Emirates</option>
-            <option value="SA">Saudi Arabia</option>
-            <option value="KW">Kuwait</option>
-            <option value="QA">Qatar</option>
-            <option value="BH">Bahrain</option>
-            <option value="OM">Oman</option>
-            <option value="OTHER">Other</option>
-          </select>
-        </div>
-      </div>
-
-      <h2 class="billing-section-title" style="margin-top:32px;">Payment Method</h2>
-
-      <div class="payment-options">
-        {% if current_store.enable_stripe %}
-        <div class="payment-method-card">
-          <input type="radio" name="paymentOption" id="payCard" value="card" checked onchange="toggleEMI(false)"/>
-          <label for="payCard">
-            <div class="payment-method-info">
-              <span class="payment-method-name">Credit / Debit Card</span>
-              <div class="payment-logos">
-                <i class="ph ph-credit-card"></i>
-              </div>
-            </div>
-          </label>
-
-          <div id="cardDetailsContainer" class="card-details-form" style="padding: 0 20px 20px 50px;">
-            <div class="form-group" style="margin-bottom: 12px;">
-              <label class="form-label" style="font-size: 10px;">Card Number</label>
-              <input type="text" class="form-control" name="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" />
-            </div>
-            <div class="form-row" style="gap: 12px;">
-              <div class="form-group">
-                <label class="form-label" style="font-size: 10px;">Expiry Date</label>
-                <input type="text" class="form-control" name="cardExpiry" placeholder="MM / YY" maxlength="5" />
-              </div>
-              <div class="form-group">
-                <label class="form-label" style="font-size: 10px;">CVV</label>
-                <input type="password" class="form-control" name="cardCVV" placeholder="***" maxlength="3" />
-              </div>
-            </div>
-          </div>
-        </div>
-        {% endif %}
-
-        {% if current_store.enable_tabby or current_store.enable_tamara %}
-        <div class="payment-method-card">
-          <input type="radio" name="paymentOption" id="payEMI" value="emi" onchange="toggleEMI(true)"/>
-          <label for="payEMI">
-            <div class="payment-method-info">
-              <span class="payment-method-name">Pay as EMI (Tabby / Tamara)</span>
-              <span class="payment-method-hint">Split your payment into installments with 0% interest</span>
-              <div class="payment-logos">
-                <i class="ph ph-calendar-check"></i>
-              </div>
-            </div>
-          </label>
-          
-          <div id="emiOptions" class="emi-sub-options" style="display:none; padding: 0 20px 20px 50px;">
-            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 1px; text-transform: uppercase;">Select your provider:</p>
-            
-            {% if current_store.enable_tabby %}
-            <div class="emi-radio-option">
-              <input type="radio" name="emiProvider" id="tabbyProvider" value="tabby" checked />
-              <label for="tabbyProvider">
-                <div style="display:flex; align-items:center; gap:10px;">
-                  <img src="/static/images/payment-icons/tabby.svg" alt="Tabby" style="height:15px;">
-                  <span class="emi-provider-name">Tabby</span>
-                </div>
-                <span class="emi-provider-hint">4 interest-free payments of {{ current_store.currency }} <span class="tabbyAmount">0</span></span>
-              </label>
-            </div>
-            {% endif %}
-
-            {% if current_store.enable_tamara %}
-            <div class="emi-radio-option">
-              <input type="radio" name="emiProvider" id="tamaraProvider" value="tamara" {% if not current_store.enable_tabby %}checked{% endif %} />
-              <label for="tamaraProvider">
-                <div style="display:flex; align-items:center; gap:10px;">
-                  <img src="/static/images/payment-icons/tamara.svg" alt="Tamara" style="height:15px;">
-                  <span class="emi-provider-name">Tamara</span>
-                </div>
-                <span class="emi-provider-hint">Split into 3 or 4 payments</span>
-              </label>
-            </div>
-            {% endif %}
-          </div>
-        </div>
-        {% endif %}
-
-        {% if current_store.enable_cod %}
-        <div class="payment-method-card">
-          <input type="radio" name="paymentOption" id="payCOD" value="cod" {% if not current_store.enable_stripe and not current_store.enable_tabby and not current_store.enable_tamara %}checked{% endif %} onchange="toggleEMI(false)"/>
-          <label for="payCOD">
-            <div class="payment-method-info">
-              <span class="payment-method-name">Cash on Delivery</span>
-              <div class="payment-logos">
-                <i class="ph ph-money"></i>
-              </div>
-            </div>
-          </label>
-        </div>
-        {% endif %}
-      </div>
-
-      <!-- Order Note -->
-      <div class="form-group">
-        <label class="form-label" for="orderNote">Order Notes <span style="font-weight:300;text-transform:none;font-size:11px;">(optional)</span></label>
-        <textarea class="form-control" id="orderNote" placeholder="Any special instructions for your order…" rows="3"></textarea>
-      </div>
-
-      <button type="button" class="btn-primary btn-full" id="placeOrderBtn" onclick="submitOrder()">
-        PLACE ORDER
-      </button>
-    </form>
-  </div>
-
-  <!-- Order Summary Sidebar -->
-  <div class="checkout-summary">
-    <h2 class="cart-summary-title">Your Order</h2>
-
-    {% for item in items %}
-    <div class="checkout-item-row" id="checkout-item-{{ item.id }}">
-      {% if item.product.imageURL %}
-        <img src="{{ item.product.imageURL }}" alt="{{ item.product.name }}" class="checkout-item-img" />
-      {% else %}
-        <div class="checkout-item-img img-placeholder">
-          <i class="ph ph-package" style="font-size:24px;opacity:0.3;"></i>
-        </div>
-      {% endif %}
-      <div class="checkout-item-info">
-        <p class="checkout-item-name">{{ item.product.name }}</p>
-        <p class="checkout-item-size">{{ item.product.size_ml }}ML × {{ item.quantity }}</p>
-      </div>
-      <p class="checkout-item-price">{{ current_store.currency }} {% if item.get_total %}{{ item.get_total|floatformat:0 }}{% else %}{{ item.product.price|floatformat:0 }}{% endif %}</p>
-    </div>
-    {% empty %}
-    <p style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px 0;">No items in cart</p>
-    {% endfor %}
-
-    <div style="margin-top:16px;">
-      <div class="cart-summary-row">
-        <span>Subtotal</span>
-        <span>{{ current_store.currency }} {{ order.get_cart_total|floatformat:0 }}</span>
-      </div>
-      <div class="cart-summary-row">
-        <span>Shipping</span>
-        <span style="color:#27ae60;font-weight:500;">
-          {% if order.shipping %}To be calculated{% else %}Free{% endif %}
-        </span>
-      </div>
-      <div class="cart-summary-total">
-        <span>Total</span>
-        <span>{{ current_store.currency }} <span id="orderTotal">{{ order.get_cart_total|floatformat:0 }}</span></span>
-      </div>
-    </div>
-
-    <a href="{% url 'cart' %}" style="font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);display:block;text-align:center;margin-top:16px;">
-      ← Edit Cart
-    </a>
-  </div>
-
-</div><!-- end checkout-layout -->
-
 {% endblock %}
 
 {% block extra_js %}
 <script>
-function submitOrder() {
-  var form = document.getElementById('checkoutForm');
-  var fullName = document.getElementById('billingFullName').value;
-  var phone    = document.getElementById('billingPhone').value;
-  var email    = document.getElementById('billingEmail').value;
-  var address  = document.getElementById('billingAddress').value;
-  var city     = document.getElementById('billingCity').value;
-  var state    = document.getElementById('billingState').value;
-  var zipcode  = document.getElementById('billingZip').value;
-  var total    = document.getElementById('orderTotal').textContent;
-  
-  var paymentOption = document.querySelector('input[name="paymentOption"]:checked').value;
-  var payment = paymentOption;
-  
-  if (paymentOption === 'emi') {
-    var emiProvider = document.querySelector('input[name="emiProvider"]:checked');
-    if (emiProvider) {
-      payment = emiProvider.value;
-    } else {
-      alert('Please select an EMI provider.');
-      return;
+    var stripe = Stripe('{{ STRIPE_PUBLIC_KEY }}');
+    var elements = stripe.elements();
+    var currentMethod = 'card';
+    var currentEMI = 'tabby';
+
+    var style = {
+        base: {
+            color: '#1a1a1a',
+            fontFamily: '"Inter", sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '15px',
+            '::placeholder': {
+              color: '#888888'
+            }
+        },
+        invalid: {
+            color: '#e74c3c',
+            iconColor: '#e74c3c'
+        }
+    };
+
+    var card = elements.create('card', { style: style, hidePostalCode: true });
+    card.mount('#card-element');
+
+    function selectPayment(method) {
+        currentMethod = method;
+        document.querySelectorAll('.payment-box').forEach(box => box.classList.remove('active'));
+        document.getElementById(method + '-box').classList.add('active');
+        
+        // Hide details of other boxes handled via CSS but we ensure explicitly if needed
+        document.querySelectorAll('.payment-box-details').forEach(d => d.style.display = 'none');
+        document.getElementById(method + '-box').querySelector('.payment-box-details').style.display = 'block';
     }
-  }
 
-  if (!fullName || !phone || !email || !address || !city || !state || !zipcode) {
-    alert('Please fill in all required fields.');
-    return;
-  }
-
-  var data = {
-    'form': {
-      'name': fullName,
-      'email': email,
-      'total': total,
-      'payment_method': payment,
-    },
-    'shipping': {
-      'full_name': fullName,
-      'phone': phone,
-      'address': address,
-      'city': city,
-      'state': state,
-      'zipcode': zipcode,
+    function selectEMI(provider) {
+        currentEMI = provider;
+        document.querySelectorAll('.emi-provider-label').forEach(l => l.classList.remove('selected'));
+        document.getElementById(provider + '-label').classList.add('selected');
+        document.getElementById(provider + '-label').querySelector('input').checked = true;
     }
-  };
 
-  document.getElementById('placeOrderBtn').textContent = 'Processing…';
-  document.getElementById('placeOrderBtn').disabled = true;
+    var form = document.getElementById('checkout-form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        var formData = new FormData(form);
+        var orderData = {
+            'form': {
+                'name': formData.get('name'),
+                'email': formData.get('email'),
+                'phone': formData.get('phone'),
+                'total': '{{ order.get_cart_total|floatformat:2 }}',
+                'payment_method': currentMethod === 'card' ? 'stripe' : currentEMI
+            },
+            'shipping': {
+                'full_name': formData.get('name'),
+                'phone': formData.get('phone'),
+                'address': formData.get('address'),
+                'city': formData.get('city'),
+                'state': formData.get('state'),
+                'zipcode': formData.get('zipcode'),
+                'country': 'UAE'
+            }
+        };
 
-  fetch('/process_order/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': csrftoken,
-    },
-    body: JSON.stringify(data)
-  })
-  .then(function(res) { return res.json(); })
-  .then(function(data) {
-    if (data.status === 'success' || (data.status === 'redirect' && data.redirect_url)) {
-      // Clear cart
-      cart = {};
-      document.cookie = 'cart=' + JSON.stringify(cart) + ";path=/";
+        var btn = document.getElementById('place-order-btn');
+        btn.disabled = true;
+        btn.textContent = 'SECURELY PROCESSING...';
 
-      if (data.status === 'redirect') {
-        window.location.href = data.redirect_url;
-      } else {
-        window.location.href = '{% url "store" %}?order_success=true';
-      }
-    } else {
-      alert(data.message || 'An error occurred during payment processing.');
-      document.getElementById('placeOrderBtn').textContent = 'Place Order';
-      document.getElementById('placeOrderBtn').disabled = false;
+        if (currentMethod === 'card') {
+            handleCardPayment(orderData);
+        } else {
+            handleEMIDirect(orderData);
+        }
+    });
+
+    function handleCardPayment(orderData) {
+        fetch('/create-payment-intent/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(orderData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                showToast(data.error, 'error');
+                resetBtn();
+                return;
+            }
+
+            if (data.mock_mode) {
+                showToast('Stripe Setup Incomplete: Using secure demo processor...', 'info');
+                setTimeout(() => {
+                    finalizeOrder(orderData);
+                }, 1500);
+                return;
+            }
+
+            stripe.confirmCardPayment(data.clientSecret, {
+                payment_method: {
+                    card: card,
+                    billing_details: {
+                        name: orderData.form.name,
+                        email: orderData.form.email
+                    }
+                }
+            }).then(result => {
+                if (result.error) {
+                    showToast(result.error.message, 'error');
+                    resetBtn();
+                } else {
+                    if (result.paymentIntent.status === 'succeeded') {
+                        finalizeOrder(orderData);
+                    }
+                }
+            });
+        })
+        .catch(err => {
+            showToast('Connection error. Please try again.', 'error');
+            resetBtn();
+        });
     }
-  })
-  .catch(function(err) {
-    alert('Something went wrong. Please try again.');
-    document.getElementById('placeOrderBtn').textContent = 'PLACE ORDER';
-    document.getElementById('placeOrderBtn').disabled = false;
-  });
-}
 
-// EMI & Card Toggler
-function toggleEMI(isEMI) {
-  var emiDiv = document.getElementById('emiOptions');
-  var cardDiv = document.getElementById('cardDetailsContainer');
-  
-  if (emiDiv) {
-    emiDiv.style.display = isEMI ? 'block' : 'none';
-  }
-  
-  if (cardDiv) {
-    // Show card details only if card is NOT selected for EMI/COD
-    var isCard = document.getElementById('payCard').checked;
-    cardDiv.style.display = isCard ? 'block' : 'none';
-  }
-}
+    function handleEMIDirect(orderData) {
+        // For Tabby/Tamara, we use the specialized redirect flow
+        var provider = orderData.form.payment_method;
+        var url = '/payment/' + provider + '/?total=' + orderData.form.total + '&email=' + orderData.form.email;
+        window.location.href = url;
+    }
 
-// Calculate installments for preview
-document.addEventListener('DOMContentLoaded', function() {
-  var total = parseFloat(document.getElementById('orderTotal').textContent);
-  var tabbyAmounts = document.querySelectorAll('.tabbyAmount');
-  tabbyAmounts.forEach(function(el) {
-    el.textContent = (total / 4).toFixed(0);
-  });
-});
+    function finalizeOrder(orderData) {
+        fetch('/process_order/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(orderData)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                window.location.href = "{% url 'order_success' %}";
+            } else {
+                showToast(data.message || 'Error processing order.', 'error');
+                resetBtn();
+            }
+        });
+    }
+
+    function resetBtn() {
+        var btn = document.getElementById('place-order-btn');
+        btn.disabled = false;
+        btn.textContent = 'COMPLETE PURCHASE';
+    }
 </script>
-
-<style>
-.emi-sub-options {
-  border-top: 1px dashed var(--border);
-  margin-top: 5px;
-  animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.emi-radio-option {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 16px;
-  cursor: pointer;
-}
-
-.emi-radio-option input[type="radio"] {
-  accent-color: var(--teal);
-  margin-top: 4px;
-  width: 16px;
-  height: 16px;
-}
-
-.emi-radio-option label {
-  display: flex;
-  flex-direction: column;
-  padding: 0 !important;
-  cursor: pointer;
-}
-
-.emi-provider-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-dark);
-}
-
-.emi-provider-hint {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-</style>
 {% endblock %}

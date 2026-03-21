@@ -33,4 +33,6 @@ urlpatterns = [
     path('clear_products/', views.clear_products, name='clear_products'),
     path('payment/tabby/', views.tabby_payment, name='tabby_payment'),
     path('payment/tamara/', views.tamara_payment, name='tamara_payment'),
+    path('create-payment-intent/', views.create_payment_intent, name='create-payment-intent'),
+    path('stripe-webhook/', views.stripe_webhook, name='stripe-webhook'),
 ]

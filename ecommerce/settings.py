@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,7 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY', 'z+ksf@)0d^qojbh4rnp4b1to$hq&*tt(3bs$gf(3i267g$k9ln')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'false').lower() == 'true'
 
 ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME', '*')]
 if os.environ.get('ALLOWED_HOSTS'):
@@ -67,7 +70,7 @@ ROOT_URLCONF = 'ecommerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,6 +96,11 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# Stripe Settings
+STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', 'pk_test_placeholder')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_placeholder')
+STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET', '')
 
 # Use DB URL if available (e.g. for PostgreSQL in production)
 db_from_env = dj_database_url.config(conn_max_age=600)
@@ -123,7 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Dubai'
 
 USE_I18N = True
 
@@ -144,7 +152,9 @@ STATICFILES_DIRS = [
 ]
 
 # WhiteNoise storage for optimization
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Email for testing
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'Saleel Luxury <noreply@saleel.com>'
 
 MEDIA_URL = '/images/'
 
@@ -160,53 +170,52 @@ JAZZMIN_SETTINGS = {
     "site_header": "Saleel",
     "site_brand": "Saleel Admin Panel",
     "site_logo": None,
-    "welcome_sign": "Welcome to Saleel Admin Panel",
-    "copyright": "Saleel Parfums Ltd",
-    "search_model": ["store.Store", "store.Product"],
+    "welcome_sign": "Welcome back to Saleel",
+    "copyright": "Mechaura International FZE LLC",
+    "search_model": ["store.Product", "store.Order"],
     "user_avatar": None,
     "topmenu_links": [
-        {"name": "Home",  "url": "admin:index"},
-        {"model": "store.Store"},
-    ],
-    "usermenu_links": [
-        {"model": "auth.user"}
+        {"name": "View Site", "url": "/", "new_window": True},
+        {"name": "Checkouts", "url": "/_admin_portal/store/order/"},
+        {"name": "Products", "url": "/_admin_portal/store/product/"},
+        {"name": "Offers", "url": "/_admin_portal/store/offersection/"},
+        {"name": "Media", "url": "/_admin_portal/store/frontendmedia/"},
+        {"name": "Users", "url": "/_admin_portal/auth/user/"},
     ],
     "show_sidebar": True,
     "navigation_expanded": True,
-    "hide_apps": [],
-    "hide_models": [],
-    "order_with_respect_to": ["store.FrontendMedia", "store.Store", "store.Product", "store.Category", "store.Order", "store.Customer"],
+    "order_with_respect_to": [
+        "auth.Group", "auth.User",
+        "store.FrontendMedia", "store.Store", "store.Product", "store.Category", "store.Order", "store.Customer",
+        "store.OfferSection", "store.BOGOOffer", "store.CategoryOffer", "store.PromoBanner",
+        "store.BlogPost", "store.Wishlist", "store.ContactMessage"
+    ],
     "icons": {
         "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "auth.Group": "fas fa-users",
-        "store.FrontendMedia": "fas fa-images",
-        "store.Store": "fas fa-store",
-        "store.Product": "fas fa-box",
-        "store.Category": "fas fa-th-large",
-        "store.Order": "fas fa-shopping-bag",
-        "store.OrderItem": "fas fa-list-ul",
-        "store.Customer": "fas fa-address-book",
+        "auth.user": "fas fa-user-circle",
+        "store.Order": "fas fa-shopping-cart",
+        "store.OrderItem": "fas fa-barcode",
         "store.ShippingAddress": "fas fa-truck",
-        "store.BlogPost": "fas fa-edit",
-        "store.ContactMessage": "fas fa-envelope-open-text",
-        "store.Wishlist": "fas fa-heart",
+        "store.Product": "fas fa-award",
+        "store.Category": "fas fa-layer-group",
+        "store.Store": "fas fa-store-alt",
+        "store.OfferSection": "fas fa-percentage",
+        "store.BOGOOffer": "fas fa-tag",
+        "store.CategoryOffer": "fas fa-tags",
+        "store.PromoBanner": "fas fa-image",
+        "store.FrontendMedia": "fas fa-photo-video",
+        "store.BlogPost": "fas fa-paper-plane",
     },
-    "default_icon_parents": "fas fa-chevron-circle-right",
-    "default_icon_children": "fas fa-circle",
-    "related_modal_active": False,
-    "custom_css": "admin/css/custom_admin.css",  # Custom CSS for the beige background
+    "custom_css": "store/css/admin_luxe.css",
     "use_google_fonts_cdn": True,
-    "show_ui_builder": False,
-    "changeform_format": "horizontal_tabs",
 }
 
 JAZZMIN_UI_TWEAKS = {
     "navbar_small_text": False,
     "footer_small_text": False,
-    "body_small_text": True,
+    "body_small_text": False,
     "brand_small_text": False,
-    "brand_colour": "navbar-dark",
+    "brand_colour": False,
     "accent": "accent-primary",
     "navbar": "navbar-white navbar-light",
     "no_navbar_border": True,
@@ -214,7 +223,7 @@ JAZZMIN_UI_TWEAKS = {
     "layout_fixed": True,
     "footer_fixed": False,
     "sidebar_fixed": True,
-    "sidebar": "sidebar-dark-primary",
+    "sidebar": "sidebar-dark-success",
     "sidebar_nav_small_text": False,
     "sidebar_disable_expand": False,
     "sidebar_nav_child_indent": True,

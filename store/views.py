@@ -12,6 +12,14 @@ from .models import (Product, Customer, Order, OrderItem, ShippingAddress, Categ
 from .utils import cookieCart, cartData, guestOrder
 from .firebase_utils import verify_token, sync_user_to_firestore, save_order_to_firestore
 from .payment_providers import payment_registry
+import stripe
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def firebase_login_sync(request, *args, **kwargs):
@@ -235,14 +243,20 @@ def cart(request, *args, **kwargs):
     return render(request, 'store/cart.html', context)
 
 
+@login_required(login_url='login')
 def checkout(request, *args, **kwargs):
     """Billing address / checkout page."""
     data = cartData(request)
     cartItems = data['cartItems']
     order = data['order']
     items = data['items']
-
-    context = {'items': items, 'order': order, 'cartItems': cartItems}
+    
+    context = {
+        'items': items,
+        'order': order,
+        'cartItems': cartItems,
+        'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY
+    }
     return render(request, 'store/checkout.html', context)
 
 
@@ -401,6 +415,83 @@ def tamara_payment(request):
     return render(request, 'store/tamara_payment.html', context)
 
 
+def create_payment_intent(request):
+    """Creates a Stripe PaymentIntent and returns the client secret."""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Only POST requests allowed'}, status=405)
+
+    try:
+        if settings.STRIPE_SECRET_KEY == 'sk_test_placeholder' or not settings.STRIPE_SECRET_KEY:
+            # Return a simulated client secret for the frontend to progress in "demo mode"
+            return JsonResponse({
+                'clientSecret': 'pi_mock_secret_123456789_secret_placeholder',
+                'mock_mode': True 
+            })
+
+        body_data = json.loads(request.body)
+        data = cartData(request)
+        total = data['order'].get_cart_total
+        
+        # Stripe expects amount in cents
+        amount = int(total * 100)
+
+        # Create a PaymentIntent with the order amount and currency
+        intent = stripe.PaymentIntent.create(
+            amount=amount,
+            currency='AED',
+            automatic_payment_methods={
+                'enabled': True,
+            },
+            metadata={
+                'customer_email': body_data['form'].get('email', ''),
+                'total': total,
+                'shipping_name': body_data['shipping'].get('full_name', ''),
+                'shipping_address': f"{body_data['shipping'].get('address', '')}, {body_data['shipping'].get('city', '')}",
+            }
+        )
+        return JsonResponse({
+            'clientSecret': intent['client_secret']
+        })
+    except Exception as e:
+        print(f"Stripe Error: {e}")
+        return JsonResponse({'error': str(e)}, status=403)
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+        )
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
+
+    # Handle the event
+    if event['type'] == 'payment_intent.succeeded':
+        intent = event['data']['object']
+        customer_email = intent['metadata'].get('customer_email')
+        
+        # Here you would typically match the order and mark it as fulfilled.
+        # Since we are using finalizeOrder on the frontend, this serves as a backup.
+        # If we had stored an order_id, we could do:
+        # order_id = intent['metadata'].get('order_id')
+        # order = Order.objects.get(id=order_id)
+        # order.complete = True
+        # order.save()
+        
+        print(f"PaymentIntent was successful for {customer_email}")
+
+    return HttpResponse(status=200)
+
+
 from .firebase_utils import save_order_to_firestore
 from .payment_providers import payment_registry
 
@@ -420,27 +511,45 @@ def processOrder(request, *args, **kwargs):
     payment_method = data['form'].get('payment_method', 'cod')
     order.transaction_id = transaction_id
     order.payment_method = payment_method
+    order.status = 'Payment Pending' if payment_method in ['tabby', 'tamara'] else 'Processing'
 
     if total == order.get_cart_total:
-        order.complete = True
+        order.complete = True if payment_method == 'cod' else False
     order.save()
 
     # Process via payment provider registry
     provider = payment_registry.get_provider(payment_method)
+    payment_result = {}
     if provider:
         payment_result = provider.process(order, data)
-        # In a real app, we'd handle payment_result['status'] failure here
+        redirect_url = payment_result.get('redirect_url')
+        
+        # SEND EMAIL LINK if Tabby/Tamara
+        if payment_method in ['tabby', 'tamara'] and redirect_url:
+            full_redirect_url = request.build_absolute_url(redirect_url)
+            try:
+                subject = f"Complete your {payment_method.capitalize()} Payment - Order #{order.id}"
+                message = f"Hello,\n\nPlease click the link below to complete your payment using {payment_method.capitalize()}:\n{full_redirect_url}\n\nThank you for shopping with Saleel."
+                recipient = data['form'].get('email') or (customer.email if customer else None)
+                if recipient:
+                    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [recipient])
+                    print(f"DEBUG: Sent payment link to {recipient}: {full_redirect_url}")
+            except Exception as e:
+                print(f"Mail Error: {e}")
 
     if order.shipping:
-        ShippingAddress.objects.create(
-            customer=customer,
+        ShippingAddress.objects.update_or_create(
             order=order,
-            full_name=data['shipping'].get('full_name', ''),
-            phone=data['shipping'].get('phone', ''),
-            address=data['shipping']['address'],
-            city=data['shipping']['city'],
-            state=data['shipping']['state'],
-            zipcode=data['shipping']['zipcode'],
+            defaults={
+                'customer': customer,
+                'full_name': data['shipping'].get('full_name', ''),
+                'phone': data['shipping'].get('phone', ''),
+                'address': data['shipping'].get('address', ''),
+                'city': data['shipping'].get('city', ''),
+                'state': data['shipping'].get('state', ''),
+                'zipcode': data['shipping'].get('zipcode', ''),
+                'country': data['shipping'].get('country', 'UAE'),
+            }
         )
 
     # Sync to Firebase for real-time tracking
@@ -448,18 +557,18 @@ def processOrder(request, *args, **kwargs):
         'transaction_id': str(transaction_id),
         'store_id': store.id if store else None,
         'store_name': store.name if store else "Unknown",
-        'customer_email': customer.email,
+        'order_id': order.id,
+        'customer_email': data['form'].get('email', (customer.email if customer else "Guest")),
         'total': total,
         'payment_method': payment_method,
+        'status': order.status,
         'timestamp': datetime.datetime.now().isoformat()
     })
 
     # Return the payment result back to the frontend for handling redirects/success
     success_redirect_url = f"/order-success/?transaction_id={transaction_id}"
     
-    if provider and 'payment_result' in locals():
-        if payment_result.get('status') == 'success':
-             payment_result['redirect_url'] = success_redirect_url
+    if provider and payment_result.get('status') == 'redirect':
         return JsonResponse(payment_result)
     
     return JsonResponse({'status': 'success', 'redirect_url': success_redirect_url})

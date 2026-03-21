@@ -1,0 +1,135 @@
+/* Luxury Admin Overrides for Saleel - FORCE LIGHT MODE */
+
+:root {
+    --saleel-green: #1a3c34;
+    --saleel-gold: #c5a059;
+    --saleel-cream: #fdfbf7;
+    --saleel-text: #2d2d2d;
+    --saleel-card: rgba(255, 255, 255, 0.6);
+}
+
+/* Sidebar Overrides */
+.main-sidebar {
+    background-color: var(--saleel-green) !important;
+}
+
+.nav-sidebar .nav-link {
+    color: rgba(255,255,255,0.7) !important;
+    font-size: 0.9rem;
+    padding: 0.75rem 1.5rem !important;
+}
+
+.nav-sidebar .nav-link.active {
+    background-color: rgba(197, 160, 89, 0.2) !important;
+    border-right: 4px solid var(--saleel-gold) !important;
+    color: var(--saleel-gold) !important;
+}
+
+.nav-sidebar .nav-link:hover {
+    background-color: rgba(255,255,255,0.05) !important;
+    color: var(--saleel-gold) !important;
+}
+
+.brand-link {
+    background-color: var(--saleel-green) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    padding: 1.5rem !important;
+}
+
+.brand-text {
+    color: var(--saleel-gold) !important;
+    font-family: 'Playfair Display', serif !important;
+    font-size: 1.5rem !important;
+}
+
+/* Content Area */
+.content-wrapper {
+    background-color: var(--saleel-cream) !important;
+}
+
+/* Buttons */
+.btn-primary, .btn-success {
+    background-color: var(--saleel-green) !important;
+    border-color: var(--saleel-green) !important;
+    color: var(--saleel-gold) !important;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.btn-primary:hover {
+    background-color: #122b25 !important;
+}
+
+/* Header */
+.main-header {
+    background-color: rgba(255,255,255,0.5) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+}
+
+.nav-link {
+    color: var(--saleel-text) !important;
+}
+
+/* CARDS / CONTAINERS - Matching reference image */
+.content-wrapper .card {
+    border: none !important;
+    border-radius: 6px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.03) !important;
+    margin-bottom: 30px !important;
+    color: #333 !important;
+}
+
+.content-wrapper .card-header {
+    background-color: transparent !important;
+    border-bottom: 1px solid #f2f2f2 !important;
+    padding: 1.5rem !important;
+}
+
+.content-wrapper .card-title {
+    font-family: 'Playfair Display', serif !important;
+    font-size: 21px !important;
+    color: var(--admin-green) !important;
+    font-weight: 600 !important;
+}
+
+/* Dashboard Summary Boxes (Saleel Ref) */
+.small-box {
+    background: #ffffff !important;
+    border-radius: 6px !important;
+    border: 1px solid #eee !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02) !important;
+}
+
+.small-box h3, .small-box p {
+    color: var(--admin-green) !important;
+}
+
+/* BUTTONS - Matching Dark Green in Ref */
+.btn-primary, .btn-success, .btn-info, .addlink, .changelink {
+    background-color: var(--admin-green) !important;
+    border: none !important;
+    color: #fff !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    padding: 10px 18px !important;
+    letter-spacing: 1px !important;
+    border-radius: 4px !important;
+}
+
+.btn-primary:active, .btn-primary:hover, .btn-primary:focus {
+    background-color: var(--admin-gold) !important;
+    color: #fff !important;
+}
+
+/* List styling */
+.change-list #changelist-form table tbody tr:nth-child(even) {
+    background-color: #fafafa !important;
+}
+
+.change-list #changelist-form table thead th {
+    background-color: #f7f7f7 !important;
+    color: var(--admin-green) !important;
+    font-size: 11px !important;
+}

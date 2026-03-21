@@ -144,21 +144,35 @@ class OrderItemInline(admin.TabularInline):
     extra = 0
     readonly_fields = ['product', 'quantity', 'get_total']
 
+class ShippingAddressInline(admin.StackedInline):
+    model = ShippingAddress
+    extra = 0
+    can_delete = False
+    readonly_fields = ['full_name', 'address', 'city', 'state', 'zipcode', 'country']
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'store', 'customer', 'complete', 'date_ordered', 'get_cart_total']
-    list_filter = ['store', 'complete', 'date_ordered']
-    list_editable = ['complete']
-    inlines = [OrderItemInline]
+    list_display = ['id', 'display_customer', 'store', 'payment_method', 'status', 'complete', 'date_ordered', 'get_cart_total']
+    list_filter = ['store', 'complete', 'payment_method', 'status', 'date_ordered']
+    list_editable = ['status', 'complete']
+    search_fields = ['id', 'transaction_id', 'customer__name', 'customer__email']
+    inlines = [OrderItemInline, ShippingAddressInline]
     
     fieldsets = (
-        ('Order Details', {
-            'fields': ('store', 'customer', 'complete')
+        ('Order & Customer', {
+            'fields': ('store', 'customer', 'status', 'complete')
         }),
-        ('Status info', {
-            'fields': ('transaction_id',)
+        ('Payment Infomation', {
+            'fields': ('payment_method', 'transaction_id'),
+            'description': 'View and manage internal payment IDs and provider methods.'
         }),
     )
+
+    def display_customer(self, obj):
+        if obj.customer:
+            return f"{obj.customer.name} ({obj.customer.email})"
+        return "Guest"
+    display_customer.short_description = "Customer"
 
 
 # OrderItem is now managed as an inline in OrderAdmin

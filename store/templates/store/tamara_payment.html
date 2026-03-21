@@ -1,21 +1,79 @@
 {% extends 'store/main.html' %}
 {% load static %}
+
+{% block title %}Tamara Payment — {{ current_store.name }}{% endblock %}
+
+{% block extra_head %}
+<style>
+    .payment-container {
+        max-width: 500px;
+        margin: 80px auto;
+        background: #fff;
+        padding: 50px;
+        border: 1px solid var(--border);
+        text-align: center;
+        box-shadow: var(--shadow-lg);
+    }
+    .tamara-logo {
+        height: 35px;
+        margin-bottom: 30px;
+    }
+    .payment-summary {
+        background: #fbfbfb;
+        padding: 25px;
+        border: 1px solid #eee;
+        margin: 30px 0;
+        text-align: left;
+    }
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 14px;
+    }
+    .btn-tamara {
+        background: #ff708e;
+        color: #fff;
+        font-weight: 700;
+        letter-spacing: 2px;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        cursor: pointer;
+        display: block;
+        text-decoration: none;
+    }
+    .btn-tamara:hover {
+        background: #e65e7d;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-6" style="margin-top: 50px; margin-bottom: 50px;">
-        <div class="box-element text-center" style="border: 2px solid #6C63FF; border-radius: 12px; padding: 40px;">
-            <img src="/static/images/payment-icons/tamara.svg" alt="Tamara" style="height: 40px; margin-bottom: 20px;">
-            <h2>Split your payment into installments</h2>
-            <p>You can choose to pay later or split into 3-4 installments. Tamara's flexible options make it easy for you to manage your budget.</p>
-            <hr>
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
-                <p><strong>Order Total:</strong> {{ current_store.currency }} {{ total }}</p>
-                <p><strong>Option:</strong> Pay in Easy Installments</p>
-            </div>
-            <a href="{% url 'store' %}?order_success=true&payment_success=true&provider=tamara" class="btn btn-success btn-block" style="background:#6C63FF; border:none; color:white; font-weight:bold; padding: 15px;">Shop with Tamara</a>
-            <br>
-            <a href="{% url 'checkout' %}" class="btn btn-link" style="color: #888;">Go back to checkout</a>
+<div class="payment-container">
+    <img src="https://cdn.tamara.co/assets/logo.svg" class="tamara-logo" alt="Tamara">
+    <h2 class="font-serif" style="font-size:28px;">Pay in Installments</h2>
+    <p style="color:var(--text-muted); line-height:1.6; margin-top:10px;">
+        Choose Tamara to split your order. Simple, secure, and Sharia-compliant.
+    </p>
+
+    <div class="payment-summary">
+        <div class="summary-row">
+            <span>Order Value</span>
+            <span style="font-weight:600;">{{ current_store.currency|default:"AED" }} {{ total }}</span>
+        </div>
+        <div class="summary-row" style="color:var(--teal); font-weight:700; font-size:16px;">
+            <span>Split total 3 × payments</span>
+            <span>Interest-free</span>
         </div>
     </div>
+
+    <a href="{% url 'order_success' %}?transaction_id=TAMARA_{{ order_id|default:'12345' }}" class="btn-tamara">
+        CONFIRM TAMARA PAYMENT
+    </a>
+    
+    <a href="{% url 'checkout' %}" style="display:block; margin-top:20px; font-size:12px; color:var(--text-muted); text-transform:uppercase;">
+        Back to Checkout 
+    </a>
 </div>
-{% endblock content %}
+{% endblock %}
