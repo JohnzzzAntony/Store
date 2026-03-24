@@ -48,14 +48,27 @@
       <div class="filter-group">
         <h4>For</h4>
         <div class="filter-options">
-          <a href="{% url 'product_list' %}{% if selected_sort %}?sort={{ selected_sort }}{% endif %}"
+          <a href="{% url 'product_list' %}{% if selected_sort %}?sort={{ selected_sort }}{% endif %}{% if selected_brand %}&brand={{ selected_brand }}{% endif %}"
              class="filter-btn {% if not selected_gender %}active{% endif %}">All</a>
-          <a href="?gender=M{% if selected_sort %}&sort={{ selected_sort }}{% endif %}{% if selected_scent %}&scent={{ selected_scent }}{% endif %}"
+          <a href="?gender=M{% if selected_sort %}&sort={{ selected_sort }}{% endif %}{% if selected_brand %}&brand={{ selected_brand }}{% endif %}"
              class="filter-btn {% if selected_gender == 'M' %}active{% endif %}">Men</a>
-          <a href="?gender=W{% if selected_sort %}&sort={{ selected_sort }}{% endif %}{% if selected_scent %}&scent={{ selected_scent }}{% endif %}"
+          <a href="?gender=W{% if selected_sort %}&sort={{ selected_sort }}{% endif %}{% if selected_brand %}&brand={{ selected_brand }}{% endif %}"
              class="filter-btn {% if selected_gender == 'W' %}active{% endif %}">Women</a>
-          <a href="?gender=U{% if selected_sort %}&sort={{ selected_sort }}{% endif %}{% if selected_scent %}&scent={{ selected_scent }}{% endif %}"
+          <a href="?gender=U{% if selected_sort %}&sort={{ selected_sort }}{% endif %}{% if selected_brand %}&brand={{ selected_brand }}{% endif %}"
              class="filter-btn {% if selected_gender == 'U' %}active{% endif %}">Unisex</a>
+        </div>
+      </div>
+
+      <!-- Brand Filter -->
+      <div class="filter-group">
+        <h4>Brand</h4>
+        <div class="filter-options">
+          <a href="{% url 'product_list' %}{% if selected_gender %}?gender={{ selected_gender }}{% endif %}"
+             class="filter-btn {% if not selected_brand %}active{% endif %}">All Brands</a>
+          {% for brand in brands %}
+            <a href="?brand={{ brand.slug }}{% if selected_gender %}&gender={{ selected_gender }}{% endif %}"
+               class="filter-btn {% if selected_brand == brand.slug %}active{% endif %}">{{ brand.name }}</a>
+          {% endfor %}
         </div>
       </div>
 

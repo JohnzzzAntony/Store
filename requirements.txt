@@ -13,3 +13,8 @@ crispy-bootstrap5==0.7
 django-import-export==3.3.1
 python-dotenv
 stripe
+djangorestframework>=3.14.0
+django-cors-headers>=4.0.0
+firebase-admin>=6.2.0
+python-decouple
+django-decouple

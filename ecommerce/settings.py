@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import dj_database_url
 from dotenv import load_dotenv
+from decouple import config, Csv
 
 load_dotenv()
 
@@ -51,9 +52,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'import_export',
+    'rest_framework',
+    'corsheaders',
+    'firebase_auth_app',
+    'products',
+    'orders',
+    'categories',
+    'payments',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',   # must be FIRST
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -63,9 +72,23 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'store.middleware.StoreMiddleware',
+    'firebase_auth_app.middleware.FirebaseAuthMiddleware',
 ]
 
 ROOT_URLCONF = 'ecommerce.urls'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'firebase_auth_app.authentication.FirebaseAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+}
+
+CORS_ALLOWED_ORIGINS  = config('CORS_ALLOWED_ORIGINS', cast=Csv(), default='http://localhost:3000')
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS    = ['accept', 'authorization', 'content-type', 'x-csrftoken']
 
 TEMPLATES = [
     {
@@ -101,6 +124,9 @@ DATABASES = {
 STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY', 'pk_test_placeholder')
 STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY', 'sk_test_placeholder')
 STRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_WEBHOOK_SECRET', '')
+STRIPE_CURRENCY = 'usd'   # change to your currency
+
+STORE_ADMIN_EMAIL = config('STORE_ADMIN_EMAIL', default='johns@maylaainternational.com')
 
 # Use DB URL if available (e.g. for PostgreSQL in production)
 db_from_env = dj_database_url.config(conn_max_age=600)
@@ -164,22 +190,21 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 DATA_UPLOAD_MAX_MEMORY_SIZE = 1073741824 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 1073741824
 
-# Jazzmin Settings to match requested premium design
+# Jazzmin Settings - Obsidian Labs Premium Editorial
 JAZZMIN_SETTINGS = {
-    "site_title": "Saleel Admin",
-    "site_header": "Saleel",
-    "site_brand": "Saleel Admin Panel",
+    "site_title": "My Store",
+    "site_header": "My Store",
+    "site_brand": "MY STORE",
     "site_logo": None,
-    "welcome_sign": "Welcome back to Saleel",
-    "copyright": "Mechaura International FZE LLC",
+    "welcome_sign": "AUTHENTICITY VERIFIED: WELCOME TO MY STORE",
+    "copyright": "My Store Digital Infrastructure",
     "search_model": ["store.Product", "store.Order"],
     "user_avatar": None,
     "topmenu_links": [
         {"name": "View Site", "url": "/", "new_window": True},
-        {"name": "Checkouts", "url": "/_admin_portal/store/order/"},
-        {"name": "Products", "url": "/_admin_portal/store/product/"},
-        {"name": "Offers", "url": "/_admin_portal/store/offersection/"},
-        {"name": "Media", "url": "/_admin_portal/store/frontendmedia/"},
+        {"name": "Terminal", "url": "/_admin_portal/store/order/"},
+        {"name": "Inventory", "url": "/_admin_portal/store/product/"},
+        {"name": "Analytics", "url": "/_admin_portal/store/offersection/"},
         {"name": "Users", "url": "/_admin_portal/auth/user/"},
     ],
     "show_sidebar": True,
@@ -191,20 +216,15 @@ JAZZMIN_SETTINGS = {
         "store.BlogPost", "store.Wishlist", "store.ContactMessage"
     ],
     "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user-circle",
-        "store.Order": "fas fa-shopping-cart",
-        "store.OrderItem": "fas fa-barcode",
-        "store.ShippingAddress": "fas fa-truck",
-        "store.Product": "fas fa-award",
-        "store.Category": "fas fa-layer-group",
-        "store.Store": "fas fa-store-alt",
-        "store.OfferSection": "fas fa-percentage",
-        "store.BOGOOffer": "fas fa-tag",
-        "store.CategoryOffer": "fas fa-tags",
+        "auth": "fas fa-lock",
+        "auth.user": "fas fa-user-shield",
+        "store.Order": "fas fa-receipt",
+        "store.Product": "fas fa-box-open",
+        "store.Category": "fas fa-tags",
+        "store.Store": "fas fa-terminal",
+        "store.OfferSection": "fas fa-chart-line",
         "store.PromoBanner": "fas fa-image",
-        "store.FrontendMedia": "fas fa-photo-video",
-        "store.BlogPost": "fas fa-paper-plane",
+        "store.BlogPost": "fas fa-file-alt",
     },
     "custom_css": "store/css/admin_luxe.css",
     "use_google_fonts_cdn": True,
@@ -217,20 +237,20 @@ JAZZMIN_UI_TWEAKS = {
     "brand_small_text": False,
     "brand_colour": False,
     "accent": "accent-primary",
-    "navbar": "navbar-white navbar-light",
+    "navbar": "navbar-dark navbar-black",
     "no_navbar_border": True,
     "navbar_fixed": True,
     "layout_fixed": True,
     "footer_fixed": False,
     "sidebar_fixed": True,
-    "sidebar": "sidebar-dark-success",
+    "sidebar": "sidebar-dark-primary",
     "sidebar_nav_small_text": False,
     "sidebar_disable_expand": False,
     "sidebar_nav_child_indent": True,
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": True,
-    "theme": "default",
+    "theme": "darkly",
     "dark_mode_theme": None,
     "button_classes": {
         "primary": "btn-primary",
@@ -240,4 +260,4 @@ JAZZMIN_UI_TWEAKS = {
         "danger": "btn-danger",
         "success": "btn-success"
     }
-}
+}

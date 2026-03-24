@@ -111,67 +111,11 @@
     <a href="{% url 'product_list' %}" class="promo-ticker-cta" style="color:inherit; border-bottom:1px solid var(--lux-green);">Shop Collection →</a>
   </div>
 </div>
-
-
-<!-- =========================================
-     OFFERS SECTION — Deal Cards Grid
-  ========================================= -->
-<section class="offers-section" id="offersSection">
-  <div class="section-header" style="justify-content:center;text-align:center;margin-bottom:60px;">
-    <div>
-      <span class="section-label">THE LUXURY EDIT</span>
-      <h2 class="section-title">Today's Best Offers</h2>
-      <div class="luxury-gold-bar"></div>
-    </div>
-  </div>
-
-  <div class="offers-grid">
-    {% if offer_sections %}
-      {% for offer in offer_sections %}
-      <div class="offer-card">
-        <span class="section-label" style="font-size:10px;">{{ offer.badge_text|default:"EXCLUSIVE" }}</span>
-        <h3 class="offer-card-title">{{ offer.title }}</h3>
-        <p class="offer-card-desc" style="font-size:14px; color:rgba(0,0,0,0.6); line-height:1.6; margin-bottom:30px;">
-          {{ offer.description|default:"Experience the pinnacle of olfactory craftsmanship with our curated seasonal offers." }}
-        </p>
-        <a href="{{ offer.cta_url }}" class="offer-cta-btn">{{ offer.cta_text }}</a>
-      </div>
-      {% endfor %}
-    {% else %}
-    <div class="offer-card">
-        <span class="section-label" style="font-size:10px;">LIMITED TIME</span>
-        <h3 class="offer-card-title">Summer Gala</h3>
-        <p class="offer-card-desc" style="font-size:14px; color:rgba(0,0,0,0.6); line-height:1.6; margin-bottom:30px;">
-          Enjoy a complimentary travel-size mist with any purchase above AED 450.
-        </p>
-        <a href="{% url 'product_list' %}" class="offer-cta-btn">Discover More</a>
-      </div>
-      <div class="offer-card" style="border-color:var(--lux-gold);">
-        <span class="section-label" style="font-size:10px; color:var(--lux-gold);">SIGNATURE DEAL</span>
-        <h3 class="offer-card-title">Private Reserve</h3>
-        <p class="offer-card-desc" style="font-size:14px; color:rgba(0,0,0,0.6); line-height:1.6; margin-bottom:30px;">
-          40% exclusive saving on our heritage collection, for a limited time only.
-        </p>
-        <a href="{% url 'product_list' %}" class="offer-cta-btn" style="background:var(--lux-gold); border-color:var(--lux-gold);">Shop Collection</a>
-      </div>
-      <div class="offer-card">
-        <span class="section-label" style="font-size:10px;">COMPLIMENTARY</span>
-        <h3 class="offer-card-title">Free Delivery</h3>
-        <p class="offer-card-desc" style="font-size:14px; color:rgba(0,0,0,0.6); line-height:1.6; margin-bottom:30px;">
-          White-glove delivery service on all orders across the UAE.
-        </p>
-        <a href="{% url 'product_list' %}" class="offer-cta-btn">Shop Now</a>
-      </div>
-    {% endif %}
-  </div>
-</section>
-
-
 <!-- =========================================
      CATEGORY LEVEL OFFERS
   ========================================= -->
 {% if category_offers or True %}
-<section class="cat-offers-section" id="catOffersSection">
+<section class="cat-offers-section" id="catOffersSection" style="padding-top: 80px;">
   <div class="section-header" style="justify-content:center;text-align:center;margin-bottom:32px;">
     <div>
       <span class="section-label">Shop by Deal</span>
@@ -278,7 +222,7 @@
             {% if bogo.ends_at %}
             <div class="offer-countdown"><span class="countdown-label">Ends in:</span> <strong class="promo-countdown" data-ends="{{ bogo.ends_at|date:'c' }}"><span class="countdown-val"></span></strong></div>
             {% endif %}
-            <a href="{{ bogo.cta_url }}" class="bogo-cta-btn">{{ bogo.cta_text }} <span>→</span></a>
+            <a href="{% url 'product_list' %}?bogo={{ bogo.id }}" class="bogo-cta-btn">{{ bogo.cta_text }} <span>→</span></a>
           </div>
         </div>
         {% endfor %}
@@ -402,7 +346,7 @@
 <!-- =========================================
      FEATURED PRODUCTS SECTION
   ========================================= -->
-<section class="section" style="background:var(--bg-white); position: relative; overflow: hidden;">
+<section class="section" id="productsSection" style="background:var(--bg-white); position: relative; overflow: hidden;">
   <!-- Decorative background element -->
   <div style="position:absolute; top:-100px; right:-100px; width:400px; height:400px; background:radial-gradient(circle, var(--teal-light), transparent); opacity:0.1; pointer-events:none; z-index:0;"></div>
   
@@ -462,7 +406,7 @@
 <!-- =========================================
      BRAND STORY BANNER
   ========================================= -->
-<section style="background:var(--lux-green); color:#fff; padding:120px 40px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; position:relative; overflow:hidden;">
+<section id="heritageSection" style="background:var(--lux-green); color:#fff; padding:120px 40px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; position:relative; overflow:hidden;">
   <div style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0.05; pointer-events:none; background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');"></div>
   
   <div>

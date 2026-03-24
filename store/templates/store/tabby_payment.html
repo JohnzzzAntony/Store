@@ -1,82 +1,243 @@
 {% extends 'store/main.html' %}
 {% load static %}
 
-{% block title %}Tabby Payment — {{ current_store.name }}{% endblock %}
+{% block title %}Tabby Secure Payment — Verify OTP{% endblock %}
 
 {% block extra_head %}
 <style>
-    .payment-container {
-        max-width: 500px;
-        margin: 80px auto;
-        background: #fff;
-        padding: 50px;
-        border: 1px solid var(--border);
+    :root {
+        --tabby-violet: #4e44e7;
+        --tabby-bg: #f5f7f9;
+        --tabby-card-bg: #ffffff;
+    }
+    body { background-color: var(--tabby-bg) !important; }
+    .tabby-page-wrapper {
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 50px;
+    }
+    .merchant-top {
+        margin-bottom: 20px;
         text-align: center;
-        box-shadow: var(--shadow-lg);
     }
-    .tabby-logo {
-        height: 35px;
-        margin-bottom: 30px;
+    .merchant-name {
+        font-weight: 700;
+        font-size: 18px;
+        color: #1a1a1a;
+        margin-bottom: 5px;
     }
-    .payment-summary {
-        background: #fcfcfc;
-        padding: 25px;
-        border: 1px dashed var(--border);
-        margin: 30px 0;
+    .tabby-sub {
+        font-size: 13px;
+        color: #717171;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+    .tabby-otp-card {
+        background: var(--tabby-card-bg);
+        width: 100%;
+        max-width: 440px;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
         text-align: left;
     }
-    .installment-row {
-        display: flex;
-        justify-content: space-between;
+    .otp-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: #1a1a1a;
         margin-bottom: 15px;
-        font-size: 15px;
+        font-family: 'Inter', sans-serif;
     }
-    .btn-tabby {
-        background: #3DFFB4;
-        color: #000;
-        font-weight: 700;
-        letter-spacing: 2px;
-        padding: 18px;
-        width: 100%;
-        border: none;
+    .otp-desc {
+        font-size: 15px;
+        color: #4a4a4a;
+        line-height: 1.5;
+        margin-bottom: 30px;
+    }
+    .otp-resend {
+        color: var(--tabby-violet);
+        font-weight: 600;
         cursor: pointer;
-        display: block;
         text-decoration: none;
     }
-    .btn-tabby:hover {
-        background: #2ee6a3;
+    .otp-inputs {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 40px;
+        justify-content: flex-start;
+    }
+    .otp-box {
+        width: 60px;
+        height: 60px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 700;
+        outline: none;
+        transition: all 0.2s;
+    }
+    .otp-box:focus {
+        border-color: var(--tabby-violet);
+        box-shadow: 0 0 0 4px rgba(78, 68, 231, 0.1);
+    }
+    .terms-section {
+        border-top: 1px solid #f1f1f1;
+        padding-top: 25px;
+    }
+    .term-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 20px;
+        cursor: pointer;
+    }
+    .term-check {
+        width: 22px;
+        height: 22px;
+        border: 2px solid #e2e8f0;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.2s;
+    }
+    .term-check.active {
+        background: #1a1a1a;
+        border-color: #1a1a1a;
+        color: #fff;
+    }
+    .term-text {
+        font-size: 14px;
+        line-height: 1.4;
+        color: #4a4a4a;
+    }
+    .term-text b { color: #1a1a1a; }
+    .btn-verify {
+        width: 100%;
+        background: #1a1a1a;
+        color: #fff;
+        padding: 16px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: transform 0.1s;
+    }
+    .btn-verify:active { transform: scale(0.98); }
+    
+    .price-badge {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 12px 20px;
+        margin-top: 30px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: #4a4a4a;
+    }
+    .back-to-shop {
+        margin-top: 30px;
+        font-size: 13px;
+        color: #717171;
+        text-decoration: none;
+        font-weight: 500;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="payment-container">
-    <img src="https://checkout.tabby.ai/assets/logo.svg" class="tabby-logo" alt="Tabby">
-    <h2 class="font-serif" style="font-size:28px;">Finish your purchase</h2>
-    <p style="color:var(--text-muted); line-height:1.6; margin-top:10px;">
-        You're splitting your payment into 4 interest-free installments. No hidden fees, no interest.
-    </p>
-
-    <div class="payment-summary">
-        <div class="installment-row">
-            <span>Order Total</span>
-            <span style="font-weight:600;">{{ current_store.currency|default:"AED" }} {{ total }}</span>
-        </div>
-        <div class="installment-row" style="color:var(--teal); font-weight:700;">
-            <span>4 × Installments of</span>
-            <span>{{ current_store.currency|default:"AED" }} {{ installment }}</span>
-        </div>
-        <p style="font-size:11px; color:#888; margin-top:15px; border-top:1px solid #eee; pt:10px;">
-            * First installment paid now, others every 30 days.
-        </p>
+<div class="tabby-page-wrapper">
+    <div class="merchant-top">
+        <div class="merchant-name">{{ current_store.name|default:"Touch of Oud" }}</div>
+        <div class="tabby-sub">Pay with <img src="https://checkout.tabby.ai/assets/logo.svg" style="height:14px;" alt="Tabby"></div>
     </div>
 
-    <a href="{% url 'order_success' %}?transaction_id=TABBY_{{ order_id|default:'12345' }}" class="btn-tabby">
-        PROCESS PAYMENT
-    </a>
-    
-    <a href="{% url 'checkout' %}" style="display:block; margin-top:20px; font-size:12px; color:var(--text-muted); text-transform:uppercase;">
-        Cancel and return 
-    </a>
+    <div class="tabby-otp-card">
+        <h1 class="otp-title">Enter 4-digit code</h1>
+        <p class="otp-desc">
+            Sent to phone number ending with <b>{{ masked_phone }}</b> or via push notification. 
+            <a href="#" class="otp-resend">Switch account</a>
+        </p>
+
+        <form action="{% url 'tabby_payment' %}" method="POST" id="otpForm">
+            {% csrf_token %}
+            <input type="hidden" name="order_id" value="{{ order_id }}">
+            <input type="hidden" name="transaction_id" value="TABBY_{{ order_id }}">
+            
+            <div class="otp-inputs">
+                <input type="text" maxlength="1" class="otp-box" name="c1" required autofocus>
+                <input type="text" maxlength="1" class="otp-box" name="c2" required>
+                <input type="text" maxlength="1" class="otp-box" name="c3" required>
+                <input type="text" maxlength="1" class="otp-box" name="c4" required>
+            </div>
+
+            <div class="otp-desc">
+                <a href="#" class="otp-resend">Send another code</a>
+                <p style="font-size: 11px; margin-top: 10px; color: #aaa;"><b>Testing Tip:</b> Use code <b>8888</b> or any 4 digits to proceed.</p>
+            </div>
+
+            <div class="terms-section">
+                <div class="term-item" onclick="toggleCheck(this)">
+                    <div class="term-check active"><i class="ph ph-check"></i></div>
+                    <div class="term-text"><b>Agree to all</b></div>
+                </div>
+                <div class="term-item" onclick="toggleCheck(this)">
+                    <div class="term-check active"><i class="ph ph-check"></i></div>
+                    <div class="term-text">I accept Tabby’s <b>terms & conditions</b>, <b>privacy policy</b> and consent to <b>sharing my data</b> with AECB</div>
+                </div>
+                <div class="term-item" onclick="toggleCheck(this)">
+                    <div class="term-check"><i class="ph ph-check"></i></div>
+                    <div class="term-text">I agree to receive marketing communications and</div>
+                </div>
+            </div>
+
+            <div class="price-badge">
+                <span>Payment Plan</span>
+                <b>4 × AED {{ installment }}</b>
+            </div>
+
+            <button type="submit" class="btn-verify">VERIFY & PAY</button>
+        </form>
+    </div>
+
+    <a href="{% url 'checkout' %}" class="back-to-shop">CANCEL AND RETURN TO STORE</a>
 </div>
+
+<script>
+function toggleCheck(el) {
+    const check = el.querySelector('.term-check');
+    check.classList.toggle('active');
+}
+
+// Auto-focus next OTP box
+const inputs = document.querySelectorAll('.otp-box');
+inputs.forEach((input, index) => {
+    input.addEventListener('input', () => {
+        if (input.value.length === 1 && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+        }
+        
+        // Auto-submit if all 4 are filled
+        const otp = Array.from(inputs).map(i => i.value).join('');
+        if (otp.length === 4) {
+            document.getElementById('otpForm').submit();
+        }
+    });
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && input.value.length === 0 && index > 0) {
+            inputs[index - 1].focus();
+        }
+    });
+});
+</script>
 {% endblock %}

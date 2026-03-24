@@ -30,6 +30,7 @@
       <form method="POST" action="{% url 'login' %}" id="loginForm">
         {% csrf_token %}
         <input type="hidden" name="action" value="login" />
+        <input type="hidden" name="next" value="{{ request.GET.next }}" />
 
         <div class="form-group">
           <label class="form-label" for="loginUsername">Username / Email</label>
@@ -50,10 +51,10 @@
 
       <button type="button" class="btn-outline btn-full" id="googleLoginBtn" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" height="18" alt="Google logo" />
-        CONTINUE WITH GOOGLE
+        SIGN IN WITH GOOGLE
       </button>
 
-      <a href="{% url 'checkout' %}" class="btn-outline btn-full" id="guestCheckoutBtn">CHECKOUT AS GUEST</a>
+      <a href="{% url 'checkout' %}" class="btn-primary btn-full" id="guestCheckoutBtn" style="display: block; text-decoration: none; text-align: center;">LOGIN AS GUEST</a>
 
       <p class="guest-checkout-note">
         NOT YET A MEMBER?
@@ -66,6 +67,7 @@
       <form method="POST" action="{% url 'login' %}" id="registerForm">
         {% csrf_token %}
         <input type="hidden" name="action" value="register" />
+        <input type="hidden" name="next" value="{{ request.GET.next }}" />
 
         <div class="form-row">
           <div class="form-group">
@@ -107,6 +109,8 @@
       </p>
     </div>
 
+    <!-- ---- GUEST TAB REMOVED ---- -->
+
   </div>
 </div>
 {% endblock %}
@@ -120,9 +124,19 @@ function switchTab(tab) {
   document.querySelectorAll('.login-tab-content').forEach(function(c) {
     c.classList.remove('active');
   });
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.getElementById('content-' + tab).classList.add('active');
+  const activeTab = document.getElementById('tab-' + tab);
+  const activeContent = document.getElementById('content-' + tab);
+  if (activeTab) activeTab.classList.add('active');
+  if (activeContent) activeContent.classList.add('active');
 }
+
+// Auto-switch based on URL param
+document.addEventListener('DOMContentLoaded', function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('checkout') === 'guest') {
+    switchTab('guest');
+  }
+});
 
 // Firebase Google Login
 document.getElementById('googleLoginBtn').addEventListener('click', function() {

@@ -1,33 +1,38 @@
-/* Custom Admin Styles for Premium Saleel Admin Panel — Luxury Branding */
+/* Custom Admin Styles for Premium Saleel Admin Panel â€” Luxury Branding */
 :root {
-    --primary-lux: #0F2E23; /* Deep Forest Green */
-    --gold-lux: #C5A03D;   /* Premium Gold */
-    --cream-lux: #F9F7F2;  /* High-end Cream */
-    --sidebar-lux: #0a1f18; /* Darker Green for Sidebar */
-    --card-shadow: 0 10px 40px rgba(0,0,0,0.08);
-    --border-lux: rgba(15, 46, 35, 0.1);
+    --primary-lux: #403a5f;
+    /* Deep Forest Green */
+    --gold-lux: #000000;
+    /* Premium Gold */
+    --cream-lux: #fffefd;
+    /* High-end Cream */
+    --sidebar-lux: #744c4c;
+    /* Darker Green for Sidebar */
+    --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    --border-lux: rgba(0, 0, 0, 0.1);
 }
 
 /* Sidebar Styling */
-.main-sidebar, .sidebar {
+.main-sidebar,
+.sidebar {
     background-color: var(--sidebar-lux) !important;
 }
 
 .nav-sidebar .nav-item .nav-link {
     font-size: 0.9rem !important;
     padding: 12px 20px !important;
-    color: rgba(255,255,255,0.7) !important;
+    color: rgba(0, 0, 0, 0.7) !important;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
 }
 
-.nav-sidebar .nav-item > .nav-link.active {
+.nav-sidebar .nav-item>.nav-link.active {
     background-color: rgba(197, 160, 61, 0.1) !important;
     color: var(--gold-lux) !important;
     border-left: 4px solid var(--gold-lux);
 }
 
-.nav-sidebar .nav-item:hover > .nav-link {
+.nav-sidebar .nav-item:hover>.nav-link {
     background-color: rgba(255, 255, 255, 0.05) !important;
     color: #fff !important;
 }
@@ -99,7 +104,8 @@
 }
 
 /* Primary Action Buttons */
-.btn-primary, .btn-info {
+.btn-primary,
+.btn-info {
     background: var(--primary-lux) !important;
     border: 1px solid var(--primary-lux) !important;
     font-weight: 600 !important;

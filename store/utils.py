@@ -29,6 +29,10 @@ def cookieCart(request):
 				order['get_cart_total'] += total
 				order['get_cart_items'] += quantity
 
+				# Task 2: Remove zero-priced fragrance items
+				if product.price == 0 and 'fragrance' in product.name.lower():
+					continue
+
 				item = {
 					'id': product.id,
 					'product': {
@@ -60,8 +64,16 @@ def cartData(request):
 			customer.email = request.user.email
 			customer.save()
 		order, created = Order.objects.get_or_create(customer=customer, store=store, complete=False)
+		# Task 2: Filter items to exclude zero-priced fragrance
 		items = order.orderitem_set.all()
-		cartItems = order.get_cart_items
+		filtered_items = []
+		for item in items:
+			if item.product and item.product.price == 0 and 'fragrance' in item.product.name.lower():
+				continue
+			filtered_items.append(item)
+		
+		items = filtered_items
+		cartItems = sum([item.quantity for item in items])
 	else:
 		cookieData = cookieCart(request)
 		cartItems = cookieData['cartItems']

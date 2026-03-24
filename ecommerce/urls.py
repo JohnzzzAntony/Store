@@ -21,6 +21,11 @@ from django.conf import settings
 urlpatterns = [
     path('_admin_portal/', admin.site.urls),
     path('s/<slug:store_slug>/', include('store.urls')),
+    path('api/auth/',       include('firebase_auth_app.urls')),
+    path('api/products/',   include('products.urls')),
+    path('api/categories/', include('categories.urls')),
+    path('api/orders/',     include('orders.urls')),
+    path('api/payments/',   include('payments.urls')),
     path('', include('store.urls')),
 ]
 

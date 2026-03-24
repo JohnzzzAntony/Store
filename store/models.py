@@ -62,6 +62,23 @@ class Customer(models.Model):
         return self.name if self.name else self.email
 
 
+class Brand(models.Model):
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
+    image = models.ImageField(null=True, blank=True, upload_to='brands/')
+    description = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name_plural = 'Brands'
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('brand_detail', kwargs={'slug': self.slug})
+
+
 class Category(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=100)
@@ -100,6 +117,7 @@ class Product(models.Model):
     image = models.ImageField(null=True, blank=True, upload_to='products/')
     image_external_url = models.URLField(max_length=500, null=True, blank=True, help_text="External URL for product image (if no file uploaded)")
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
+    brand = models.ForeignKey(Brand, null=True, blank=True, on_delete=models.SET_NULL, related_name='products')
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='U')
     scent_profile = models.CharField(max_length=20, choices=SCENT_CHOICES, default='floral')
     size_ml = models.IntegerField(default=100)
@@ -139,6 +157,8 @@ class Order(models.Model):
     transaction_id = models.CharField(max_length=100, null=True)
     payment_method = models.CharField(max_length=50, null=True, blank=True)
     status = models.CharField(max_length=50, default='Pending')
+    coupon = models.CharField(max_length=50, null=True, blank=True)
+    discount = models.FloatField(default=0.0)
 
     def __str__(self):
         return str(self.id)
@@ -156,7 +176,9 @@ class Order(models.Model):
     def get_cart_total(self):
         orderitems = self.orderitem_set.all()
         total = sum([item.get_total for item in orderitems])
-        return total
+        # Apply discount
+        total = total - self.discount
+        return max(0, total)
 
     @property
     def get_cart_items(self):
@@ -173,7 +195,10 @@ class OrderItem(models.Model):
 
     @property
     def get_total(self):
-        total = self.product.price * self.quantity
+        if self.product:
+            total = self.product.price * self.quantity
+        else:
+            total = 0.0
         return total
 
 
@@ -220,6 +245,8 @@ class ContactMessage(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200)
     email = models.EmailField()
+    phone = models.CharField(max_length=30, blank=True, null=True)
+    subject = models.CharField(max_length=300, blank=True, null=True)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

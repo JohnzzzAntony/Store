@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import (Store, Customer, Category, Product, Order, OrderItem,
+from .models import (Store, Customer, Category, Brand, Product, Order, OrderItem,
                       ShippingAddress, BlogPost, ContactMessage, Wishlist, FrontendMedia,
                       PromoBanner, OfferSection, CategoryOffer, BOGOOffer)
-from .figma_utils import fetch_figma_design_data, create_store_from_figma
+from .core.figma_utils import fetch_figma_design_data, create_store_from_figma
 from django.urls import path
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -96,6 +96,15 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
+@admin.register(Brand)
+class BrandAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'store']
+    list_filter = ['store']
+    prepopulated_fields = {'slug': ('name',)}
+
+
+
+from django.utils.text import slugify
 
 class ProductResource(resources.ModelResource):
     category = fields.Field(
@@ -111,21 +120,33 @@ class ProductResource(resources.ModelResource):
     class Meta:
         model = Product
         fields = ('id', 'name', 'slug', 'store', 'category', 'price', 'in_stock', 'is_featured', 'description', 'gender', 'scent_profile', 'size_ml')
-        export_order = fields
+        import_id_fields = ('name', 'store')  # Match existing records by name and store if ID is missing
+        skip_unchanged = True
+        report_skipped = True
+
+    def before_import_row(self, row, **kwargs):
+        # Auto-generate slug if missing in the import row
+        if not row.get('slug') and row.get('name'):
+            row['slug'] = slugify(row['name'])
+        
+        # Ensure name and store are present for matching
+        if not row.get('name') or not row.get('store'):
+            # This will likely fail anyway, but we ensure basic data is there
+            pass
 
 
 @admin.register(Product)
 class ProductAdmin(ImportExportModelAdmin):
     resource_class = ProductResource
-    list_display = ['name', 'store', 'price', 'category', 'in_stock', 'is_featured']
-    list_filter = ['store', 'category', 'gender', 'in_stock', 'is_featured']
+    list_display = ['name', 'brand', 'store', 'price', 'category', 'in_stock', 'is_featured']
+    list_filter = ['store', 'brand', 'category', 'gender', 'in_stock', 'is_featured']
     list_editable = ['in_stock', 'is_featured', 'price']
     search_fields = ['name', 'description']
     prepopulated_fields = {'slug': ('name',)}
     
     fieldsets = (
         ('Essentials', {
-            'fields': ('name', 'slug', 'store', 'category', 'description')
+            'fields': ('name', 'slug', 'store', 'brand', 'category', 'description')
         }),
         ('Pricing & Inventory', {
             'fields': ('price', 'in_stock', 'is_featured', 'digital')
@@ -134,7 +155,12 @@ class ProductAdmin(ImportExportModelAdmin):
             'fields': ('gender', 'scent_profile', 'size_ml')
         }),
         ('Media', {
-            'fields': ('image',)
+            'fields': ('image', 'image_external_url'),
+            'description': 'Upload an image file OR enter an external image URL. The external URL takes precedence if provided.'
+        }),
+        ('Additional Notes', {
+            'fields': ('top_notes', 'heart_notes', 'base_notes'),
+            'classes': ('collapse',),
         }),
     )
 
@@ -197,7 +223,11 @@ class BlogPostAdmin(admin.ModelAdmin):
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ['name', 'email', 'created_at']
-    readonly_fields = ['name', 'email', 'message', 'created_at']
+    readonly_fields = ['name', 'email', 'phone', 'subject', 'message', 'created_at']
+    list_display = ['name', 'email', 'phone', 'subject', 'created_at']
+    list_filter = ['store', 'created_at']
+    search_fields = ['name', 'email', 'subject']
+
 
 
 @admin.register(Wishlist)

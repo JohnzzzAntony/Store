@@ -16,37 +16,41 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // ---- Menu Toggle (Burger → Drawer) ----
-  var menuToggle  = document.getElementById('menuToggle');
-  var navDrawer   = document.getElementById('navDrawer');
-  var drawerClose = document.getElementById('navDrawerClose');
+  // ---- Sidebar Navigation Toggle ----
+  var menuToggle = document.getElementById('menuToggle');
+  var sidebarNav = document.getElementById('sidebarNav');
+  var sidebarOverlay = document.getElementById('sidebarOverlay');
+  var menuCloseBtn = document.getElementById('menuCloseBtn');
 
-  if (menuToggle && navDrawer) {
-    menuToggle.addEventListener('click', function () {
-      navDrawer.classList.add('open');
-      menuToggle.classList.add('open');
-      document.body.style.overflow = 'hidden';
-    });
+  function toggleSidebar() {
+    sidebarNav.classList.toggle('active');
+    sidebarOverlay.classList.toggle('active');
+    document.body.classList.toggle('no-scroll');
   }
 
-  if (drawerClose && navDrawer) {
-    drawerClose.addEventListener('click', function () {
-      navDrawer.classList.remove('open');
-      if (menuToggle) menuToggle.classList.remove('open');
-      document.body.style.overflow = '';
-    });
+  if (menuToggle && sidebarNav) {
+    menuToggle.addEventListener('click', toggleSidebar);
+    if (menuCloseBtn) menuCloseBtn.addEventListener('click', toggleSidebar);
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
   }
 
-  // Close drawer on nav link click
-  if (navDrawer) {
-    navDrawer.querySelectorAll('a').forEach(function (link) {
-      link.addEventListener('click', function () {
-        navDrawer.classList.remove('open');
-        if (menuToggle) menuToggle.classList.remove('open');
-        document.body.style.overflow = '';
+  // Handle Mobile Submenus
+  ['fragrance', 'watches', 'accessories', 'bath'].forEach(function(menu) {
+    var toggle = document.getElementById(menu + 'Toggle');
+    if (toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        var parent = this.parentElement;
+        var icon = this.querySelector('i');
+        
+        parent.classList.toggle('open');
+        if (icon) {
+          icon.classList.toggle('ph-plus');
+          icon.classList.toggle('ph-minus');
+        }
       });
-    });
-  }
+    }
+  });
 
   // ---- Auto-dismiss flash messages ----
   var messagesContainer = document.getElementById('messagesContainer');

@@ -1,135 +1,141 @@
-/* Luxury Admin Overrides for Saleel - FORCE LIGHT MODE */
+/* 
+   OBSIDIAN LABS - PREMIUM EDITORIAL DESIGN SYSTEM
+   Theme: High-Performance Dark Cyber (FINAL FORCE)
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-    --saleel-green: #1a3c34;
-    --saleel-gold: #c5a059;
-    --saleel-cream: #fdfbf7;
-    --saleel-text: #2d2d2d;
-    --saleel-card: rgba(255, 255, 255, 0.6);
+    --obsidian-bg: #0e0e0e;
+    --obsidian-surface: #131313;
+    --obsidian-cyan: #00d4ff;
+    --obsidian-lime: #c3f400;
+    --obsidian-text: #e5e2e1;
+    --obsidian-text-muted: #859398;
+    --obsidian-border: rgba(60, 73, 78, 0.2);
 }
 
-/* Sidebar Overrides */
+/* Force Body & Dashboard */
+body, .content-wrapper, .main-header, .main-sidebar {
+    font-family: 'Outfit', sans-serif !important;
+    background-color: var(--obsidian-bg) !important;
+    color: var(--obsidian-text) !important;
+}
+
+h1, h2, h3, .brand-text, .nav-header {
+    font-family: 'Space Grotesk', sans-serif !important;
+    text-transform: uppercase !important;
+}
+
+/* Sidebar Overrides - FORCE CYAN */
 .main-sidebar {
-    background-color: var(--saleel-green) !important;
-}
-
-.nav-sidebar .nav-link {
-    color: rgba(255,255,255,0.7) !important;
-    font-size: 0.9rem;
-    padding: 0.75rem 1.5rem !important;
-}
-
-.nav-sidebar .nav-link.active {
-    background-color: rgba(197, 160, 89, 0.2) !important;
-    border-right: 4px solid var(--saleel-gold) !important;
-    color: var(--saleel-gold) !important;
-}
-
-.nav-sidebar .nav-link:hover {
-    background-color: rgba(255,255,255,0.05) !important;
-    color: var(--saleel-gold) !important;
+    background: #0e0e0e !important;
+    border-right: 1px solid var(--obsidian-border) !important;
 }
 
 .brand-link {
-    background-color: var(--saleel-green) !important;
-    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
-    padding: 1.5rem !important;
+    border-bottom: 1px solid var(--obsidian-border) !important;
+    background: transparent !important;
+    padding: 2rem 1rem !important;
 }
 
-.brand-text {
-    color: var(--saleel-gold) !important;
-    font-family: 'Playfair Display', serif !important;
+.brand-link .brand-text {
+    color: var(--obsidian-cyan) !important;
+    font-weight: 900 !important;
+    letter-spacing: -1px !important;
     font-size: 1.5rem !important;
 }
 
-/* Content Area */
-.content-wrapper {
-    background-color: var(--saleel-cream) !important;
+/* Nav Link Styling */
+.nav-sidebar .nav-link {
+    color: var(--obsidian-text-muted) !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    letter-spacing: 1px !important;
+    border-radius: 0 !important;
+    margin: 2px 0 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.nav-sidebar .nav-link:hover {
+    background: rgba(0, 212, 255, 0.05) !important;
+    color: var(--obsidian-cyan) !important;
+    padding-left: 25px !important;
+}
+
+.nav-sidebar .nav-link.active {
+    background: linear-gradient(90deg, rgba(0, 212, 255, 0.15) 0%, transparent 100%) !important;
+    color: var(--obsidian-cyan) !important;
+    border-right: 3px solid var(--obsidian-cyan) !important;
+    box-shadow: none !important;
+}
+
+.nav-header {
+    color: var(--obsidian-lime) !important;
+    font-size: 10px !important;
+    opacity: 0.5 !important;
+    letter-spacing: 2px !important;
+    padding: 20px 20px 10px !important;
+}
+
+/* Dashboard Cards (The main white boxes in user's screenshot) */
+.content-wrapper .card {
+    background: rgba(32, 31, 31, 0.6) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--obsidian-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
+    color: var(--obsidian-text) !important;
+    margin-bottom: 30px !important;
+}
+
+.card-header {
+    background: transparent !important;
+    border-bottom: 1px solid var(--obsidian-border) !important;
+}
+
+.card-title {
+    color: var(--obsidian-cyan) !important;
+    font-weight: 800 !important;
+    font-size: 13px !important;
+    letter-spacing: 1px !important;
 }
 
 /* Buttons */
-.btn-primary, .btn-success {
-    background-color: var(--saleel-green) !important;
-    border-color: var(--saleel-green) !important;
-    color: var(--saleel-gold) !important;
-    font-weight: 500;
-    text-transform: capitalize;
+.btn-primary, .addlink, .changelink {
+    background: var(--obsidian-cyan) !important;
+    color: #000 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    font-size: 11px !important;
+    padding: 10px 18px !important;
 }
 
 .btn-primary:hover {
-    background-color: #122b25 !important;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.4) !important;
+    transform: translateY(-1px) !important;
 }
 
-/* Header */
-.main-header {
-    background-color: rgba(255,255,255,0.5) !important;
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+/* Table Styling */
+.table {
+    background: transparent !important;
 }
 
-.nav-link {
-    color: var(--saleel-text) !important;
+.table thead th {
+    background: rgba(255,255,255,0.02) !important;
+    color: var(--obsidian-cyan) !important;
+    border-bottom: 1px solid var(--obsidian-border) !important;
+    font-size: 10px !important;
 }
 
-/* CARDS / CONTAINERS - Matching reference image */
-.content-wrapper .card {
-    border: none !important;
-    border-radius: 6px !important;
-    background-color: #ffffff !important;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.03) !important;
-    margin-bottom: 30px !important;
-    color: #333 !important;
+.table td {
+    border-top: 1px solid var(--obsidian-border) !important;
+    color: var(--obsidian-text-muted) !important;
 }
 
-.content-wrapper .card-header {
-    background-color: transparent !important;
-    border-bottom: 1px solid #f2f2f2 !important;
-    padding: 1.5rem !important;
-}
-
-.content-wrapper .card-title {
-    font-family: 'Playfair Display', serif !important;
-    font-size: 21px !important;
-    color: var(--admin-green) !important;
-    font-weight: 600 !important;
-}
-
-/* Dashboard Summary Boxes (Saleel Ref) */
-.small-box {
-    background: #ffffff !important;
-    border-radius: 6px !important;
-    border: 1px solid #eee !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.02) !important;
-}
-
-.small-box h3, .small-box p {
-    color: var(--admin-green) !important;
-}
-
-/* BUTTONS - Matching Dark Green in Ref */
-.btn-primary, .btn-success, .btn-info, .addlink, .changelink {
-    background-color: var(--admin-green) !important;
-    border: none !important;
-    color: #fff !important;
-    font-size: 11px !important;
-    text-transform: uppercase !important;
-    padding: 10px 18px !important;
-    letter-spacing: 1px !important;
-    border-radius: 4px !important;
-}
-
-.btn-primary:active, .btn-primary:hover, .btn-primary:focus {
-    background-color: var(--admin-gold) !important;
-    color: #fff !important;
-}
-
-/* List styling */
-.change-list #changelist-form table tbody tr:nth-child(even) {
-    background-color: #fafafa !important;
-}
-
-.change-list #changelist-form table thead th {
-    background-color: #f7f7f7 !important;
-    color: var(--admin-green) !important;
-    font-size: 11px !important;
-}
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--obsidian-bg); }
+::-webkit-scrollbar-thumb { background: #3c494e; border-radius: 10px; }

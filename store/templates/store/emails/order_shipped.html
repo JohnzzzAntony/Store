@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Playfair Display', serif; color: #1a3535; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #fdfdfb; padding: 40px; }
+        .header { text-align: center; border-bottom: 2px solid #2d5a5a; padding-bottom: 20px; }
+        .logo { font-size: 28px; font-weight: 700; color: #2d5a5a; }
+        .order-info { margin-top: 30px; font-size: 16px; }
+        .shipping-box { padding: 30px; background-color: #f5f5f5; border-radius: 8px; font-size: 18px; margin-top: 20px; text-align: center; }
+        .footer { margin-top: 50px; text-align: center; font-size: 12px; color: #777; border-top: 1px solid #eeeeee; padding-top: 20px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">LUXURY PERFUMES</div>
+        <h3>Order Shipped</h3>
+    </div>
+    
+    <div class="order-info">
+        <p>Hello {{ order.customer.name }},</p>
+        <p>Great news! Your order #<strong>{{ order.id }}</strong> is on its way!</p>
+    </div>
+    
+    <div class="shipping-box">
+        Your fragrance is being delivered to:<br>
+        <strong>{{ shipping.city }}</strong>, {{ shipping.state }}
+    </div>
+    
+    <div class="footer">
+        <p>Expect your delivery within 2-3 business days.</p>
+        <p>&copy; 2026 {{ store_name }}. All Rights Reserved.</p>
+    </div>
+</div>
+</body>
+</html>

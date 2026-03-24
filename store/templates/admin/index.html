@@ -2,7 +2,9 @@
 {% load i18n static jazzmin %}
 
 {% block content %}
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
@@ -20,7 +22,9 @@
         color: var(--saleel-text);
     }
 
-    .font-serif { font-family: 'Playfair Display', serif; }
+    .font-serif {
+        font-family: 'Playfair Display', serif;
+    }
 
     /* Dashboard Grid Layout */
     .dashboard-grid {
@@ -31,7 +35,9 @@
     }
 
     @media (max-width: 1200px) {
-        .dashboard-grid { grid-template-columns: 1fr; }
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
     }
 
     /* Stat Cards */
@@ -49,11 +55,14 @@
         display: flex;
         align-items: center;
         gap: 24px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        border: 1px solid rgba(0, 0, 0, 0.05);
         transition: transform 0.2s ease;
     }
-    .stat-card:hover { transform: translateY(-5px); }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
 
     .stat-icon {
         width: 48px;
@@ -66,8 +75,18 @@
         color: var(--saleel-gold);
     }
 
-    .stat-label { font-size: 14px; font-weight: 500; color: #6b7280; }
-    .stat-value { font-size: 24px; font-weight: 700; color: var(--saleel-gold); margin-top: 2px; }
+    .stat-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #6b7280;
+    }
+
+    .stat-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--saleel-gold);
+        margin-top: 2px;
+    }
 
     /* Management Sections */
     .mgmt-row {
@@ -84,7 +103,11 @@
         backdrop-filter: blur(5px);
     }
 
-    .mgmt-title { font-size: 24px; margin-bottom: 32px; color: var(--saleel-text); }
+    .mgmt-title {
+        font-size: 24px;
+        margin-bottom: 32px;
+        color: var(--saleel-text);
+    }
 
     .mgmt-item {
         display: flex;
@@ -94,11 +117,23 @@
         margin-bottom: 16px;
         border-bottom: 1px solid rgba(197, 160, 89, 0.1);
     }
-    .mgmt-item:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
 
-    .mgmt-item-label { font-size: 18px; font-family: 'Playfair Display', serif; }
+    .mgmt-item:last-child {
+        border-bottom: 0;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
 
-    .mgmt-btns { display: flex; gap: 8px; }
+    .mgmt-item-label {
+        font-size: 18px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .mgmt-btns {
+        display: flex;
+        gap: 8px;
+    }
+
     .mgmt-btn {
         padding: 6px 16px;
         border-radius: 6px;
@@ -111,7 +146,11 @@
         transition: all 0.2s;
         text-decoration: none !important;
     }
-    .mgmt-btn:hover { background: #122b25; filter: brightness(1.1); }
+
+    .mgmt-btn:hover {
+        background: #122b25;
+        filter: brightness(1.1);
+    }
 
     /* Activity Sidebar */
     .activity-panel {
@@ -128,12 +167,24 @@
         position: relative;
         padding-bottom: 32px;
     }
-    .activity-item:last-child { padding-bottom: 0; }
-    .activity-item::after { 
-        content: ''; position: absolute; left: 15px; top: 32px; bottom: 0; 
-        width: 1px; background: #e5e7eb; 
+
+    .activity-item:last-child {
+        padding-bottom: 0;
     }
-    .activity-item:last-child::after { display: none; }
+
+    .activity-item::after {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 32px;
+        bottom: 0;
+        width: 1px;
+        background: #e5e7eb;
+    }
+
+    .activity-item:last-child::after {
+        display: none;
+    }
 
     .activity-icon {
         width: 32px;
@@ -148,14 +199,36 @@
         flex-shrink: 0;
     }
 
-    .activity-content { flex: 1; }
-    .activity-header { display: flex; align-items: center; justify-content: space-between; }
-    .activity-title { font-size: 18px; font-family: 'Playfair Display', serif; }
-    .activity-status {
-        font-size: 10px; font-weight: 700; text-transform: uppercase;
-        padding: 2px 8px; border-radius: 99px; background: rgba(52, 211, 153, 0.1); color: #059669;
+    .activity-content {
+        flex: 1;
     }
-    .activity-action { font-size: 14px; color: #6b7280; margin-top: 4px; }
+
+    .activity-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .activity-title {
+        font-size: 18px;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .activity-status {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 99px;
+        background: rgba(52, 211, 153, 0.1);
+        color: #059669;
+    }
+
+    .activity-action {
+        font-size: 14px;
+        color: #6b7280;
+        margin-top: 4px;
+    }
 </style>
 
 <div class="dashboard-grid">
@@ -166,14 +239,14 @@
                 <div class="stat-icon"><i data-lucide="dollar-sign"></i></div>
                 <div>
                     <div class="stat-label">Total Sales</div>
-                    <div class="stat-value">AED 2,576.00</div>
+                    <div class="stat-value">AED 00</div>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon"><i data-lucide="shopping-bag"></i></div>
                 <div>
                     <div class="stat-label">Active Orders</div>
-                    <div class="stat-value">10</div>
+                    <div class="stat-value"></div>
                 </div>
             </div>
             <div class="stat-card">
@@ -189,7 +262,7 @@
         <div class="mgmt-row">
             <!-- Auth Section -->
             <div class="mgmt-section">
-                <h3 class="mgmt-title font-serif">Authentication and Authorization</h3>
+                <h3 class="mgmt-title font-serif">USER MANAGEMENT</h3>
                 <div class="mgmt-items">
                     <div class="mgmt-item">
                         <span class="mgmt-item-label">Groups</span>

@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateCookieCart(productId, action, quantity = 1) {
+    if (!cart) cart = {};
     if (cart[productId] === undefined) {
       cart[productId] = { quantity: 0 };
     }

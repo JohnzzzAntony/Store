@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Playfair Display', serif; color: #1a3535; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #fdfdfb; padding: 40px; }
+        .header { text-align: center; border-bottom: 2px solid #2d5a5a; padding-bottom: 20px; }
+        .logo { font-size: 28px; font-weight: 700; color: #2d5a5a; }
+        .order-info { margin-top: 30px; font-size: 16px; }
+        .details-table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        .details-table th, .details-table td { padding: 12px; border-bottom: 1px solid #e0e0e0; text-align: left; }
+        .total { font-size: 20px; font-weight: bold; margin-top: 20px; text-align: right; }
+        .footer { margin-top: 50px; text-align: center; font-size: 12px; color: #777; border-top: 1px solid #eeeeee; padding-top: 20px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">LUXURY PERFUMES</div>
+        <h3>Order Confirmation</h3>
+    </div>
+    
+    <div class="order-info">
+        <p>Hello {{ order.customer.name }},</p>
+        <p>Thank you for choosing us! Your order #<strong>{{ order.id }}</strong> has been received and is being processed.</p>
+        <p>Order Date: {{ date }}</p>
+    </div>
+    
+    <table class="details-table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>AED {{ item.product.price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="total">
+        Total: AED {{ total }}
+    </div>
+    
+    <div class="shipping-info">
+        <h4>Shipping Details:</h4>
+        <p>{{ shipping.full_name }}<br>
+        {{ shipping.address }}, {{ shipping.city }}<br>
+        {{ shipping.state }}, {{ shipping.zipcode }}<br>
+        Phone: {{ shipping.phone }}</p>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2026 {{ store_name }}. All Rights Reserved.</p>
+        <p>For any inquiries, reach us at support@saleluxury.com</p>
+    </div>
+</div>
+</body>
+</html>
