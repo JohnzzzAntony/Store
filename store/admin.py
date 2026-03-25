@@ -10,18 +10,10 @@ from import_export.admin import ImportExportModelAdmin
 from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget
 
-from django.contrib.auth.models import Group
-
 # Branding Admin
 admin.site.site_header = "Master Ecom Platform"
 admin.site.site_title = "Platform Admin"
 admin.site.index_title = "Store & Design Management"
-
-# Remove Group section
-try:
-    admin.site.unregister(Group)
-except Exception:
-    pass
 
 
 @admin.register(Store)
