@@ -211,8 +211,9 @@ JAZZMIN_SETTINGS = {
     ],
     "show_sidebar": True,
     "navigation_expanded": True,
+    "hide_models": ["auth.Group"],
     "order_with_respect_to": [
-        "auth.Group", "auth.User",
+        "auth.User",
         "store.FrontendMedia", "store.Store", "store.Product", "store.Category", "store.Order", "store.Customer",
         "store.OfferSection", "store.BOGOOffer", "store.CategoryOffer", "store.PromoBanner",
         "store.BlogPost", "store.Wishlist", "store.ContactMessage"
