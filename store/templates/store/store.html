@@ -14,7 +14,7 @@
     <!-- Slide 1 -->
     <div class="hero-slide active" id="slide-0">
       {% if media.hero_slide_1 %}
-        <img src="{{ media.hero_slide_1.image.url }}" alt="{{ media.hero_slide_1.title|default:featured_products.0.name }}" />
+        <img src="{{ media.hero_slide_1.imageURL }}" alt="{{ media.hero_slide_1.title|default:featured_products.0.name }}" />
       {% elif featured_products.0 and featured_products.0.imageURL %}
         <img src="{{ featured_products.0.imageURL }}" alt="{{ featured_products.0.name }}" />
       {% else %}
@@ -46,7 +46,7 @@
     <!-- Slide 2 -->
     <div class="hero-slide" id="slide-1">
       {% if media.hero_slide_2 %}
-        <img src="{{ media.hero_slide_2.image.url }}" alt="{{ media.hero_slide_2.title }}" />
+        <img src="{{ media.hero_slide_2.imageURL }}" alt="{{ media.hero_slide_2.title }}" />
       {% elif featured_products.1 and featured_products.1.imageURL %}
         <img src="{{ featured_products.1.imageURL }}" alt="{{ featured_products.1.name }}" />
       {% else %}
@@ -70,7 +70,7 @@
     <!-- Slide 3 -->
     <div class="hero-slide" id="slide-2">
       {% if media.hero_slide_3 %}
-        <img src="{{ media.hero_slide_3.image.url }}" alt="{{ media.hero_slide_3.title }}" />
+        <img src="{{ media.hero_slide_3.imageURL }}" alt="{{ media.hero_slide_3.title }}" />
       {% elif featured_products.2 and featured_products.2.imageURL %}
         <img src="{{ featured_products.2.imageURL }}" alt="{{ featured_products.2.name }}" />
       {% else %}
@@ -130,8 +130,8 @@
       <a href="{% url 'product_list' %}?category={{ co.category.slug }}" class="cat-offer-card">
         {% if co.imageURL %}
           <img src="{{ co.imageURL }}" alt="{{ co.title }}" loading="lazy">
-        {% elif co.category.image %}
-          <img src="{{ co.category.image.url }}" alt="{{ co.category.name }}" loading="lazy">
+        {% elif co.category.imageURL %}
+          <img src="{{ co.category.imageURL }}" alt="{{ co.category.name }}" loading="lazy">
         {% else %}
           <div class="cat-offer-placeholder" style="background:{{ co.bg_color }};"></div>
         {% endif %}
@@ -290,8 +290,8 @@
     {% if categories %}
       {% for category in categories|slice:":3" %}
       <a href="{% url 'product_list' %}{% if category.slug %}?category={{ category.slug }}{% endif %}" class="category-card">
-        {% if category.image %}
-          <img src="{{ category.image.url }}" alt="{{ category.name }}">
+        {% if category.imageURL %}
+          <img src="{{ category.imageURL }}" alt="{{ category.name }}">
         {% else %}
           <div style="width:100%;height:100%;background:var(--lux-green);opacity:0.8;"></div>
         {% endif %}

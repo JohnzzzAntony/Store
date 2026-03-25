@@ -119,10 +119,22 @@ def brand_list(request):
 
 def brand_detail(request, slug):
     data = cartData(request)
-    brand = get_object_or_404(Brand, slug=slug)
+    store_obj = getattr(request, 'current_store', None)
+    brand = get_object_or_404(Brand, slug=slug, store=store_obj)
+    
     products = Product.objects.filter(brand=brand, in_stock=True)
-    categories = Category.objects.filter(product__brand=brand).distinct()
-    return render(request, 'store/product_list.html', {'brand': brand, 'products': products, 'categories': categories, 'cartItems': data['cartItems']})
+    categories = Category.objects.filter(store=store_obj)
+    
+    context = {
+        'brand': brand,
+        'products': products,
+        'categories': categories,
+        'brands': Brand.objects.filter(store=store_obj),
+        'cartItems': data['cartItems'],
+        'scent_choices': Product.SCENT_CHOICES,
+        'selected_brand': brand.slug,
+    }
+    return render(request, 'store/product_list.html', context)
 
 def terms(request, *args, **kwargs):
     data = cartData(request)

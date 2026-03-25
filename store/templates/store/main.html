@@ -50,7 +50,7 @@
   <style>
     .nav-drawer {
       background: linear-gradient(rgba(26, 28, 35, 0.9), rgba(26, 28, 35, 0.9)),
-      url('{{ media.nav_bg.image.url }}') !important;
+      url('{{ media.nav_bg.imageURL }}') !important;
       background-size: cover !important;
       background-position: center !important;
     }
@@ -388,8 +388,8 @@
     </div>
 
     <a href="{% url 'store' %}" class="header-logo" id="headerLogo">
-      {% if current_store.logo %}
-      <img src="{{ current_store.logo.url }}" alt="{{ current_store.name }}" style="height: 40px;">
+      {% if current_store.imageURL %}
+      <img src="{{ current_store.imageURL }}" alt="{{ current_store.name }}" style="height: 40px;">
       {% else %}
       <span class="logo-text font-serif">{{ current_store.name|default:"Ecom" }}</span>
       {% endif %}

@@ -60,7 +60,7 @@ class StoreAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Store Essentials', {
-            'fields': ('name', 'slug', 'logo', 'details', 'is_active')
+            'fields': ('name', 'slug', 'logo', 'image_external_url', 'details', 'is_active')
         }),
         ('UI/UX Design Management', {
             'fields': ('primary_color', 'secondary_color', 'font_family', 'theme_style', 'custom_css'),
@@ -94,6 +94,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug', 'store']
     list_filter = ['store']
     prepopulated_fields = {'slug': ('name',)}
+    fields = ('store', 'name', 'slug', 'image', 'image_external_url')
 
 
 @admin.register(Brand)
@@ -101,6 +102,7 @@ class BrandAdmin(admin.ModelAdmin):
     list_display = ['name', 'slug', 'store']
     list_filter = ['store']
     prepopulated_fields = {'slug': ('name',)}
+    fields = ('store', 'name', 'slug', 'image', 'image_external_url', 'description')
 
 
 
@@ -119,7 +121,7 @@ class ProductResource(resources.ModelResource):
 
     class Meta:
         model = Product
-        fields = ('id', 'name', 'slug', 'store', 'category', 'price', 'in_stock', 'is_featured', 'description', 'gender', 'scent_profile', 'size_ml')
+        fields = ('id', 'name', 'slug', 'store', 'category', 'price', 'in_stock', 'is_featured', 'image', 'image_external_url', 'description', 'gender', 'scent_profile', 'size_ml')
         import_id_fields = ('name', 'store')  # Match existing records by name and store if ID is missing
         skip_unchanged = True
         report_skipped = True
@@ -214,10 +216,9 @@ class ShippingAddressAdmin(admin.ModelAdmin):
 
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'store', 'author', 'published_at']
-    list_filter = ['store', 'published_at']
     prepopulated_fields = {'slug': ('title',)}
     search_fields = ['title', 'content']
+    fields = ('store', 'title', 'slug', 'author', 'excerpt', 'content', 'image', 'image_external_url', 'reading_time')
 
 
 @admin.register(ContactMessage)
@@ -226,10 +227,6 @@ class ContactMessageAdmin(admin.ModelAdmin):
     readonly_fields = ['name', 'email', 'phone', 'subject', 'message', 'created_at']
     list_display = ['name', 'email', 'phone', 'subject', 'created_at']
     list_filter = ['store', 'created_at']
-    search_fields = ['name', 'email', 'subject']
-
-
-
 @admin.register(Wishlist)
 class WishlistAdmin(admin.ModelAdmin):
     list_display = ['customer', 'product']
@@ -240,6 +237,7 @@ class FrontendMediaAdmin(admin.ModelAdmin):
     list_display = ['section_name', 'store', 'is_active', 'title']
     list_filter = ['store', 'section_name', 'is_active']
     search_fields = ['title', 'subtitle']
+    fields = ('store', 'section_name', 'title', 'subtitle', 'image', 'image_external_url', 'is_active')
 
 
 # ─── PROMOTIONAL BANNERS ADMIN ───────────────────────────────────────────────

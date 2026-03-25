@@ -19,6 +19,7 @@ class Store(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     logo = models.ImageField(null=True, blank=True, upload_to='logos/')
+    image_external_url = models.URLField(max_length=500, null=True, blank=True, help_text="External URL for store logo")
     details = models.TextField(blank=True)
     
     # UI/UX Design Management
@@ -50,6 +51,17 @@ class Store(models.Model):
     def get_absolute_url(self):
         return f"/s/{self.slug}/"
 
+    @property
+    def imageURL(self):
+        if self.image_external_url:
+            return self.image_external_url
+        try:
+            if self.logo and hasattr(self.logo, 'url'):
+                return self.logo.url
+        except ValueError:
+            pass
+        return ''
+
 
 class Customer(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE, null=True, blank=True)
@@ -67,6 +79,7 @@ class Brand(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     image = models.ImageField(null=True, blank=True, upload_to='brands/')
+    image_external_url = models.URLField(max_length=500, null=True, blank=True, help_text="External URL for brand image")
     description = models.TextField(blank=True)
 
     class Meta:
@@ -78,18 +91,41 @@ class Brand(models.Model):
     def get_absolute_url(self):
         return reverse('brand_detail', kwargs={'slug': self.slug})
 
+    @property
+    def imageURL(self):
+        if self.image_external_url:
+            return self.image_external_url
+        try:
+            if self.image and hasattr(self.image, 'url'):
+                return self.image.url
+        except ValueError:
+            pass
+        return ''
+
 
 class Category(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     image = models.ImageField(null=True, blank=True, upload_to='categories/')
+    image_external_url = models.URLField(max_length=500, null=True, blank=True, help_text="External URL for category image")
 
     class Meta:
         verbose_name_plural = 'Categories'
 
     def __str__(self):
         return self.name
+
+    @property
+    def imageURL(self):
+        if self.image_external_url:
+            return self.image_external_url
+        try:
+            if self.image and hasattr(self.image, 'url'):
+                return self.image.url
+        except ValueError:
+            pass
+        return ''
 
 
 class Product(models.Model):
@@ -139,14 +175,14 @@ class Product(models.Model):
 
     @property
     def imageURL(self):
+        if self.image_external_url:
+            return self.image_external_url
         try:
-            if self.image:
+            if self.image and hasattr(self.image, 'url'):
                 return self.image.url
-            if self.image_external_url:
-                return self.image_external_url
-            return ''
-        except:
-            return ''
+        except (ValueError, RuntimeError):
+            pass
+        return ''
 
 
 class Order(models.Model):
@@ -225,6 +261,7 @@ class BlogPost(models.Model):
     excerpt = models.TextField(blank=True)
     content = models.TextField()
     image = models.ImageField(null=True, blank=True, upload_to='blog/')
+    image_external_url = models.URLField(max_length=500, null=True, blank=True, help_text="External URL for blog image")
     author = models.CharField(max_length=100, default='Perfumes')
     published_at = models.DateTimeField(auto_now_add=True)
     reading_time = models.IntegerField(default=5)
@@ -234,11 +271,14 @@ class BlogPost(models.Model):
 
     @property
     def imageURL(self):
+        if self.image_external_url:
+            return self.image_external_url
         try:
-            url = self.image.url
-        except:
-            url = ''
-        return url
+            if self.image and hasattr(self.image, 'url'):
+                return self.image.url
+        except ValueError:
+            pass
+        return ''
 
 
 class ContactMessage(models.Model):
@@ -282,7 +322,8 @@ class FrontendMedia(models.Model):
     
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='media_assets')
     section_name = models.CharField(max_length=50, choices=SECTION_CHOICES)
-    image = models.ImageField(upload_to='frontend/')
+    image = models.ImageField(upload_to='frontend/', null=True, blank=True)
+    image_external_url = models.URLField(max_length=500, null=True, blank=True, help_text="External URL for this section's media")
     title = models.CharField(max_length=200, blank=True, help_text="Optional overlay title")
     subtitle = models.CharField(max_length=300, blank=True, help_text="Optional overlay subtitle")
     is_active = models.BooleanField(default=True)
@@ -293,6 +334,17 @@ class FrontendMedia(models.Model):
 
     def __str__(self):
         return f"{self.get_section_name_display()} ({self.store.name})"
+
+    @property
+    def imageURL(self):
+        if self.image_external_url:
+            return self.image_external_url
+        try:
+            if self.image and hasattr(self.image, 'url'):
+                return self.image.url
+        except ValueError:
+            pass
+        return ''
 
 
 # ─── PROMOTIONAL BANNERS ─────────────────────────────────────────────────────
@@ -330,14 +382,14 @@ class PromoBanner(models.Model):
 
     @property
     def imageURL(self):
+        if self.image_external_url:
+            return self.image_external_url
         try:
-            if self.image:
+            if self.image and hasattr(self.image, 'url'):
                 return self.image.url
-            if self.image_external_url:
-                return self.image_external_url
-            return ''
-        except:
-            return ''
+        except (ValueError, RuntimeError):
+            pass
+        return ''
 
 
 # ─── OFFER / DEAL SECTIONS ────────────────────────────────────────────────────
@@ -378,14 +430,14 @@ class OfferSection(models.Model):
 
     @property
     def imageURL(self):
+        if self.image_external_url:
+            return self.image_external_url
         try:
-            if self.image:
+            if self.image and hasattr(self.image, 'url'):
                 return self.image.url
-            if self.image_external_url:
-                return self.image_external_url
-            return ''
-        except:
-            return ''
+        except (ValueError, RuntimeError):
+            pass
+        return ''
 
 
 # ─── CATEGORY LEVEL OFFERS ───────────────────────────────────────────────────
@@ -416,14 +468,14 @@ class CategoryOffer(models.Model):
 
     @property
     def imageURL(self):
+        if self.image_external_url:
+            return self.image_external_url
         try:
-            if self.image:
+            if self.image and hasattr(self.image, 'url'):
                 return self.image.url
-            if self.image_external_url:
-                return self.image_external_url
-            return ''
-        except:
-            return ''
+        except (ValueError, RuntimeError):
+            pass
+        return ''
 
 
 # ─── BUY ONE GET ONE OFFERS ──────────────────────────────────────────────────
@@ -465,11 +517,11 @@ class BOGOOffer(models.Model):
 
     @property
     def imageURL(self):
+        if self.image_external_url:
+            return self.image_external_url
         try:
-            if self.image:
+            if self.image and hasattr(self.image, 'url'):
                 return self.image.url
-            if self.image_external_url:
-                return self.image_external_url
-            return ''
-        except:
-            return ''
+        except (ValueError, RuntimeError):
+            pass
+        return ''

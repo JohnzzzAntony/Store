@@ -79,17 +79,13 @@
           <a href="{% url 'product_list' %}{% if selected_gender %}?gender={{ selected_gender }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}"
              class="filter-btn {% if not selected_scent %}active{% endif %}">All</a>
           {% for scent_val, scent_label in scent_choices|default:"" %}
-            <a href="?scent={{ scent_val }}{% if selected_gender %}&gender={{ selected_gender }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}"
+            <a href="?scent={{ scent_val }}{% if selected_brand %}&brand={{ selected_brand }}{% endif %}"
                class="filter-btn {% if selected_scent == scent_val %}active{% endif %}">{{ scent_label }}</a>
           {% empty %}
-            {% for scent_val, scent_label in "floral,Floral|woody,Woody|oriental,Oriental|fresh,Fresh|citrus,Citrus|musky,Musky|aquatic,Aquatic"|make_list %}{% endfor %}
-            <a href="?scent=floral{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'floral' %}active{% endif %}">Floral</a>
-            <a href="?scent=woody{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'woody' %}active{% endif %}">Woody</a>
-            <a href="?scent=oriental{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'oriental' %}active{% endif %}">Oriental</a>
-            <a href="?scent=fresh{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'fresh' %}active{% endif %}">Fresh</a>
-            <a href="?scent=citrus{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'citrus' %}active{% endif %}">Citrus</a>
-            <a href="?scent=aquatic{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'aquatic' %}active{% endif %}">Aquatic</a>
-            <a href="?scent=musky{% if selected_gender %}&gender={{ selected_gender }}{% endif %}" class="filter-btn {% if selected_scent == 'musky' %}active{% endif %}">Musky</a>
+            <!-- Fallback if choices missing -->
+            <a href="?scent=floral" class="filter-btn">Floral</a>
+            <a href="?scent=woody" class="filter-btn">Woody</a>
+            <a href="?scent=fresh" class="filter-btn">Fresh</a>
           {% endfor %}
         </div>
       </div>
