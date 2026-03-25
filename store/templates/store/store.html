@@ -14,9 +14,7 @@
     <!-- Slide 1 -->
     <div class="hero-slide active" id="slide-0">
       {% if media.hero_slide_1 %}
-        <img src="{{ media.hero_slide_1.imageURL }}" alt="{{ media.hero_slide_1.title|default:featured_products.0.name }}" />
-      {% elif featured_products.0 and featured_products.0.imageURL %}
-        <img src="{{ featured_products.0.imageURL }}" alt="{{ featured_products.0.name }}" />
+        <img src="{{ media.hero_slide_1.imageURL }}" alt="{{ media.hero_slide_1.title }}" />
       {% else %}
         <div style="width:100%;height:100%;background:var(--lux-green);display:flex;align-items:center;justify-content:center;">
           <span style="font-family:'Playfair Display',serif;font-size:120px;color:rgba(197, 160, 61, 0.1);">✧</span>
@@ -26,17 +24,15 @@
       <div class="hero-content">
         <p class="section-label" style="color:var(--lux-gold); font-size:12px; letter-spacing:5px;">{% if media.hero_slide_1 %}{{ media.hero_slide_1.subtitle }}{% else %}ESSENCE OF LUXURY{% endif %}</p>
         <h1 class="hero-title">
-          {% if media.hero_slide_1 %}{{ media.hero_slide_1.title }}{% elif featured_products.0 %}{{ featured_products.0.name }}{% else %}Eternal Elegance{% endif %}
+          {% if media.hero_slide_1 %}{{ media.hero_slide_1.title }}{% else %}Eternal Elegance{% endif %}
         </h1>
         <p class="hero-subtitle">
-          {% if media.hero_slide_1 %}{{ media.hero_slide_1.subtitle }}{% elif featured_products.0 and featured_products.0.description %}
-            {{ featured_products.0.description|truncatewords:20 }}
-          {% else %}
+          {% if media.hero_slide_1 %}{{ media.hero_slide_1.subtitle }}{% else %}
             Discover a curated collection of artisanal fragrances that define your unique identity.
           {% endif %}
         </p>
         <div style="margin-top:40px;">
-          <a href="{% if featured_products.0 %}{% url 'product_detail' featured_products.0.pk %}{% else %}{% url 'product_list' %}{% endif %}" class="btn-primary">
+          <a href="{% url 'product_list' %}" class="btn-primary">
             Explore Collection
           </a>
         </div>
@@ -47,8 +43,6 @@
     <div class="hero-slide" id="slide-1">
       {% if media.hero_slide_2 %}
         <img src="{{ media.hero_slide_2.imageURL }}" alt="{{ media.hero_slide_2.title }}" />
-      {% elif featured_products.1 and featured_products.1.imageURL %}
-        <img src="{{ featured_products.1.imageURL }}" alt="{{ featured_products.1.name }}" />
       {% else %}
         <img src="/static/images/frontend/hero_2.png" alt="Pure Escapism" />
       {% endif %}
@@ -56,7 +50,7 @@
       <div class="hero-content">
         <p class="section-label" style="color:var(--lux-gold); font-size:12px; letter-spacing:5px;">{% if media.hero_slide_2 %}{{ media.hero_slide_2.subtitle }}{% else %}LEGACY OF LUXURY{% endif %}</p>
         <h1 class="hero-title">
-          {% if media.hero_slide_2 %}{{ media.hero_slide_2.title }}{% elif featured_products.1 %}{{ featured_products.1.name }}{% else %}Imperial Forest{% endif %}
+          {% if media.hero_slide_2 %}{{ media.hero_slide_2.title }}{% else %}Imperial Forest{% endif %}
         </h1>
         <p class="hero-subtitle">
           {% if media.hero_slide_2 %}{{ media.hero_slide_2.subtitle }}{% else %}A bold journey into the heart of the forest, defined by cedar and rich leather.{% endif %}
@@ -71,8 +65,6 @@
     <div class="hero-slide" id="slide-2">
       {% if media.hero_slide_3 %}
         <img src="{{ media.hero_slide_3.imageURL }}" alt="{{ media.hero_slide_3.title }}" />
-      {% elif featured_products.2 and featured_products.2.imageURL %}
-        <img src="{{ featured_products.2.imageURL }}" alt="{{ featured_products.2.name }}" />
       {% else %}
         <img src="/static/images/frontend/hero_3.png" alt="Pure Escapism" />
       {% endif %}
@@ -80,7 +72,7 @@
       <div class="hero-content">
         <p class="section-label" style="color:var(--lux-gold); font-size:12px; letter-spacing:5px;">{% if media.hero_slide_3 %}{{ media.hero_slide_3.subtitle }}{% else %}UNISEX EXCELLENCE{% endif %}</p>
         <h1 class="hero-title">
-          {% if media.hero_slide_3 %}{{ media.hero_slide_3.title }}{% elif featured_products.2 %}{{ featured_products.2.name }}{% else %}Midnight Bloom{% endif %}
+          {% if media.hero_slide_3 %}{{ media.hero_slide_3.title }}{% else %}Midnight Bloom{% endif %}
         </h1>
         <p class="hero-subtitle">
           {% if media.hero_slide_3 %}{{ media.hero_slide_3.subtitle }}{% else %}Universal appeal, timeless design. The fragrance that transcends gender.{% endif %}
