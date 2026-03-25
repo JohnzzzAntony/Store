@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import dj_database_url
 from dotenv import load_dotenv
-from decouple import config, Csv
+from decouple import config
 
 load_dotenv()
 
@@ -86,7 +86,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-CORS_ALLOWED_ORIGINS  = config('CORS_ALLOWED_ORIGINS', cast=Csv(), default='http://localhost:3000')
+CORS_ALLOWED_ORIGINS  = [orig.strip() for orig in config('CORS_ALLOWED_ORIGINS', default='http://localhost:3000').split(',')]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS    = ['accept', 'authorization', 'content-type', 'x-csrftoken']
 
