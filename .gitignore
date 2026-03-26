@@ -12,3 +12,5 @@ venv/
 node_modules/
 dist/
 .DS_Store
+firebase-service-account.json
+*.json

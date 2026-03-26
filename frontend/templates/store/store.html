@@ -1,0 +1,459 @@
+{% extends 'store/main.html' %}
+{% load static %}
+
+{% block title %}Ecom — Perfumes{% endblock %}
+
+{% block content %}
+
+<!-- =========================================
+     HERO SECTION — Carousel
+  ========================================= -->
+<section class="hero-section" id="heroSection">
+  <div class="hero-carousel" id="heroCarousel">
+
+    <!-- Slide 1 -->
+    <div class="hero-slide active" id="slide-0">
+      {% if media.hero_slide_1 %}
+        <img src="{{ media.hero_slide_1.imageURL }}" alt="{{ media.hero_slide_1.title }}" />
+      {% else %}
+        <div style="width:100%;height:100%;background:var(--lux-green);display:flex;align-items:center;justify-content:center;">
+          <span style="font-family:'Playfair Display',serif;font-size:120px;color:rgba(197, 160, 61, 0.1);">✧</span>
+        </div>
+      {% endif %}
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-content">
+        <p class="section-label" style="color:var(--lux-gold); font-size:12px; letter-spacing:5px;">{% if media.hero_slide_1 %}{{ media.hero_slide_1.subtitle }}{% else %}ESSENCE OF LUXURY{% endif %}</p>
+        <h1 class="hero-title">
+          {% if media.hero_slide_1 %}{{ media.hero_slide_1.title }}{% else %}Eternal Elegance{% endif %}
+        </h1>
+        <p class="hero-subtitle">
+          {% if media.hero_slide_1 %}{{ media.hero_slide_1.subtitle }}{% else %}
+            Discover a curated collection of artisanal fragrances that define your unique identity.
+          {% endif %}
+        </p>
+        <div style="margin-top:40px;">
+          <a href="{% url 'product_list' %}" class="btn-primary">
+            Explore Collection
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="hero-slide" id="slide-1">
+      {% if media.hero_slide_2 %}
+        <img src="{{ media.hero_slide_2.imageURL }}" alt="{{ media.hero_slide_2.title }}" />
+      {% else %}
+        <img src="/static/images/frontend/hero_2.png" alt="Pure Escapism" />
+      {% endif %}
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-content">
+        <p class="section-label" style="color:var(--lux-gold); font-size:12px; letter-spacing:5px;">{% if media.hero_slide_2 %}{{ media.hero_slide_2.subtitle }}{% else %}LEGACY OF LUXURY{% endif %}</p>
+        <h1 class="hero-title">
+          {% if media.hero_slide_2 %}{{ media.hero_slide_2.title }}{% else %}Imperial Forest{% endif %}
+        </h1>
+        <p class="hero-subtitle">
+          {% if media.hero_slide_2 %}{{ media.hero_slide_2.subtitle }}{% else %}A bold journey into the heart of the forest, defined by cedar and rich leather.{% endif %}
+        </p>
+        <div style="margin-top:40px;">
+          <a href="{% url 'product_list' %}" class="btn-primary">Explore Collection</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="hero-slide" id="slide-2">
+      {% if media.hero_slide_3 %}
+        <img src="{{ media.hero_slide_3.imageURL }}" alt="{{ media.hero_slide_3.title }}" />
+      {% else %}
+        <img src="/static/images/frontend/hero_3.png" alt="Pure Escapism" />
+      {% endif %}
+      <div class="hero-slide-overlay"></div>
+      <div class="hero-content">
+        <p class="section-label" style="color:var(--lux-gold); font-size:12px; letter-spacing:5px;">{% if media.hero_slide_3 %}{{ media.hero_slide_3.subtitle }}{% else %}UNISEX EXCELLENCE{% endif %}</p>
+        <h1 class="hero-title">
+          {% if media.hero_slide_3 %}{{ media.hero_slide_3.title }}{% else %}Midnight Bloom{% endif %}
+        </h1>
+        <p class="hero-subtitle">
+          {% if media.hero_slide_3 %}{{ media.hero_slide_3.subtitle }}{% else %}Universal appeal, timeless design. The fragrance that transcends gender.{% endif %}
+        </p>
+        <div style="margin-top:40px;">
+          <a href="{% url 'product_list' %}" class="btn-primary">Shop Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="hero-dots" id="heroDots" style="bottom:60px;">
+    <div class="hero-dot active" onclick="goToSlide(0)" style="background:var(--lux-gold);"></div>
+    <div class="hero-dot" onclick="goToSlide(1)"></div>
+    <div class="hero-dot" onclick="goToSlide(2)"></div>
+  </div>
+</section>
+
+
+{% if current_store.promo_ticker_text %}
+<!-- =========================================
+     PROMO TICKER / TOP BANNER
+  ========================================= -->
+<div class="promo-ticker" style="background:var(--lux-gold); color:var(--lux-green); font-weight:600; font-size:12px; height:45px;">
+  <div class="promo-ticker-inner">
+    {% if current_store.promo_ticker_badge %}
+    <span class="promo-ticker-badge" style="background:var(--lux-green); color:var(--lux-gold);">{{ current_store.promo_ticker_badge }}</span>
+    {% endif %}
+    <span class="promo-ticker-text">{{ current_store.promo_ticker_text }}</span>
+    {% if current_store.promo_ticker_url %}
+    <a href="{{ current_store.promo_ticker_url }}" class="promo-ticker-cta" style="color:inherit; border-bottom:1px solid var(--lux-green);">Shop Collection →</a>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% if category_offers %}
+<!-- =========================================
+     CATEGORY LEVEL OFFERS
+  ========================================= -->
+<section class="cat-offers-section" id="catOffersSection" style="padding-top: 80px;">
+  <div class="section-header" style="justify-content:center;text-align:center;margin-bottom:32px;">
+    <div>
+      <span class="section-label">Shop by Deal</span>
+      <h2 class="section-title font-serif">Category Offers</h2>
+      <div class="section-divider" style="margin:0 auto;"></div>
+    </div>
+  </div>
+
+  <div class="cat-offers-grid">
+    {% for co in category_offers %}
+    <a href="{% url 'product_list' %}?category={{ co.category.slug }}" class="cat-offer-card">
+      {% if co.imageURL %}
+        <img src="{{ co.imageURL }}" alt="{{ co.title }}" loading="lazy">
+      {% elif co.category.imageURL %}
+        <img src="{{ co.category.imageURL }}" alt="{{ co.category.name }}" loading="lazy">
+      {% else %}
+        <div class="cat-offer-placeholder" style="background:{{ co.bg_color }};"></div>
+      {% endif %}
+      <div class="cat-offer-overlay"></div>
+      <div class="cat-offer-content">
+        {% if co.badge_text %}<span class="cat-offer-badge">{{ co.badge_text }}</span>{% endif %}
+        {% if co.discount_label %}<div class="cat-offer-discount">{{ co.discount_label }}</div>{% endif %}
+        <h3 class="cat-offer-title">{{ co.title }}</h3>
+        {% if co.subtitle %}<p class="cat-offer-sub">{{ co.subtitle }}</p>{% endif %}
+        <span class="cat-offer-cta">{{ co.cta_text }} →</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+
+{% if bogo_offers %}
+<!-- =========================================
+     BUY ONE GET ONE SECTION
+  ========================================= -->
+<section class="bogo-section" id="bogoSection">
+  <div class="bogo-section-inner">
+    <div class="bogo-header">
+      <span class="section-label" style="color:rgba(255,255,255,0.5);">Best Value</span>
+      <h2 class="section-title font-serif bogo-title">Buy One, Get One Deals</h2>
+      <p class="bogo-subtitle">Double the luxury without doubling the spend. Our best BOGO offers, curated for you.</p>
+    </div>
+
+    <div class="bogo-grid">
+      {% for bogo in bogo_offers %}
+      <div class="bogo-card">
+        <div class="bogo-card-image">
+          {% if bogo.imageURL %}
+            <img src="{{ bogo.imageURL }}" alt="{{ bogo.title }}" loading="lazy">
+          {% else %}
+            <div class="bogo-card-placeholder" style="background:{{ bogo.bg_color }};"></div>
+          {% endif %}
+          <div class="bogo-type-badge">{{ bogo.get_bogo_type_display }}</div>
+        </div>
+        <div class="bogo-card-body">
+          <h3 class="bogo-card-title">{{ bogo.title }}</h3>
+          {% if bogo.description %}<p class="bogo-card-desc">{{ bogo.description|truncatewords:20 }}</p>{% endif %}
+          {% if bogo.promo_code %}
+          <div class="offer-promo-code" style="margin-bottom:16px;">
+            <span class="promo-label">CODE:</span>
+            <span class="promo-code" id="bogo-code-{{ forloop.counter }}" onclick="copyCode('bogo-code-{{ forloop.counter }}','{{ bogo.promo_code }}')">{{ bogo.promo_code }}</span>
+            <button class="promo-copy-btn" onclick="copyCode('bogo-code-{{ forloop.counter }}','{{ bogo.promo_code }}')">Copy</button>
+          </div>
+          {% endif %}
+          {% if bogo.ends_at %}
+          <div class="offer-countdown"><span class="countdown-label">Ends in:</span> <strong class="promo-countdown" data-ends="{{ bogo.ends_at|date:'c' }}"><span class="countdown-val"></span></strong></div>
+          {% endif %}
+          <a href="{% url 'product_list' %}?bogo={{ bogo.id }}" class="bogo-cta-btn">{{ bogo.cta_text }} <span>→</span></a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+
+{% if categories %}
+<!-- =========================================
+     SHOP BY CATEGORIES SECTION
+  ========================================= -->
+<section class="category-section" id="categorySection">
+  <div class="category-grid">
+      {% for category in categories|slice:":3" %}
+      <a href="{% url 'product_list' %}{% if category.slug %}?category={{ category.slug }}{% endif %}" class="category-card">
+        {% if category.imageURL %}
+          <img src="{{ category.imageURL }}" alt="{{ category.name }}">
+        {% else %}
+          <div style="width:100%;height:100%;background:var(--lux-green);opacity:0.8;"></div>
+        {% endif %}
+        <div class="category-card-overlay"></div>
+        <div class="category-card-content">
+          <span class="section-label" style="color:var(--lux-gold); font-size:10px;">CURATED</span>
+          <h3>{{ category.name }}</h3>
+          <span>Discovery →</span>
+        </div>
+      </a>
+      {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+
+<!-- =========================================
+     FEATURED PRODUCTS SECTION
+  ========================================= -->
+<section class="section" id="productsSection" style="background:var(--bg-white); position: relative; overflow: hidden;">
+  <!-- Decorative background element -->
+  <div style="position:absolute; top:-100px; right:-100px; width:400px; height:400px; background:radial-gradient(circle, var(--teal-light), transparent); opacity:0.1; pointer-events:none; z-index:0;"></div>
+  
+  <div class="section-header" style="position:relative; z-index:1;">
+    <div>
+      <span class="section-label">Latest Products</span>
+      <h2 class="section-title font-serif">New Arrivals</h2>
+      <div class="section-divider"></div>
+    </div>
+    <a href="{% url 'product_list' %}" class="btn-outline">View All</a>
+  </div>
+
+  {% if featured_products %}
+  <div class="products-grid" style="position:relative; z-index:1;">
+    {% for product in featured_products %}
+    <article class="product-card" id="product-card-{{ product.pk }}">
+      <a href="{% url 'product_detail' product.pk %}">
+        <div class="product-card-image">
+          {% if product.imageURL %}
+            <img src="{{ product.imageURL }}" alt="{{ product.name }}" loading="lazy" />
+          {% else %}
+            <div class="img-placeholder" style="width:100%;height:100%;min-height:320px;">
+              <i class="ph ph-package" style="font-size:48px;color:var(--teal);opacity:0.4;"></i>
+            </div>
+          {% endif %}
+          <div class="product-card-overlay">
+            <span style="color:#fff;font-size:12px;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.6);padding-bottom:4px;">View Details</span>
+          </div>
+        </div>
+      </a>
+      <button class="product-wishlist-btn" id="wishlist-{{ product.pk }}" aria-label="Add to wishlist">
+        <i class="ph ph-heart"></i>
+      </button>
+      <div class="product-card-info">
+        <span class="product-category-tag">[PERFUMES]</span>
+        <h3 class="product-name">
+          <a href="{% url 'product_detail' product.pk %}" style="color:inherit;">{{ product.name }}</a>
+        </h3>
+        <p class="product-price">AED {{ product.price|floatformat:0 }}</p>
+        <span class="product-size-tag">{{ product.size_ml }}ml</span>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:60px 20px;color:var(--text-muted);">
+    <i class="ph ph-package" style="font-size:48px;margin-bottom:16px;display:block;"></i>
+    <p>No products available yet. Please check back later.</p>
+  </div>
+  {% endif %}
+</section>
+
+
+{% if current_store.heritage_title %}
+<!-- =========================================
+     BRAND STORY BANNER
+  ========================================= -->
+<section id="heritageSection" style="background:{% if media.heritage_bg %}url('{{ media.heritage_bg.imageURL }}'){% else %}var(--lux-green){% endif %}; color:#fff; padding:120px 40px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; position:relative; overflow:hidden;">
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0.05; pointer-events:none; background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');"></div>
+  
+  <div>
+    <span class="section-label" style="color:var(--lux-gold);">HERITAGE & ARTISTRY</span>
+    <h2 style="font-size:56px; font-weight:400; line-height:1.1; margin:24px 0; font-family:'Playfair Display',serif;">{{ current_store.heritage_title }}</h2>
+    <p style="color:rgba(255,255,255,0.7); line-height:2; font-size:16px; margin-bottom:40px; font-weight:300;">
+      {{ current_store.heritage_description }}
+    </p>
+    <a href="{% url 'about' %}" class="btn-primary" style="background:transparent !important; border-color:var(--lux-gold) !important; color:var(--lux-gold) !important;">
+      Our Legacy
+    </a>
+  </div>
+  
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:30px;">
+    {% if current_store.heritage_stat_1_value %}
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(197, 160, 61, 0.2); padding:50px 30px; text-align:center;">
+      <p style="font-family:'Playfair Display',serif; font-size:64px; color:var(--lux-gold);">{{ current_store.heritage_stat_1_value }}</p>
+      <p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">{{ current_store.heritage_stat_1_label }}</p>
+    </div>
+    {% endif %}
+    {% if current_store.heritage_stat_2_value %}
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(197, 160, 61, 0.2); padding:50px 30px; text-align:center;">
+      <p style="font-family:'Playfair Display',serif; font-size:64px; color:var(--lux-gold);">{{ current_store.heritage_stat_2_value }}</p>
+      <p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">{{ current_store.heritage_stat_2_label }}</p>
+    </div>
+    {% endif %}
+    {% if current_store.heritage_stat_3_value %}
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(197, 160, 61, 0.2); padding:50px 30px; text-align:center;">
+      <p style="font-family:'Playfair Display',serif; font-size:64px; color:var(--lux-gold);">{{ current_store.heritage_stat_3_value }}</p>
+      <p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">{{ current_store.heritage_stat_3_label }}</p>
+    </div>
+    {% endif %}
+    {% if current_store.heritage_stat_4_value %}
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(197, 160, 61, 0.2); padding:50px 30px; text-align:center;">
+      <p style="font-family:'Playfair Display',serif; font-size:64px; color:var(--lux-gold);">{{ current_store.heritage_stat_4_value }}</p>
+      <p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">{{ current_store.heritage_stat_4_label }}</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+
+<!-- =========================================
+     JOURNAL / BLOG PREVIEW
+  ========================================= -->
+{% if latest_blogs %}
+<section class="featured-section" id="featuredSection" style="padding:120px 40px; background:#fff;">
+  <div class="section-header" style="text-align:center; margin-bottom:80px;">
+    <span class="section-label">CURATED COLLECTION</span>
+    <h2 class="section-title">Newest Creations</h2>
+    <div class="luxury-gold-bar"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;">
+    {% for blog in latest_blogs %}
+    <article class="blog-card">
+      <a href="{% url 'blog_detail' blog.slug %}">
+        <div class="blog-card-image">
+          {% if blog.imageURL %}
+            <img src="{{ blog.imageURL }}" alt="{{ blog.title }}" loading="lazy" />
+          {% else %}
+            <div class="img-placeholder" style="height:200px;">
+              <i class="ph ph-article" style="font-size:40px;opacity:0.3;"></i>
+            </div>
+          {% endif %}
+        </div>
+      </a>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span>{{ blog.published_at|date:"M d, Y" }}</span>
+          <div class="dot"></div>
+          <span>{{ blog.reading_time }} min read</span>
+        </div>
+        <h3 class="blog-card-title"><a href="{% url 'blog_detail' blog.slug %}" style="color:inherit;">{{ blog.title }}</a></h3>
+        <p class="blog-card-excerpt">{{ blog.excerpt|truncatewords:20 }}</p>
+        <a href="{% url 'blog_detail' blog.slug %}" class="blog-card-link">Read More →</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Hero Carousel
+var currentSlide = 0;
+var totalSlides = 3;
+var autoplayTimer;
+
+function goToSlide(n) {
+  document.querySelectorAll('.hero-slide').forEach(function(s, i) {
+    s.classList.toggle('active', i === n);
+  });
+  document.querySelectorAll('.hero-dot').forEach(function(d, i) {
+    d.classList.toggle('active', i === n);
+  });
+  currentSlide = n;
+  resetAutoplay();
+}
+
+function changeSlide(dir) {
+  var next = (currentSlide + dir + totalSlides) % totalSlides;
+  goToSlide(next);
+}
+
+function resetAutoplay() {
+  clearInterval(autoplayTimer);
+  autoplayTimer = setInterval(function() { changeSlide(1); }, 5000);
+}
+
+// Start autoplay
+autoplayTimer = setInterval(function() { changeSlide(1); }, 5000);
+
+// Order Success check
+if (window.location.search.includes('order_success=true')) {
+  setTimeout(function() {
+    if (window.showToast) {
+       showToast('🎉 Order placed successfully! Check your email for details.');
+    } else {
+       alert('🎉 Order placed successfully! Thank you for shopping with Perfumes.');
+    }
+  }, 500);
+}
+
+// ── Copy Promo Code ──────────────────────────────────────────
+function copyCode(spanId, code) {
+  navigator.clipboard.writeText(code).catch(function() {
+    var ta = document.createElement('textarea');
+    ta.value = code;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+  var btn = document.querySelector('#' + spanId)?.closest('.offer-promo-code')?.querySelector('.promo-copy-btn');
+  if (btn) {
+    var orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = orig;
+      btn.classList.remove('copied');
+    }, 2000);
+  }
+}
+
+// ── Countdown Timers ─────────────────────────────────────────
+function pad(n) { return n < 10 ? '0' + n : n; }
+
+function updateCountdowns() {
+  var now = new Date();
+  document.querySelectorAll('.promo-countdown[data-ends]').forEach(function(el) {
+    var end = new Date(el.getAttribute('data-ends'));
+    var diff = end - now;
+    var valEl = el.querySelector('.countdown-val') || el;
+    if (diff <= 0) {
+      valEl.textContent = 'Expired';
+      return;
+    }
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    var str = d > 0 ? d + 'd ' + pad(h) + 'h ' + pad(m) + 'm' : pad(h) + ':' + pad(m) + ':' + pad(s);
+    valEl.textContent = str;
+  });
+}
+updateCountdowns();
+setInterval(updateCountdowns, 1000);
+</script>
+{% endblock %}
+
