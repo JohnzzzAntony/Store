@@ -63,17 +63,27 @@ def cartData(request):
 			customer.name = request.user.username
 			customer.email = request.user.email
 			customer.save()
-		order, created = Order.objects.get_or_create(customer=customer, store=store, complete=False)
-		# Task 2: Filter items to exclude zero-priced fragrance
-		items = order.orderitem_set.all()
-		filtered_items = []
-		for item in items:
-			if item.product and item.product.price == 0 and 'fragrance' in item.product.name.lower():
-				continue
-			filtered_items.append(item)
-		
-		items = filtered_items
-		cartItems = sum([item.quantity for item in items])
+		order = Order.objects.filter(customer=customer, store=store, complete=False).first()
+		if not order:
+			# Return a dummy context object instead of a database record
+			order = {
+				'get_cart_total': 0.0, 
+				'get_cart_items': 0, 
+				'shipping': False,
+				'id': None
+			}
+			items = []
+		else:
+			# Existing order logic
+			items = order.orderitem_set.all()
+			filtered_items = []
+			for item in items:
+				if item.product and item.product.price == 0 and 'fragrance' in item.product.name.lower():
+					continue
+				filtered_items.append(item)
+			
+			items = filtered_items
+			cartItems = sum([item.quantity for item in items])
 	else:
 		cookieData = cookieCart(request)
 		cartItems = cookieData['cartItems']
