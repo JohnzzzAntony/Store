@@ -110,7 +110,7 @@
   <!-- CSRF & Cart cookie setup -->
   <script>
     var user = '{{ request.user }}';
-    var isAuthenticated = "{{ request.user.is_authenticated }}" === "True";
+    var isAuthenticated = {% if is_guest %}false{% else %}true{% endif %};
 
     function getToken(name) {
       var cookieValue = null;
@@ -372,7 +372,7 @@
       <li class="sidebar-item"><a href="{% url 'about' %}" class="sidebar-link">Our Story (About Us)</a></li>
       <li class="sidebar-item"><a href="{% url 'contact' %}" class="sidebar-link">Contact & Support</a></li>
       <li class="sidebar-item" style="margin-top:40px; border-top:1px solid #eee; padding-top:20px;">
-        {% if request.user.is_authenticated %}
+        {% if not is_guest %}
         <a href="{% url 'logout' %}" class="sidebar-link" style="color:#e65c5c;">Sign Out</a>
         {% else %}
         <a href="{% url 'login' %}" class="sidebar-link">Sign In / Register</a>
@@ -407,7 +407,7 @@
       <a href="{% url 'product_list' %}?sort=" class="header-icon-btn" aria-label="Search" id="searchBtn">
         <i class="ph ph-magnifying-glass" style="font-size:22px;"></i>
       </a>
-      {% if request.user.is_authenticated %}
+      {% if not is_guest %}
       <a href="{% url 'logout' %}" class="header-icon-btn" id="userBtn" title="Sign Out">
         <i class="ph ph-user-circle" style="font-size:24px;"></i>
       </a>
@@ -453,9 +453,9 @@
   <footer class="site-footer">
     <div class="footer-grid">
         <div class="footer-col">
-          <h2 class="font-serif" style="color:var(--lux-gold); font-size:32px; letter-spacing:2px;">{{ current_store.name|default:"Perfumes" }}</h2>
+          <h2 class="font-serif" style="color:var(--lux-gold); font-size:32px; letter-spacing:2px;">{{ current_store.name }}</h2>
           <p style="color:rgba(255,255,255,0.7); line-height:1.8; margin-top:20px;">
-            {{ current_store.details|default:"Crafting luxury fragrances since 2006, blending tradition with modern elegance for discerning clients across the UAE." }}
+            {{ current_store.details }}
           </p>
         </div>
       <div class="footer-col">
@@ -487,7 +487,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span style="color:rgba(255,255,255,0.4);font-size:12px;">© 2024 {{ current_store.name|default:"Perfumes" }}. All
+      <span style="color:rgba(255,255,255,0.4);font-size:12px;">© 2024 {{ current_store.name }}. All
         rights reserved.</span>
       <div class="footer-social">
         <a href="#" aria-label="Instagram"><i class="ph ph-instagram-logo"></i></a>

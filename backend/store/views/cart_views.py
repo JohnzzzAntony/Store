@@ -91,16 +91,41 @@ def processOrder(request, *args, **kwargs):
     """Process the order (billing + shipping info)."""
     transaction_id = datetime.datetime.now().timestamp()
     data = json.loads(request.body)
+    form_data = data.get('form', {})
+    
+    name = form_data.get('name')
+    email = form_data.get('email')
+    phone = form_data.get('phone')
+    total = float(form_data.get('total', 0))
+    payment_method = form_data.get('payment_method', 'cod')
 
     store = getattr(request, 'current_store', None)
+    
+    # Logic: Always use form name/email even if logged in
     if request.user.is_authenticated:
         customer, created = Customer.objects.get_or_create(user=request.user, defaults={'store': store})
+        if name: customer.name = name
+        if email: customer.email = email
+        if phone: customer.phone = phone
+        customer.save()
+        
+        # Check if they have an active DB order
         order, created = Order.objects.get_or_create(customer=customer, store=store, complete=False)
+        
+        # SPECIAL CASE: If they are staff/admin browsing as guest, they might have items in COOKIE
+        # but the DB order might be empty.
+        if order.get_cart_items == 0:
+            cookie_data = cookieCart(request)
+            for item in cookie_data['items']:
+                product = Product.objects.get(id=item['id'])
+                OrderItem.objects.create(
+                    product=product,
+                    order=order,
+                    quantity=int(item['quantity'])
+                )
     else:
         customer, order = guestOrder(request, data)
 
-    total = float(data['form']['total'])
-    payment_method = data['form'].get('payment_method', 'cod')
     order.transaction_id = transaction_id
     order.payment_method = payment_method
     

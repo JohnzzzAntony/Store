@@ -58,33 +58,43 @@ def cookieCart(request):
 def cartData(request):
 	store = getattr(request, 'current_store', None)
 	if request.user.is_authenticated:
-		customer, created = Customer.objects.get_or_create(user=request.user, defaults={'store': store})
-		if created:
-			customer.name = request.user.username
-			customer.email = request.user.email
-			customer.save()
-		cartItems = 0
-		order = Order.objects.filter(customer=customer, store=store, complete=False).first()
-		if not order:
-			# Return a dummy context object instead of a database record
-			order = {
-				'get_cart_total': 0.0, 
-				'get_cart_items': 0, 
-				'shipping': False,
-				'id': None
-			}
-			items = []
+		# If user is staff/superuser, we treat them as a guest on the frontend 
+		# unless they have a Customer profile already (from a real login/signup)
+		# This allows admins to browse the store as guests initially.
+		is_staff = getattr(request.user, 'is_staff', False)
+		customer = Customer.objects.filter(user=request.user).first()
+		
+		if is_staff and not customer:
+			# Admin/Staff without a customer profile is treated as a guest
+			cookieData = cookieCart(request)
+			cartItems = cookieData['cartItems']
+			order = cookieData['order']
+			items = cookieData['items']
 		else:
-			# Existing order logic
-			items = order.orderitem_set.all()
-			filtered_items = []
-			for item in items:
-				if item.product and item.product.price == 0 and 'fragrance' in item.product.name.lower():
-					continue
-				filtered_items.append(item)
+			# Real customer or admin with a profile
+			if not customer:
+				customer = Customer.objects.create(user=request.user, store=store, name=request.user.username, email=request.user.email)
 			
-			items = filtered_items
-			cartItems = sum([item.quantity for item in items])
+			cartItems = 0
+			order = Order.objects.filter(customer=customer, store=store, complete=False).first()
+			if not order:
+				order = {
+					'get_cart_total': 0.0, 
+					'get_cart_items': 0, 
+					'shipping': False,
+					'id': None
+				}
+				items = []
+			else:
+				items = order.orderitem_set.all()
+				filtered_items = []
+				for item in items:
+					if item.product and item.product.price == 0 and 'fragrance' in item.product.name.lower():
+						continue
+					filtered_items.append(item)
+				
+				items = filtered_items
+				cartItems = sum([item.quantity for item in items])
 	else:
 		cookieData = cookieCart(request)
 		cartItems = cookieData['cartItems']

@@ -59,6 +59,19 @@ class Store(models.Model):
     
     heritage_stat_2_value = models.CharField(max_length=20, blank=True)
     heritage_stat_2_label = models.CharField(max_length=50, blank=True)
+
+    # Category Section Customization
+    category_section_title = models.CharField(max_length=200, blank=True, default="Shop by Category")
+    category_section_subtitle = models.CharField(max_length=500, blank=True)
+
+    # Category Offers Header
+    category_offers_title = models.CharField(max_length=200, blank=True, default="Category Offers")
+    category_offers_subtitle = models.CharField(max_length=500, blank=True, default="Shop by Deal")
+
+    # BOGO Section Header
+    bogo_section_title = models.CharField(max_length=200, blank=True, default="Buy One, Get One Deals")
+    bogo_section_subtitle = models.CharField(max_length=500, blank=True, default="Double the luxury without doubling the spend.")
+    bogo_section_label = models.CharField(max_length=100, blank=True, default="Best Value")
     
     heritage_stat_3_value = models.CharField(max_length=20, blank=True)
     heritage_stat_3_label = models.CharField(max_length=50, blank=True)

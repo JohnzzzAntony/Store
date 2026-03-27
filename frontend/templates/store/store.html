@@ -110,6 +110,23 @@
 </div>
 {% endif %}
 
+{% for banner in promo_banners %}
+  {% if banner.position == 'top' %}
+    <!-- TOP PROMO BANNER -->
+    <section class="promo-banner-wide" style="background: {{ banner.bg_color }}; color: {{ banner.text_color }}; padding: 60px 40px; margin-bottom: 40px; text-align: center; position: relative; overflow: hidden;">
+      {% if banner.imageURL %}
+        <div style="position:absolute; top:0; left:0; width:100%; height:100%; opacity:0.3; background:url('{{ banner.imageURL }}') center/cover no-repeat; z-index:0;"></div>
+      {% endif %}
+      <div style="position:relative; z-index:1;">
+        {% if banner.badge_text %}<span style="background:var(--lux-gold); color:var(--lux-green); padding:4px 12px; font-size:10px; letter-spacing:2px; font-weight:700; margin-bottom:16px; display:inline-block;">{{ banner.badge_text }}</span>{% endif %}
+        <h2 class="font-serif" style="font-size:42px; margin-bottom:12px;">{{ banner.title }}</h2>
+        {% if banner.subtitle %}<p style="opacity:0.8; font-size:16px; margin-bottom:24px;">{{ banner.subtitle }}</p>{% endif %}
+        <a href="{{ banner.cta_url }}" class="btn-primary" style="background:{{ banner.text_color }} !important; color:{{ banner.bg_color }} !important; border:none !important;">{{ banner.cta_text }}</a>
+      </div>
+    </section>
+  {% endif %}
+{% endfor %}
+
 {% if category_offers %}
 <!-- =========================================
      CATEGORY LEVEL OFFERS
@@ -117,8 +134,8 @@
 <section class="cat-offers-section" id="catOffersSection" style="padding-top: 80px;">
   <div class="section-header" style="justify-content:center;text-align:center;margin-bottom:32px;">
     <div>
-      <span class="section-label">Shop by Deal</span>
-      <h2 class="section-title font-serif">Category Offers</h2>
+      <span class="section-label">{% if current_store.category_offers_subtitle %}{{ current_store.category_offers_subtitle }}{% else %}Shop by Deal{% endif %}</span>
+      <h2 class="section-title font-serif">{% if current_store.category_offers_title %}{{ current_store.category_offers_title }}{% else %}Category Offers{% endif %}</h2>
       <div class="section-divider" style="margin:0 auto;"></div>
     </div>
   </div>
@@ -155,9 +172,9 @@
 <section class="bogo-section" id="bogoSection">
   <div class="bogo-section-inner">
     <div class="bogo-header">
-      <span class="section-label" style="color:rgba(255,255,255,0.5);">Best Value</span>
-      <h2 class="section-title font-serif bogo-title">Buy One, Get One Deals</h2>
-      <p class="bogo-subtitle">Double the luxury without doubling the spend. Our best BOGO offers, curated for you.</p>
+      <span class="section-label" style="color:rgba(255,255,255,0.5);">{% if current_store.bogo_section_label %}{{ current_store.bogo_section_label }}{% else %}Best Value{% endif %}</span>
+      <h2 class="section-title font-serif bogo-title">{% if current_store.bogo_section_title %}{{ current_store.bogo_section_title }}{% else %}Buy One, Get One Deals{% endif %}</h2>
+      <p class="bogo-subtitle">{% if current_store.bogo_section_subtitle %}{{ current_store.bogo_section_subtitle }}{% else %}Double the luxury without doubling the spend. Our best BOGO offers, curated for you.{% endif %}</p>
     </div>
 
     <div class="bogo-grid">
@@ -198,7 +215,15 @@
 <!-- =========================================
      SHOP BY CATEGORIES SECTION
   ========================================= -->
-<section class="category-section" id="categorySection">
+<section class="category-section" id="categorySection" style="padding: 100px 40px; background: #fff;">
+  <div class="section-header" style="justify-content:center;text-align:center;margin-bottom:60px;">
+    <div>
+      <span class="section-label" style="color:var(--lux-gold);">{% if current_store.category_section_subtitle %}{{ current_store.category_section_subtitle }}{% else %}COLLECTION{% endif %}</span>
+      <h2 class="section-title font-serif" style="color:var(--lux-green); font-size:48px;">{% if current_store.category_section_title %}{{ current_store.category_section_title }}{% else %}Shop by Category{% endif %}</h2>
+      <div class="section-divider" style="margin:20px auto;"></div>
+    </div>
+  </div>
+
   <div class="category-grid">
       {% for category in categories|slice:":3" %}
       <a href="{% url 'product_list' %}{% if category.slug %}?category={{ category.slug }}{% endif %}" class="category-card">
@@ -209,7 +234,6 @@
         {% endif %}
         <div class="category-card-overlay"></div>
         <div class="category-card-content">
-          <span class="section-label" style="color:var(--lux-gold); font-size:10px;">CURATED</span>
           <h3>{{ category.name }}</h3>
           <span>Discovery →</span>
         </div>
@@ -218,6 +242,27 @@
   </div>
 </section>
 {% endif %}
+
+{% for banner in promo_banners %}
+  {% if banner.position == 'mid' %}
+    <!-- MIDDLE PROMO BANNER -->
+    <section class="promo-banner-mid" style="background: {{ banner.bg_color }}; color: {{ banner.text_color }}; padding: 80px 40px; margin: 60px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;">
+        {% if banner.imageURL %}
+            <div style="height: 400px; background: url('{{ banner.imageURL }}') center/cover no-repeat; border: 1px solid rgba(255,255,255,0.1);"></div>
+        {% else %}
+            <div style="height: 400px; background: rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; border: 1px dashed rgba(255,255,255,0.2);">
+                <i class="ph ph-image" style="font-size:48px; opacity:0.2;"></i>
+            </div>
+        {% endif %}
+        <div style="color: {{ banner.text_color }};">
+            {% if banner.badge_text %}<span style="color:var(--lux-gold); font-size:11px; letter-spacing:4px; font-weight:600;">{{ banner.badge_text }}</span>{% endif %}
+            <h2 class="font-serif" style="font-size:48px; line-height:1.1; margin: 16px 0;">{{ banner.title }}</h2>
+            {% if banner.subtitle %}<p style="color:rgba(255,255,255,0.7); line-height:1.7; font-size:16px; margin-bottom:32px;">{{ banner.subtitle }}</p>{% endif %}
+            <a href="{{ banner.cta_url }}" class="btn-primary" style="border-color:{{ banner.text_color }} !important; color:{{ banner.text_color }} !important; background:transparent !important;">{{ banner.cta_text }}</a>
+        </div>
+    </section>
+  {% endif %}
+{% endfor %}
 
 
 <!-- =========================================
@@ -287,9 +332,11 @@
   <div>
     <span class="section-label" style="color:var(--lux-gold);">HERITAGE & ARTISTRY</span>
     <h2 style="font-size:56px; font-weight:400; line-height:1.1; margin:24px 0; font-family:'Playfair Display',serif;">{{ current_store.heritage_title }}</h2>
+    {% if current_store.heritage_description %}
     <p style="color:rgba(255,255,255,0.7); line-height:2; font-size:16px; margin-bottom:40px; font-weight:300;">
       {{ current_store.heritage_description }}
     </p>
+    {% endif %}
     <a href="{% url 'about' %}" class="btn-primary" style="background:transparent !important; border-color:var(--lux-gold) !important; color:var(--lux-gold) !important;">
       Our Legacy
     </a>
@@ -299,25 +346,25 @@
     {% if current_store.heritage_stat_1_value %}
     <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(197, 160, 61, 0.2); padding:50px 30px; text-align:center;">
       <p style="font-family:'Playfair Display',serif; font-size:64px; color:var(--lux-gold);">{{ current_store.heritage_stat_1_value }}</p>
-      <p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">{{ current_store.heritage_stat_1_label }}</p>
+      {% if current_store.heritage_stat_1_label %}<p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">{{ current_store.heritage_stat_1_label }}</p>{% endif %}
     </div>
     {% endif %}
     {% if current_store.heritage_stat_2_value %}
     <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(197, 160, 61, 0.2); padding:50px 30px; text-align:center;">
       <p style="font-family:'Playfair Display',serif; font-size:64px; color:var(--lux-gold);">{{ current_store.heritage_stat_2_value }}</p>
-      <p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">{{ current_store.heritage_stat_2_label }}</p>
+      {% if current_store.heritage_stat_2_label %}<p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">{{ current_store.heritage_stat_2_label }}</p>{% endif %}
     </div>
     {% endif %}
     {% if current_store.heritage_stat_3_value %}
     <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(197, 160, 61, 0.2); padding:50px 30px; text-align:center;">
       <p style="font-family:'Playfair Display',serif; font-size:64px; color:var(--lux-gold);">{{ current_store.heritage_stat_3_value }}</p>
-      <p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">{{ current_store.heritage_stat_3_label }}</p>
+      {% if current_store.heritage_stat_3_label %}<p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">{{ current_store.heritage_stat_3_label }}</p>{% endif %}
     </div>
     {% endif %}
     {% if current_store.heritage_stat_4_value %}
     <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(197, 160, 61, 0.2); padding:50px 30px; text-align:center;">
       <p style="font-family:'Playfair Display',serif; font-size:64px; color:var(--lux-gold);">{{ current_store.heritage_stat_4_value }}</p>
-      <p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">{{ current_store.heritage_stat_4_label }}</p>
+      {% if current_store.heritage_stat_4_label %}<p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.5);">{{ current_store.heritage_stat_4_label }}</p>{% endif %}
     </div>
     {% endif %}
   </div>
@@ -364,6 +411,17 @@
   </div>
 </section>
 {% endif %}
+
+{% for banner in promo_banners %}
+  {% if banner.position == 'bottom' %}
+    <!-- BOTTOM PROMO BANNER -->
+    <section class="promo-banner-bottom" style="background: {{ banner.bg_color }}; color: {{ banner.text_color }}; padding: 100px 40px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
+        <h2 class="font-serif" style="font-size:36px; margin-bottom:8px;">{{ banner.title }}</h2>
+        {% if banner.subtitle %}<p style="opacity:0.7; margin-bottom:32px;">{{ banner.subtitle }}</p>{% endif %}
+        <a href="{{ banner.cta_url }}" class="btn-outline" style="color:{{ banner.text_color }} !important; border-color:{{ banner.text_color }} !important;">{{ banner.cta_text }}</a>
+    </section>
+  {% endif %}
+{% endfor %}
 
 {% endblock %}
 

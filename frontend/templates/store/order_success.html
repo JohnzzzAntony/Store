@@ -7,7 +7,7 @@
 <section class="success-page">
     <div class="success-header">
         <h1 class="font-serif">Thank You for <br>Your Order.</h1>
-        <p class="order-meta-info">Order Number: #{{ order.transaction_id|default:"123456789" }}</p>
+        <p class="order-meta-info">Order Number: #{{ order.id|default:"123456789" }}</p>
         <p style="color: rgba(0,0,0,0.5); font-weight: 300;">A confirmation has been sent to your email.</p>
     </div>
 
@@ -55,7 +55,7 @@
         <div class="like-grid">
             {% for category in categories %}
             <div class="like-card">
-                <img src="{{ category.image.url|default:'/static/images/hero_perfume.png' }}" alt="{{ category.name }}">
+                <img src="{% if category.imageURL %}{{ category.imageURL }}{% else %}/static/images/frontend/category_fallback.png{% endif %}" alt="{{ category.name }}">
                 <div class="like-card-label">{{ category.name }}</div>
             </div>
             {% endfor %}

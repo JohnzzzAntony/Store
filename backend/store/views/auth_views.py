@@ -40,7 +40,10 @@ def login_view(request, *args, **kwargs):
     cartItems = data['cartItems']
 
     if request.user.is_authenticated:
-        return redirect('store')
+        customer = Customer.objects.filter(user=request.user).first()
+        is_staff = request.user.is_staff
+        if not is_staff or customer:
+            return redirect('store')
 
     if request.method == 'POST':
         action = request.POST.get('action', 'login')

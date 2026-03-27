@@ -38,6 +38,14 @@ class StoreAdmin(admin.ModelAdmin):
             'fields': ('promo_ticker_badge', 'promo_ticker_text', 'promo_ticker_url'),
             'description': 'Configure the scrolling promo bar at the top.'
         }),
+        ('Homepage Sections Header', {
+            'fields': (
+                'category_offers_title', 'category_offers_subtitle',
+                'category_section_title', 'category_section_subtitle',
+                'bogo_section_title', 'bogo_section_subtitle', 'bogo_section_label',
+            ),
+            'description': 'Customize the titles and subtitles for homepage sections.'
+        }),
         ('Heritage Section', {
             'fields': (
                 'heritage_title', 'heritage_description',
@@ -99,15 +107,41 @@ class BrandAdmin(SingleStoreMixin, admin.ModelAdmin):
 
 from django.utils.text import slugify
 
+class CreateOnImportWidget(ForeignKeyWidget):
+    """Custom widget to create Category/Brand if not found during import."""
+    def clean(self, value, row=None, **kwargs):
+        if not value:
+            return None
+        try:
+            return super().clean(value, row, **kwargs)
+        except self.model.DoesNotExist:
+            # Auto-create the category/brand if it doesn't exist
+            slug = slugify(value)
+            
+            # Try to get store from row or default
+            store_id = row.get('store')
+            store = None
+            if store_id:
+                try:
+                    store = Store.objects.get(id=store_id)
+                except Store.DoesNotExist:
+                    pass
+            
+            if not store:
+                store = Store.objects.filter(is_active=True).first()
+
+            return self.model.objects.create(name=value, slug=slug, store=store)
+
 class ProductResource(resources.ModelResource):
     category = fields.Field(
         column_name='category',
         attribute='category',
-        widget=ForeignKeyWidget(Category, 'name'))
+        widget=CreateOnImportWidget(Category, 'name'))
+    
     brand = fields.Field(
         column_name='brand',
         attribute='brand',
-        widget=ForeignKeyWidget(Brand, 'name'))
+        widget=CreateOnImportWidget(Brand, 'name'))
 
     store = fields.Field(
         column_name='store',
@@ -116,7 +150,7 @@ class ProductResource(resources.ModelResource):
 
     class Meta:
         model = Product
-        fields = ('id', 'name', 'slug', 'category', 'brand', 'store', 'price', 'in_stock', 'is_featured', 'image', 'image_external_url', 'description', 'gender', 'scent_profile', 'size_ml')
+        fields = ('id', 'store', 'category', 'brand', 'name', 'slug', 'price', 'in_stock', 'is_featured', 'image', 'image_external_url', 'description', 'gender', 'scent_profile', 'size_ml')
         import_id_fields = ('name',)
         skip_unchanged = True
         report_skipped = True
@@ -126,12 +160,13 @@ class ProductResource(resources.ModelResource):
         if not row.get('slug') and row.get('name'):
             row['slug'] = slugify(row['name'])
         
-        # We don't have store in CSV, so we must add it here or in after_import_instance
-        # Let's add a default store if not present
-        from .models import Store
-        store = Store.objects.filter(is_active=True).first()
-        if store:
-            row['store'] = store.id
+        # Ensure Store is assigned to the row so widgets can use it
+        store_id = row.get('store')
+        if not store_id:
+            store = getattr(kwargs.get('request'), 'current_store', None) or Store.objects.filter(is_active=True).first()
+            if store:
+                row['store'] = store.id
+                store_id = store.id
         
         # Ensure name is present for matching
         if not row.get('name'):
